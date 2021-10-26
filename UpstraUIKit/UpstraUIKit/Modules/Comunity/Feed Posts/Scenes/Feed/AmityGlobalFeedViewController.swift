@@ -44,12 +44,12 @@ public class AmityGlobalFeedViewController: AmityViewController {
     }
     
     private func setupPostButton() {
-        createPostButton.image = AmityIconSet.iconCreatePost
-        createPostButton.add(to: view, position: .bottomRight)
-        createPostButton.actionHandler = { [weak self] button in
-            guard let strongSelf = self else { return }
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
-        }
+//        createPostButton.image = AmityIconSet.iconCreatePost
+//        createPostButton.add(to: view, position: .bottomRight)
+//        createPostButton.actionHandler = { [weak self] button in
+//            guard let strongSelf = self else { return }
+//            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
+//        }
     }
     
 }

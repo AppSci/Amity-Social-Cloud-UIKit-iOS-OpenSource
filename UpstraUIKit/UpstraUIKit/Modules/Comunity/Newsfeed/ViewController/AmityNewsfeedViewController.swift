@@ -19,7 +19,7 @@ public class AmityNewsfeedViewController: AmityViewController, IndicatorInfoProv
     
     private let emptyView = AmityNewsfeedEmptyView()
     private var headerView = AmityMyCommunityPreviewViewController.make()
-    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
+//    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
     private let feedViewController = AmityFeedViewController.make(feedType: .globalFeed)
     
     public override func viewDidLoad() {
@@ -27,7 +27,7 @@ public class AmityNewsfeedViewController: AmityViewController, IndicatorInfoProv
         setupFeedView()
         setupHeaderView()
         setupEmptyView()
-        setupPostButton()
+//        setupPostButton()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -66,25 +66,25 @@ private extension AmityNewsfeedViewController {
             parent.setCurrentIndex(1)
         }
         emptyView.createHandler = { [weak self] in
-            let vc = AmityCommunityCreatorViewController.make()
-            vc.delegate = self
-            let nav = UINavigationController(rootViewController: vc)
-            nav.modalPresentationStyle = .overFullScreen
-            self?.present(nav, animated: true, completion: nil)
+//            let vc = AmityCommunityCreatorViewController.make()
+//            vc.delegate = self
+//            let nav = UINavigationController(rootViewController: vc)
+//            nav.modalPresentationStyle = .overFullScreen
+//            self?.present(nav, animated: true, completion: nil)
         }
         feedViewController.emptyView = emptyView
 
     }
     
-    private func setupPostButton() {
+//    private func setupPostButton() {
         // setup button
-        createPostButton.add(to: view, position: .bottomRight)
-        createPostButton.image = AmityIconSet.iconCreatePost
-        createPostButton.actionHandler = { [weak self] _ in
-            guard let strongSelf = self else { return }
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
-        }
-    }
+//        createPostButton.add(to: view, position: .bottomRight)
+//        createPostButton.image = AmityIconSet.iconCreatePost
+//        createPostButton.actionHandler = { [weak self] _ in
+//            guard let strongSelf = self else { return }
+//            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
+//        }
+//    }
     
 }
 

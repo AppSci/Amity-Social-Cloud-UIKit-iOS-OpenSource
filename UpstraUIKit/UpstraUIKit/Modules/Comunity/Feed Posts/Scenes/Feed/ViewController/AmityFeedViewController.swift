@@ -23,6 +23,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     // MARK: - Properties
     private var screenViewModel: AmityFeedScreenViewModelType!
+    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
     
     // MARK: - Post Protocol Handler
     private var postHeaderProtocolHandler: AmityPostHeaderProtocolHandler?
@@ -61,7 +62,8 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         super.viewDidLoad()
         setupView()
         setupProtocolHandler()
-        setupScreenViewModel()   
+        setupScreenViewModel()
+        setupPostButton()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -119,6 +121,15 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     private func setupView() {
         setupTableView()
         setupRefreshControl()
+    }
+    
+    private func setupPostButton() {
+        createPostButton.image = AmityIconSet.iconCreatePost
+        createPostButton.add(to: view, position: .bottomRight)
+        createPostButton.actionHandler = { [weak self] button in
+            guard let strongSelf = self else { return }
+            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
+        }
     }
     
     private func setupTableView() {

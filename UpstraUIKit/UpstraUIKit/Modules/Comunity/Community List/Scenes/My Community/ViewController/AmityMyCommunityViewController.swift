@@ -15,7 +15,7 @@ public final class AmityMyCommunityViewController: AmityViewController {
     @IBOutlet private var tableView: UITableView!
     
     // MARK: - Properties
-    private var searchController = UISearchController(searchResultsController: nil)
+//    private var searchController = UISearchController(searchResultsController: nil)
     private var emptyView = AmitySearchEmptyView()
     private var screenViewModel: AmityMyCommunityScreenViewModelType!
     
@@ -23,14 +23,14 @@ public final class AmityMyCommunityViewController: AmityViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        setupSearchController()
+//        setupSearchController()
         setupTableView()
         setupScreenViewModel()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        searchController.searchBar.text = screenViewModel.dataSource.searchText
+//        searchController.searchBar.text = screenViewModel.dataSource.searchText
     }
     
     public static func make() -> AmityMyCommunityViewController {
@@ -50,50 +50,50 @@ public final class AmityMyCommunityViewController: AmityViewController {
     // MARK: - Setup views
     private func setupView() {
         title = AmityLocalizedStringSet.myCommunityTitle.localizedString
-        if communityCreationButtonVisible() {
-            let rightItem = UIBarButtonItem(image: AmityIconSet.iconAdd, style: .plain, target: self, action: #selector(createCommunityTap))
-            rightItem.tintColor = AmityColorSet.base
-            navigationItem.rightBarButtonItem = rightItem
-        }
+//        if communityCreationButtonVisible() {
+//            let rightItem = UIBarButtonItem(image: AmityIconSet.iconAdd, style: .plain, target: self, action: #selector(createCommunityTap))
+//            rightItem.tintColor = AmityColorSet.base
+//            navigationItem.rightBarButtonItem = rightItem
+//        }
     }
     
-    private func communityCreationButtonVisible() -> Bool {
-        // The default visibility of this button.
-        var visible = true
-        // If someone override this env, we then force visibility to be that value.
-        if let overrideVisible = AmityUIKitManagerInternal.shared.env["amity_uikit_social_community_creation_button_visible"] as? Bool {
-            visible = overrideVisible
-        }
-        return visible
-    }
+//    private func communityCreationButtonVisible() -> Bool {
+//        // The default visibility of this button.
+//        var visible = true
+//        // If someone override this env, we then force visibility to be that value.
+//        if let overrideVisible = AmityUIKitManagerInternal.shared.env["amity_uikit_social_community_creation_button_visible"] as? Bool {
+//            visible = overrideVisible
+//        }
+//        return visible
+//    }
     
-    private func setupSearchController() {
-        searchController.searchBar.delegate = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = AmityLocalizedStringSet.General.search.localizedString
-        searchController.searchBar.tintColor = AmityColorSet.base
-        searchController.searchBar.returnKeyType = .done
-        searchController.searchBar.backgroundImage = UIImage()
-        searchController.searchBar.barTintColor = AmityColorSet.backgroundColor
-        
-        (searchController.searchBar.value(forKey: "cancelButton") as? UIButton)?.tintColor = AmityColorSet.base
-        
-        if #available(iOS 13, *) {
-            searchController.searchBar.searchTextField.backgroundColor = AmityColorSet.secondary.blend(.shade4)
-            searchController.searchBar.searchTextField.textColor = AmityColorSet.base
-            searchController.searchBar.searchTextField.leftView?.tintColor = AmityColorSet.base.blend(.shade2)
-        } else {
-            if let textField = (searchController.searchBar.value(forKey: "searchField") as? UITextField) {
-                textField.backgroundColor = AmityColorSet.secondary.blend(.shade4)
-                textField.tintColor = AmityColorSet.base
-                textField.textColor = AmityColorSet.base
-                textField.leftView?.tintColor = AmityColorSet.base.blend(.shade2)
-            }
-        }
-    }
+//    private func setupSearchController() {
+//        searchController.searchBar.delegate = self
+//        searchController.obscuresBackgroundDuringPresentation = false
+//        searchController.searchBar.placeholder = AmityLocalizedStringSet.General.search.localizedString
+//        searchController.searchBar.tintColor = AmityColorSet.base
+//        searchController.searchBar.returnKeyType = .done
+//        searchController.searchBar.backgroundImage = UIImage()
+//        searchController.searchBar.barTintColor = AmityColorSet.backgroundColor
+//
+//        (searchController.searchBar.value(forKey: "cancelButton") as? UIButton)?.tintColor = AmityColorSet.base
+//
+//        if #available(iOS 13, *) {
+//            searchController.searchBar.searchTextField.backgroundColor = AmityColorSet.secondary.blend(.shade4)
+//            searchController.searchBar.searchTextField.textColor = AmityColorSet.base
+//            searchController.searchBar.searchTextField.leftView?.tintColor = AmityColorSet.base.blend(.shade2)
+//        } else {
+//            if let textField = (searchController.searchBar.value(forKey: "searchField") as? UITextField) {
+//                textField.backgroundColor = AmityColorSet.secondary.blend(.shade4)
+//                textField.tintColor = AmityColorSet.base
+//                textField.textColor = AmityColorSet.base
+//                textField.leftView?.tintColor = AmityColorSet.base.blend(.shade2)
+//            }
+//        }
+//    }
     
     private func setupTableView() {
-        tableView.tableHeaderView = searchController.searchBar
+//        tableView.tableHeaderView = searchController.searchBar
         tableView.setContentOffset(CGPoint(x: 0, y: 50), animated: true)
         tableView.register(cell: AmityMyCommunityTableViewCell.self)
         tableView.delegate = self
@@ -107,22 +107,22 @@ public final class AmityMyCommunityViewController: AmityViewController {
     
 }
 
-private extension AmityMyCommunityViewController {
-    @objc func createCommunityTap() {
-        let vc = AmityCommunityCreatorViewController.make()
-        vc.delegate = self
-        let nav = UINavigationController(rootViewController: vc)
-        nav.modalPresentationStyle = .fullScreen
-        present(nav, animated: true, completion: nil)
-    }
-}
+//private extension AmityMyCommunityViewController {
+//    @objc func createCommunityTap() {
+//        let vc = AmityCommunityCreatorViewController.make()
+//        vc.delegate = self
+//        let nav = UINavigationController(rootViewController: vc)
+//        nav.modalPresentationStyle = .fullScreen
+//        present(nav, animated: true, completion: nil)
+//    }
+//}
 
 extension AmityMyCommunityViewController: UITableViewDelegate {
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        searchController.isActive = false
-        searchController.searchBar.setShowsCancelButton(false, animated: true)
-        searchController.searchBar.text = screenViewModel.dataSource.searchText
+//        searchController.isActive = false
+//        searchController.searchBar.setShowsCancelButton(false, animated: true)
+//        searchController.searchBar.text = screenViewModel.dataSource.searchText
         guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId else { return }
         AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
     }
@@ -153,9 +153,9 @@ extension AmityMyCommunityViewController: AmityMyCommunityTableViewCellDelegate 
     
     func cellDidTapOnAvatar(_ cell: AmityMyCommunityTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        searchController.isActive = false
-        searchController.searchBar.setShowsCancelButton(false, animated: true)
-        searchController.searchBar.text = screenViewModel.dataSource.searchText
+//        searchController.isActive = false
+//        searchController.searchBar.setShowsCancelButton(false, animated: true)
+//        searchController.searchBar.text = screenViewModel.dataSource.searchText
         guard let community = screenViewModel.dataSource.item(at: indexPath) else { return }
         AmityEventHandler.shared.communityDidTap(from: self, communityId: community.communityId)
     }

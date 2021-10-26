@@ -100,14 +100,13 @@ private extension AmityCommunityExplorerViewController {
         addContainerView(categoryVC, to: categoriesContainerView)
         
         categoryVC.selectedCategoryHandler = { [weak self] category in
-            let vc = AmityCategoryCommunityListViewController.make(categoryId: category.categoryId)
-            vc.title = category.name
-            self?.navigationController?.pushViewController(vc, animated: true)
+            guard let strongSelf = self else { return }
+            AmityEventHandler.shared.categoryDidTap(from: strongSelf, category: category)
         }
         
         categoryVC.selectedCategoriesHandler = { [weak self] in
-            let categoryVC = AmityCategoryListViewController.make()
-            self?.navigationController?.pushViewController(categoryVC, animated: true)
+            guard let strongSelf = self else { return }
+            AmityEventHandler.shared.categoriesDidTap(from: strongSelf)
         }
         
         categoryVC.emptyHandler = { [weak self] isEmpty in
