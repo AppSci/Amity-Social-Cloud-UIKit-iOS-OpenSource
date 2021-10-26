@@ -12,7 +12,7 @@ import UIKit
 public class AmityUserFeedViewController: AmityViewController {
     
     private let feedViewController: AmityFeedViewController
-    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
+//    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
     private let feedType: AmityPostFeedType
     
     // MARK: - Initializer
@@ -41,7 +41,7 @@ public class AmityUserFeedViewController: AmityViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupFeedView()
-        setupPostButton()
+//        setupPostButton()
     }
     
     // MARK: - Private functions
@@ -50,26 +50,26 @@ public class AmityUserFeedViewController: AmityViewController {
         addChild(viewController: feedViewController)
     }
     
-    private func setupPostButton() {
-        createPostButton.image = AmityIconSet.iconCreatePost
-        createPostButton.add(to: view, position: .bottomRight)
-        createPostButton.actionHandler = { [weak self] button in
-            guard let strongSelf = self else { return }
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .myFeed)
-        }
-        
-        // We can't post on other user feed.
-        // So, create button will be show particularly on current user feed.
-        switch feedType {
-        case .myFeed:
-            createPostButton.isHidden = false
-        case .userFeed(let userId):
-            // If current userId is passing through .userFeed, handle this case as .myFeed type.
-            createPostButton.isHidden = AmityUIKitManagerInternal.shared.client.currentUserId != userId
-        default:
-            createPostButton.isHidden = true
-        }
-    }
+//    private func setupPostButton() {
+//        createPostButton.image = AmityIconSet.iconCreatePost
+//        createPostButton.add(to: view, position: .bottomRight)
+//        createPostButton.actionHandler = { [weak self] button in
+//            guard let strongSelf = self else { return }
+//            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .myFeed)
+//        }
+//
+//        // We can't post on other user feed.
+//        // So, create button will be show particularly on current user feed.
+//        switch feedType {
+//        case .myFeed:
+//            createPostButton.isHidden = false
+//        case .userFeed(let userId):
+//            // If current userId is passing through .userFeed, handle this case as .myFeed type.
+//            createPostButton.isHidden = AmityUIKitManagerInternal.shared.client.currentUserId != userId
+//        default:
+//            createPostButton.isHidden = true
+//        }
+//    }
     
 }
 
