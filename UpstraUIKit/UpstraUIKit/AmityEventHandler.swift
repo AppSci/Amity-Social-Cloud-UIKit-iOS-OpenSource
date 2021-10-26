@@ -45,6 +45,17 @@ open class AmityEventHandler {
         source.navigationController?.pushViewController(viewController, animated: true)
     }
     
+    open func categoryDidTap(from source: AmityViewController, category: AmityCommunityCategoryModel) {
+        let viewController = AmityCategoryCommunityListViewController.make(categoryId: category.categoryId)
+        viewController.title = category.name
+        source.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    open func categoriesDidTap(from source: AmityViewController) {
+        let categoryVC = AmityCategoryListViewController.make()
+        source.navigationController?.pushViewController(categoryVC, animated: true)
+    }
+    
     /// Event for leave community
     /// It will be triggered when leave community button tapped
     ///
