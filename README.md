@@ -1,6 +1,4 @@
 # WBAmityUIKit
-
-[![CI Status](https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource](https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource)
 [![Version](https://img.shields.io/cocoapods/v/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
 [![License](https://img.shields.io/cocoapods/l/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
 [![Platform](https://img.shields.io/cocoapods/p/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
@@ -23,7 +21,3 @@ pod 'WBAmityUIKit'
 ## Author
 
 Booster, roman.mishchenko@gen.tech
-
-## License
-
-WBAmityUIKit is available under the MIT license. See the LICENSE file for more info.
