@@ -44,6 +44,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     var dataDidUpdateHandler: ((Int) -> Void)?
     var emptyViewHandler: ((UIView?) -> Void)?
     var pullRefreshHandler: (() -> Void)?
+    var onViewDidLoad: (() -> Void)?
     
     // To determine if the vc is visible or not
     private var isVisible: Bool = true
@@ -63,7 +64,8 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         setupView()
         setupProtocolHandler()
         setupScreenViewModel()
-        setupPostButton()
+        onViewDidLoad?()
+//        setupPostButton()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -85,11 +87,27 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         let postController = AmityPostController()
         let commentController = AmityCommentController()
         let reaction = AmityReactionController()
+        
+        var communityID: String?
+        switch feedType {
+        case .communityFeed(let communityId):
+            communityID = communityId
+        default: ()
+        }
+        
         let viewModel = AmityFeedScreenViewModel(withFeedType: feedType,
-                                                      postController: postController,
-                                                      commentController: commentController,
-                                                      reactionController: reaction)
+                                                 postController: postController,
+                                                 commentController: commentController,
+                                                 reactionController: reaction,
+                                                 communityID: communityID)
         let vc = AmityFeedViewController(nibName: AmityFeedViewController.identifier, bundle: AmityUIKitManager.bundle)
+        switch feedType {
+        case .communityFeed:
+            vc.onViewDidLoad = { [weak vc] in
+                vc?.setupPostButton()
+            }
+        default: ()
+        }
         vc.screenViewModel = viewModel
         return vc
     }
@@ -127,8 +145,12 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         createPostButton.image = AmityIconSet.iconCreatePost
         createPostButton.add(to: view, position: .bottomRight)
         createPostButton.actionHandler = { [weak self] button in
-            guard let strongSelf = self else { return }
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf)
+            guard
+                let strongSelf = self,
+                let community = strongSelf.screenViewModel.getCurrentCommunity()
+            else { return }
+//            AmityEventHandler.shared.postTargetDidSelect(from: strongSelf, postTarget: .myFeed, postContentType: .post)
+            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .community(object: community))
         }
     }
     

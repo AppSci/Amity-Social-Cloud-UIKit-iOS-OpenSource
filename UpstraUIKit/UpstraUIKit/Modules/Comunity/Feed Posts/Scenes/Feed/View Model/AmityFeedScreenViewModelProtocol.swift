@@ -54,6 +54,7 @@ protocol AmityFeedScreenViewModelAction {
     func report(withPostId postId: String)
     func unreport(withPostId postId: String)
     func getReportStatus(withPostId postId: String)
+    func getCurrentCommunity() -> AmityCommunity?
     
     // MARK: Comment
     func delete(withComment comment: AmityCommentModel)

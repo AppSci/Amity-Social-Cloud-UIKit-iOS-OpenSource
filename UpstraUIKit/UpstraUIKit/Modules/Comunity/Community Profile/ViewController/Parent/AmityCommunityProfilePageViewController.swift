@@ -22,7 +22,7 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
     private var settings: AmityCommunityProfilePageSettings!
     private var header: AmityCommunityProfileHeaderViewController!
     private var bottom: AmityCommunityFeedViewController!
-    private var postButton: AmityFloatingButton = AmityFloatingButton()
+//    private var postButton: AmityFloatingButton = AmityFloatingButton()
     
     private var screenViewModel: AmityCommunityProfileScreenViewModelType!
     
@@ -34,7 +34,7 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupViewModel()
-        setupPostButton()
+//        setupPostButton()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -93,13 +93,13 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
             self?.header.updatePostsCount()
         }
     }
-    private func setupPostButton() {
-        postButton.image = AmityIconSet.iconCreatePost
-        postButton.add(to: view, position: .bottomRight)
-        postButton.actionHandler = { [weak self] button in
-            self?.postAction()
-        }
-    }
+//    private func setupPostButton() {
+//        postButton.image = AmityIconSet.iconCreatePost
+//        postButton.add(to: view, position: .bottomRight)
+//        postButton.actionHandler = { [weak self] button in
+//            self?.postAction()
+//        }
+//    }
     
     private func setupNavigationItemOption(show isJoined: Bool) {
         let item = UIBarButtonItem(image: AmityIconSet.iconOption, style: .plain, target: self, action: #selector(optionTap))
@@ -155,7 +155,7 @@ private extension AmityCommunityProfilePageViewController {
 extension AmityCommunityProfilePageViewController: AmityCommunityProfileScreenViewModelDelegate {
     
     func screenViewModelDidGetCommunity(with community: AmityCommunityModel) {
-        postButton.isHidden = !community.isJoined
+//        postButton.isHidden = !community.isJoined
         header.updateView()
         setupNavigationItemOption(show: community.isJoined)
         AmityHUD.hide()

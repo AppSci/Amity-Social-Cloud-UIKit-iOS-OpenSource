@@ -89,7 +89,6 @@ public class AmityPostTextEditorViewController: AmityViewController {
         navigationItem.rightBarButtonItem = postButton
         navigationItem.rightBarButtonItem?.isEnabled = false
         
-        #warning("ViewController must be implemented with storyboard")
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.keyboardDismissMode = .onDrag
         scrollView.backgroundColor = AmityColorSet.backgroundColor
