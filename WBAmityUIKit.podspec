@@ -21,16 +21,16 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/Roman Mishchenko/WBAmityUIKit'
+  s.homepage         = 'https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Boosters' => 'roman.mishchenko@gen.tech' }
-  s.source           = { :git => 'https://github.com/Roman Mishchenko/WBAmityUIKit.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '12.3'
 
-  s.source_files = 'WBAmityUIKit/Classes/**/*'
+  s.source_files = 'UpstraUIKit/UpstraUIKit/**/*.{h,m,swift}'
   
   # s.resource_bundles = {
   #   'WBAmityUIKit' => ['WBAmityUIKit/Assets/*.png']

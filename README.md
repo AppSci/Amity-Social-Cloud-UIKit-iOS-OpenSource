@@ -1,35 +1,29 @@
+# WBAmityUIKit
 
-# AmityUIKit OpenSource
+[![CI Status](https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource](https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource)
+[![Version](https://img.shields.io/cocoapods/v/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
+[![License](https://img.shields.io/cocoapods/l/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
+[![Platform](https://img.shields.io/cocoapods/p/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
 
-<p align="center" >
-  <img src="https://global-uploads.webflow.com/5eddccffdb3c6a27f79757c1/604f017e59681e734c3bd995_nav-logo.png" alt="Amity" title="AmityUIKit">
-</p>
+## Example
 
-AmityUIKit is a delightful networking library for iOS. It is extending the powerful high-level messaging abstractions provided by [Amity](https://www.amity.co). It has a scalable architecture with well-designed, feature-rich APIs that are a joy to use.
+To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Requirements
 
-| Minimum iOS Target | Supported Language |
-| ------------------ | ------------------ |
-| iOS 12.0           |        Swift 5.3   |
+## Installation
 
-## Dependencies
+WBAmityUIKit is available through [CocoaPods](https://cocoapods.org). To install
+it, simply add the following line to your Podfile:
 
-AmityUIKit has dependencies with Realm. Currently we are only able to work with Realm version 10.12.0.
+```ruby
+pod 'WBAmityUIKit'
+```
 
-## Framework Building
+## Author
 
-AmityUIKit supports building xcframework which can be used on any Xcode version. Please follow this instruction for building.
-1. Open this project with Xcode 12.2 (The version should be the same)
-2. Select `Release Framework` as a build target
-3. Build (The output path is `/AmityUIKit/Distribution`)
-
-`Distribution` folder will contains `AmityChat.xcframework`, `Realm.xcframework` and `AmityUIKit.xcframework`. These frameworks can be imported and built on any version of Xcode or Swift.
-
-## Sample App
-
-AmityUIKit has sample app you can play along with it. It is written with Swift. Please finish `Release Framework` before running `SampleApp`.
+Booster, roman.mishchenko@gen.tech
 
 ## License
 
-Public Framework. Copyright (c) 2020 [Amity](https://www.amity.co).
+WBAmityUIKit is available under the MIT license. See the LICENSE file for more info.
