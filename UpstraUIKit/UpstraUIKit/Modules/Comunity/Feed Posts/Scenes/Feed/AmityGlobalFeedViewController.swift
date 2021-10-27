@@ -12,7 +12,7 @@ import UIKit
 public class AmityGlobalFeedViewController: AmityViewController {
     
     private let feedViewController: AmityFeedViewController
-    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
+//    private let createPostButton: AmityFloatingButton = AmityFloatingButton()
     
     // MARK: - Initializer
     

@@ -101,8 +101,7 @@ extension AmityNewsfeedViewController: AmityMyCommunityPreviewViewControllerDele
     public func viewController(_ viewController: AmityMyCommunityPreviewViewController, didPerformAction action: AmityMyCommunityPreviewViewController.ActionType) {
         switch action {
         case .seeAll:
-            let vc = AmityMyCommunityViewController.make()
-            navigationController?.pushViewController(vc, animated: true)
+            AmityEventHandler.shared.seeAllCommunitiesDidTap(from: self)
         case .communityItem(let communityId):
             AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
         }

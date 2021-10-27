@@ -45,6 +45,11 @@ open class AmityEventHandler {
         source.navigationController?.pushViewController(viewController, animated: true)
     }
     
+    open func seeAllCommunitiesDidTap(from source: AmityViewController) {
+        let viewController = AmityMyCommunityViewController.make()
+        source.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
     open func categoryDidTap(from source: AmityViewController, category: AmityCommunityCategoryModel) {
         let viewController = AmityCategoryCommunityListViewController.make(categoryId: category.categoryId)
         viewController.title = category.name

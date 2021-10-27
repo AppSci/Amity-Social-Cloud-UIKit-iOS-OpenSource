@@ -19,7 +19,7 @@ final class AmityFeedScreenViewModel: AmityFeedScreenViewModelType {
     private let commentController: AmityCommentControllerProtocol
     private let reactionController: AmityReactionControllerProtocol
     private let pollRepository: AmityPollRepository
-    
+    private var manager: AmityCommunityRepositoryManagerProtocol?
     
     // MARK: - Properties
     private let debouncer = Debouncer(delay: 0.3)
@@ -30,13 +30,18 @@ final class AmityFeedScreenViewModel: AmityFeedScreenViewModelType {
     init(withFeedType feedType: AmityPostFeedType,
         postController: AmityPostControllerProtocol,
         commentController: AmityCommentControllerProtocol,
-        reactionController: AmityReactionControllerProtocol) {
+        reactionController: AmityReactionControllerProtocol,
+         communityID: String? = nil) {
         self.feedType = feedType
         self.postController = postController
         self.commentController = commentController
         self.reactionController = reactionController
         self.isPrivate = false
         self.pollRepository = AmityPollRepository(client: AmityUIKitManagerInternal.shared.client)
+        guard let communityID = communityID else {
+            return
+        }
+        self.manager = AmityCommunityRepositoryManager(communityId: communityID)
     }
     
 }
@@ -45,6 +50,10 @@ final class AmityFeedScreenViewModel: AmityFeedScreenViewModelType {
 
 // MARK: Post component
 extension AmityFeedScreenViewModel {
+    
+    func getCurrentCommunity() -> AmityCommunity? {
+        self.manager?.getCurrentCommunity()
+    }
     
     func getFeedType() -> AmityPostFeedType {
         return feedType
