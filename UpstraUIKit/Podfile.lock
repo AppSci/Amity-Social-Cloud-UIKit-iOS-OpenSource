@@ -1,0 +1,27 @@
+PODS:
+  - AmitySDK (5.7.0):
+    - Realm (~> 10.12.0)
+  - Realm (10.12.0):
+    - Realm/Headers (= 10.12.0)
+  - Realm/Headers (10.12.0)
+  - RealmSwift (10.12.0):
+    - Realm (= 10.12.0)
+
+DEPENDENCIES:
+  - AmitySDK
+  - RealmSwift
+
+SPEC REPOS:
+  trunk:
+    - AmitySDK
+    - Realm
+    - RealmSwift
+
+SPEC CHECKSUMS:
+  AmitySDK: b170ffea352947f0fdee271b4dce8d5bbf782969
+  Realm: 32488213acb44660539c619d620cec1bac046166
+  RealmSwift: 0abdca6231d5ff8a4f84cef9c1121ef95a483faf
+
+PODFILE CHECKSUM: 9bd064bc0c49980b36882c2567b3193f6880a99e
+
+COCOAPODS: 1.11.2
