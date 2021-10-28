@@ -145,7 +145,6 @@
 		72931CBB24F7A27A008D6DBD /* AmityPostTargetPickerScreenViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72931CBA24F7A27A008D6DBD /* AmityPostTargetPickerScreenViewModelType.swift */; };
 		72931CC624F8C2D3008D6DBD /* AmityColorPaletteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72931CC524F8C2D3008D6DBD /* AmityColorPaletteTableViewController.swift */; };
 		7299AFE126D63E90007DED67 /* Realm.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = A052EAD42577A0FF00FF9312 /* Realm.xcframework */; };
-		72A3503A24EA811500DA9D46 /* AmityUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72A3503024EA811500DA9D46 /* AmityUIKit.framework */; };
 		72A3504124EA811500DA9D46 /* AmityUIKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A3503324EA811500DA9D46 /* AmityUIKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		72A3510D24EA820800DA9D46 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72A3504A24EA820700DA9D46 /* Assets.xcassets */; };
 		72A3510E24EA820800DA9D46 /* AmityAvatarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 72A3504C24EA820700DA9D46 /* AmityAvatarView.xib */; };
@@ -628,16 +627,6 @@
 		D4EC11EA25B93E000095F507 /* AmityPostSharingTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EC11E925B93E000095F507 /* AmityPostSharingTarget.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		72A3503B24EA811500DA9D46 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 72A3502724EA811500DA9D46 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 72A3502F24EA811500DA9D46;
-			remoteInfo = UpstraUIKit;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		0D123ECD25DA85DD009171D8 /* AmityCommentCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmityCommentCreateController.swift; sourceTree = "<group>"; };
 		0D12BD2A25D4307100D3E4BC /* AmityPostHeaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmityPostHeaderProtocol.swift; sourceTree = "<group>"; };
@@ -779,7 +768,6 @@
 		72931CC524F8C2D3008D6DBD /* AmityColorPaletteTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmityColorPaletteTableViewController.swift; sourceTree = "<group>"; };
 		72A3503024EA811500DA9D46 /* AmityUIKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AmityUIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A3503324EA811500DA9D46 /* AmityUIKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AmityUIKit.h; sourceTree = "<group>"; };
-		72A3503924EA811500DA9D46 /* AmityUIKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AmityUIKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A3504A24EA820700DA9D46 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		72A3504C24EA820700DA9D46 /* AmityAvatarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AmityAvatarView.xib; sourceTree = "<group>"; };
 		72A3504D24EA820700DA9D46 /* AmityBadgeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AmityBadgeView.swift; sourceTree = "<group>"; };
@@ -1269,14 +1257,6 @@
 			files = (
 				D45D45A026203D57008F7C2C /* AmitySDK.xcframework in Frameworks */,
 				7299AFE126D63E90007DED67 /* Realm.xcframework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		72A3503624EA811500DA9D46 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				72A3503A24EA811500DA9D46 /* AmityUIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1979,7 +1959,6 @@
 			isa = PBXGroup;
 			children = (
 				72A3503024EA811500DA9D46 /* AmityUIKit.framework */,
-				72A3503924EA811500DA9D46 /* AmityUIKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4254,24 +4233,6 @@
 			productReference = 72A3503024EA811500DA9D46 /* AmityUIKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		72A3503824EA811500DA9D46 /* AmityUIKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 72A3504724EA811500DA9D46 /* Build configuration list for PBXNativeTarget "AmityUIKitTests" */;
-			buildPhases = (
-				72A3503524EA811500DA9D46 /* Sources */,
-				72A3503624EA811500DA9D46 /* Frameworks */,
-				72A3503724EA811500DA9D46 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				72A3503C24EA811500DA9D46 /* PBXTargetDependency */,
-			);
-			name = AmityUIKitTests;
-			productName = UpstraUIKitTests;
-			productReference = 72A3503924EA811500DA9D46 /* AmityUIKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -4283,9 +4244,6 @@
 				ORGANIZATIONNAME = Amity;
 				TargetAttributes = {
 					72A3502F24EA811500DA9D46 = {
-						CreatedOnToolsVersion = 11.6;
-					};
-					72A3503824EA811500DA9D46 = {
 						CreatedOnToolsVersion = 11.6;
 					};
 				};
@@ -4304,7 +4262,6 @@
 			projectRoot = "";
 			targets = (
 				72A3502F24EA811500DA9D46 /* AmityUIKit */,
-				72A3503824EA811500DA9D46 /* AmityUIKitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -4443,13 +4400,6 @@
 				0D41DA4625D0EF860061A46D /* AmityPostFileTableViewCell.xib in Resources */,
 				0DA0BD2325D9802B004804BA /* AmityPostDetailViewController.xib in Resources */,
 				72A3514F24EA820800DA9D46 /* AmityMessageImageOutgoingTableViewCell.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		72A3503724EA811500DA9D46 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4949,22 +4899,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		72A3503524EA811500DA9D46 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		72A3503C24EA811500DA9D46 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 72A3502F24EA811500DA9D46 /* AmityUIKit */;
-			targetProxy = 72A3503B24EA811500DA9D46 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		72A3504224EA811500DA9D46 /* Debug */ = {
@@ -5158,44 +5093,6 @@
 			};
 			name = Release;
 		};
-		72A3504824EA811500DA9D46 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 37Z583JR6K;
-				INFOPLIST_FILE = UpstraUIKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.upstra.UpstraUIKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		72A3504924EA811500DA9D46 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 37Z583JR6K;
-				INFOPLIST_FILE = UpstraUIKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.upstra.UpstraUIKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -5213,15 +5110,6 @@
 			buildConfigurations = (
 				72A3504524EA811500DA9D46 /* Debug */,
 				72A3504624EA811500DA9D46 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		72A3504724EA811500DA9D46 /* Build configuration list for PBXNativeTarget "AmityUIKitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				72A3504824EA811500DA9D46 /* Debug */,
-				72A3504924EA811500DA9D46 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
