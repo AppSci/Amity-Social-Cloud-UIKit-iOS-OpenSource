@@ -1657,7 +1657,6 @@
 				77F93D36211F41570DEC41C7 /* Pods-AmityUIKit.debug.xcconfig */,
 				A1951CD6EED32FF6CDC12234 /* Pods-AmityUIKit.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -1957,6 +1956,7 @@
 				1A88282226D620390057A066 /* LICENSE */,
 				4451B51D272972B900DD7D7A /* README.md */,
 				4451B521272978DE00DD7D7A /* WBAmityUIKit.podspec */,
+				72928FA324EA832900BF566D /* Info.plist */,
 				72A3503224EA811500DA9D46 /* UpstraUIKit */,
 				72A3503124EA811500DA9D46 /* Products */,
 				72928FA524EA834A00BF566D /* Frameworks */,
@@ -1976,10 +1976,9 @@
 			isa = PBXGroup;
 			children = (
 				72A3503324EA811500DA9D46 /* AmityUIKit.h */,
+				72A3504A24EA820700DA9D46 /* Assets.xcassets */,
 				72A351AB24EA821F00DA9D46 /* AmityUIKit.swift */,
 				7259789C256CC5850074D414 /* AmityEventHandler.swift */,
-				72928FA324EA832900BF566D /* Info.plist */,
-				72A3504A24EA820700DA9D46 /* Assets.xcassets */,
 				72A3508B24EA820700DA9D46 /* Appearance */,
 				72A3504B24EA820700DA9D46 /* Components */,
 				72A3507D24EA820700DA9D46 /* Extensions */,
