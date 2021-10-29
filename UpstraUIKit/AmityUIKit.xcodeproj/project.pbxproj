@@ -77,7 +77,7 @@
 		1A95A5262514E8620018888F /* AmityFileExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A95A5252514E8620018888F /* AmityFileExtension.swift */; };
 		1AF0D2CA251371780083D12C /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF0D2C9251371780083D12C /* Log.swift */; };
 		4451B51F272972B900DD7D7A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 4451B51D272972B900DD7D7A /* README.md */; };
-		4451B522272978DE00DD7D7A /* WBAmityUIKit.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 4451B521272978DE00DD7D7A /* WBAmityUIKit.podspec */; };
+		44F7B495272C19020070C73A /* WBAmityUIKit.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 44F7B494272C19020070C73A /* WBAmityUIKit.podspec */; };
 		581D1793E37C72CC9D8C615C /* Pods_AmityUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79CB39A6CE754888BC78A325 /* Pods_AmityUIKit.framework */; };
 		720D599A2525BDB1009734EF /* DispatchGroupWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720D59992525BDB1009734EF /* DispatchGroupWrapper.swift */; };
 		7211553E25505D180081CC23 /* AmityCategoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7211553C25505D180081CC23 /* AmityCategoryPickerViewController.swift */; };
@@ -697,7 +697,7 @@
 		1A95A5252514E8620018888F /* AmityFileExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmityFileExtension.swift; sourceTree = "<group>"; };
 		1AF0D2C9251371780083D12C /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		4451B51D272972B900DD7D7A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		4451B521272978DE00DD7D7A /* WBAmityUIKit.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WBAmityUIKit.podspec; path = ../WBAmityUIKit.podspec; sourceTree = "<group>"; };
+		44F7B494272C19020070C73A /* WBAmityUIKit.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = WBAmityUIKit.podspec; sourceTree = SOURCE_ROOT; };
 		720D59992525BDB1009734EF /* DispatchGroupWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchGroupWrapper.swift; sourceTree = "<group>"; };
 		7211553C25505D180081CC23 /* AmityCategoryPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmityCategoryPickerViewController.swift; sourceTree = "<group>"; };
 		7211553D25505D180081CC23 /* AmityCategoryPickerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AmityCategoryPickerViewController.xib; sourceTree = "<group>"; };
@@ -1955,7 +1955,6 @@
 			children = (
 				1A88282226D620390057A066 /* LICENSE */,
 				4451B51D272972B900DD7D7A /* README.md */,
-				4451B521272978DE00DD7D7A /* WBAmityUIKit.podspec */,
 				72928FA324EA832900BF566D /* Info.plist */,
 				72A3503224EA811500DA9D46 /* UpstraUIKit */,
 				72A3503124EA811500DA9D46 /* Products */,
@@ -1975,6 +1974,7 @@
 		72A3503224EA811500DA9D46 /* UpstraUIKit */ = {
 			isa = PBXGroup;
 			children = (
+				44F7B494272C19020070C73A /* WBAmityUIKit.podspec */,
 				72A3503324EA811500DA9D46 /* AmityUIKit.h */,
 				72A3504A24EA820700DA9D46 /* Assets.xcassets */,
 				72A351AB24EA821F00DA9D46 /* AmityUIKit.swift */,
@@ -4389,7 +4389,7 @@
 				72A3515424EA820800DA9D46 /* AmityMessageTextIncomingTableViewCell.xib in Resources */,
 				72A3512824EA820800DA9D46 /* AmityGalleryCollectionViewCell.xib in Resources */,
 				B7B02630256FB4D900CD9242 /* AmityMessageListRecordingViewController.xib in Resources */,
-				4451B522272978DE00DD7D7A /* WBAmityUIKit.podspec in Resources */,
+				44F7B495272C19020070C73A /* WBAmityUIKit.podspec in Resources */,
 				97E21E86264D244200F19CB3 /* AmityGroupChatEditViewController.xib in Resources */,
 				A062147C2709864100037C34 /* PostGalleryEmptyStateCell.xib in Resources */,
 				97D0EBA026A14A3A00E9FE6A /* AmityPendingPostsViewController.xib in Resources */,
@@ -4988,7 +4988,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -5046,7 +5046,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -5075,8 +5075,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Shared",
 				);
-				INFOPLIST_FILE = UpstraUIKit/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5110,8 +5111,9 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Shared",
 				);
-				INFOPLIST_FILE = UpstraUIKit/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
