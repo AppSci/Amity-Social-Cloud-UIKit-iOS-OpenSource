@@ -61,6 +61,11 @@ open class AmityEventHandler {
         source.navigationController?.pushViewController(categoryVC, animated: true)
     }
     
+    open func followingDidTap(from source: AmityViewController, userId: String, isFollowersSelected: Bool) {
+        let vc = AmityUserFollowersViewController.make(withUserId: userId, isFollowersSelected: isFollowersSelected)
+        source.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     /// Event for leave community
     /// It will be triggered when leave community button tapped
     ///

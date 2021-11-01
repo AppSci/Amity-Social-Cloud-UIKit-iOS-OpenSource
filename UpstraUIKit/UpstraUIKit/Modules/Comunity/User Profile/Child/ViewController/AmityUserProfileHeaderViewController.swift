@@ -298,8 +298,7 @@ private extension AmityUserProfileHeaderViewController {
     }
     
     func handleTapAction(isFollowersSelected: Bool) {
-        let vc = AmityUserFollowersViewController.make(withUserId: screenViewModel.dataSource.userId, isFollowersSelected: isFollowersSelected)
-        navigationController?.pushViewController(vc, animated: true)
+        AmityEventHandler.shared.followingDidTap(from: self, userId: screenViewModel.dataSource.userId, isFollowersSelected: isFollowersSelected)
     }
 }
 
