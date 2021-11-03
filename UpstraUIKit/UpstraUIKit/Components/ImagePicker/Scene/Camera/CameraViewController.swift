@@ -20,49 +20,73 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import UIKit
-import AVFoundation
-
-class CameraViewController: UIViewController {
-    private let captureSession = AVCaptureSession()
-    private let previewView = CameraPreviewView()
-    private let captureSessionQueue = DispatchQueue(label: "session queue")
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        previewView.session = captureSession
-        previewView.frame = view.bounds
-        previewView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(previewView)
-        
-        requestAuthorization()
-        setupSession()
-    }
-
-    private func requestAuthorization() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            break
-        case .notDetermined:
-            captureSessionQueue.suspend()
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
-                if granted {
-                    self?.captureSessionQueue.resume()
-                } else {
-                    // TODO: User didn't grant access. Show something?
-                }
-            })
-
-        default:
-            // TODO: User has denied access...show some sort of dialog..?
-            break
-        }
-    }
-
-    private func setupSession() {
-        captureSessionQueue.async {
-
-        }
-    }
-}
+//import UIKit
+//import AVFoundation
+//
+//class CameraViewController: UIViewController {
+//    private let captureSession = AVCaptureSession()
+//    private let previewView = CameraPreviewView()
+//    private let captureSessionQueue = DispatchQueue(label: "session queue")
+//
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        previewView.session = captureSession
+//        previewView.frame = view.bounds
+//        previewView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        view.addSubview(previewView)
+//        
+//        requestAuthorization()
+//        setupSession()
+//    }
+//
+//    private func requestAuthorization() {
+//        switch AVCaptureDevice.authorizationStatus(for: .video) {
+//        case .authorized:
+//            break
+//        case .notDetermined:
+//            captureSessionQueue.suspend()
+//            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
+//                if granted {
+//                    self?.captureSessionQueue.resume()
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self?.presentAlertController()
+//                    }
+//                }
+//            })
+//        case .denied, .restricted:
+//            DispatchQueue.main.async {
+//                self.presentAlertController()
+//            }
+//        }
+//    }
+//    
+//    private func presentAlertController() {
+//        let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
+//
+//        let settingsAction = UIAlertAction(title: "OK", style: .default) { (_) -> Void in
+//
+//            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+//                return
+//            }
+//
+//            if UIApplication.shared.canOpenURL(settingsUrl) {
+//                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+//                    print("Settings opened: \(success)") // Prints true
+//                })
+//            }
+//        }
+//        alertController.addAction(settingsAction)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+//        alertController.addAction(cancelAction)
+//
+//        self.present(alertController, animated: true, completion: nil)
+//    }
+//
+//    private func setupSession() {
+//        captureSessionQueue.async {
+//
+//        }
+//    }
+//}

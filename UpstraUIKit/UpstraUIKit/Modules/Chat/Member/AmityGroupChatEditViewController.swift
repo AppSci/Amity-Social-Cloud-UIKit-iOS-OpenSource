@@ -111,10 +111,10 @@ class AmityGroupChatEditViewController: AmityViewController {
         // Show camera
         var cameraOption = TextItemOption(title: AmityLocalizedStringSet.General.camera.localizedString)
         cameraOption.completion = { [weak self] in
-            let cameraPicker = UIImagePickerController()
-            cameraPicker.sourceType = .camera
-            cameraPicker.delegate = self
-            self?.present(cameraPicker, animated: true, completion: nil)
+//            let cameraPicker = UIImagePickerController()
+//            cameraPicker.sourceType = .camera
+//            cameraPicker.delegate = self
+//            self?.present(cameraPicker, animated: true, completion: nil)
         }
         
         // Show image picker

@@ -113,11 +113,10 @@ public final class AmityMessageListViewController: AmityViewController {
 private extension AmityMessageListViewController {
     
     func cameraTap() {
-        #warning("Redundancy: camera picker should be replaced with a singleton class")
-        let cameraPicker = UIImagePickerController()
-        cameraPicker.sourceType = .camera
-        cameraPicker.delegate = self
-        present(cameraPicker, animated: true, completion: nil)
+//        let cameraPicker = UIImagePickerController()
+//        cameraPicker.sourceType = .camera
+//        cameraPicker.delegate = self
+//        present(cameraPicker, animated: true, completion: nil)
     }
     
     func albumTap() {

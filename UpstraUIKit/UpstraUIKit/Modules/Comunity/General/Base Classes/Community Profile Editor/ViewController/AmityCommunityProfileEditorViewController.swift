@@ -335,11 +335,11 @@ private extension AmityCommunityProfileEditorViewController {
         let bottomSheet = BottomSheetViewController()
         var cameraOption = TextItemOption(title: AmityLocalizedStringSet.General.camera.localizedString)
         cameraOption.completion = { [weak self] in
-            #warning("Redundancy: camera picker should be replaced with a singleton class")
-            let cameraPicker = UIImagePickerController()
-            cameraPicker.sourceType = .camera
-            cameraPicker.delegate = self
-            self?.present(cameraPicker, animated: true, completion: nil)
+//            #warning("Redundancy: camera picker should be replaced with a singleton class")
+//            let cameraPicker = UIImagePickerController()
+//            cameraPicker.sourceType = .camera
+//            cameraPicker.delegate = self
+//            self?.present(cameraPicker, animated: true, completion: nil)
         }
         
         var galleryOption = TextItemOption(title: AmityLocalizedStringSet.General.imageGallery.localizedString)

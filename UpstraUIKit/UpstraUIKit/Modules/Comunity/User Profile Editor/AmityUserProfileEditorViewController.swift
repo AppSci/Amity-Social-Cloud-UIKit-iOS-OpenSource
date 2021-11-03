@@ -29,6 +29,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     // To support reuploading image
     // use this variable to store a new image
     private var uploadingAvatarImage: UIImage?
+    private var completion: (() -> Void)?
     
     private var isValueChanged: Bool {
         guard let user = screenViewModel?.dataSource.user else {
@@ -55,8 +56,10 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public static func make() -> AmityUserProfileEditorViewController {
-        return AmityUserProfileEditorViewController()
+    public static func make(completion: (() -> Void)?) -> AmityUserProfileEditorViewController {
+        let controller = AmityUserProfileEditorViewController()
+        controller.completion = completion
+        return controller
     }
     
     // MARK: - view's life cycle
@@ -65,6 +68,11 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupView()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.completion?()
     }
     
     private func setupNavigationBar() {
@@ -141,11 +149,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         // Show camera
         var cameraOption = TextItemOption(title: AmityLocalizedStringSet.General.camera.localizedString)
         cameraOption.completion = { [weak self] in
-            #warning("Redundancy: camera picker should be replaced with a singleton class")
-            let cameraPicker = UIImagePickerController()
-            cameraPicker.sourceType = .camera
-            cameraPicker.delegate = self
-            self?.present(cameraPicker, animated: true, completion: nil)
+            self?.presentMediaPickerCamera()
         }
         
         // Show image picker
@@ -197,6 +201,59 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         saveBarButtonItem?.isEnabled = isValueChanged
         displayNameCounterLabel?.text = "\(displayNameTextField.text?.count ?? 0)/\(displayNameTextField.maxLength)"
         aboutCounterLabel?.text = "\(aboutTextView.text.utf16.count)/\(aboutTextView.maxCharacters)"
+    }
+    
+    private func showCameraPicker() {
+        let cameraPicker = UIImagePickerController()
+        cameraPicker.sourceType = .camera
+        // Currently users can only select one media type when create a post.
+        // After users choose the media, we will not `presentAskMediaTypeDialogue` after that.
+        // We automatically choose media type based on last media pick.
+        cameraPicker.delegate = self
+        self.present(cameraPicker, animated: true, completion: nil)
+    }
+    
+    private func presentMediaPickerCamera() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            self.showCameraPicker()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
+                if granted {
+                    self?.showCameraPicker()
+                } else {
+                    DispatchQueue.main.async {
+                        self?.presentAlertController()
+                    }
+                }
+            })
+        case .denied, .restricted:
+            DispatchQueue.main.async {
+                self.presentAlertController()
+            }
+        }
+    }
+
+    private func presentAlertController() {
+        let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
+
+        let settingsAction = UIAlertAction(title: "OK", style: .default) { (_) -> Void in
+
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Settings opened: \(success)") // Prints true
+                })
+            }
+        }
+        alertController.addAction(settingsAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
     }
 
 }

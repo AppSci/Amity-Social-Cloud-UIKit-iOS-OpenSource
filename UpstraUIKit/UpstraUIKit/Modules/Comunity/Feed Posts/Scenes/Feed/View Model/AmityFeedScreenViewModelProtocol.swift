@@ -34,7 +34,7 @@ protocol AmityFeedScreenViewModelDelegate: AnyObject {
 protocol AmityFeedScreenViewModelDataSource {
     // MARK: PostComponents
     var isPrivate: Bool { get }
-    func postComponents(in section: Int) -> AmityPostComponent
+    func postComponents(in section: Int) -> AmityPostComponent?
     func numberOfPostComponents() -> Int
     func getFeedType() -> AmityPostFeedType
 }
@@ -54,7 +54,7 @@ protocol AmityFeedScreenViewModelAction {
     func report(withPostId postId: String)
     func unreport(withPostId postId: String)
     func getReportStatus(withPostId postId: String)
-    func getCurrentCommunity() -> AmityCommunity?
+    func getCurrentCommunity(completion: @escaping (AmityCommunity?)->()) 
     
     // MARK: Comment
     func delete(withComment comment: AmityCommentModel)

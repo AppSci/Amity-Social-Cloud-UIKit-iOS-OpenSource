@@ -14,7 +14,7 @@ protocol AmityCommunityRepositoryManagerProtocol {
     func join(_ completion: ((AmityError?) -> Void)?)
     
     func getPendingPostsCount(by feedType: AmityFeedType, _ completion: ((Result<Int, AmityError>) -> Void)?)
-    func getCurrentCommunity() -> AmityCommunity?
+    func getCurrentCommunity(completion: @escaping (AmityCommunity?)->())
 }
 
 final class AmityCommunityRepositoryManager: AmityCommunityRepositoryManagerProtocol {
@@ -25,6 +25,7 @@ final class AmityCommunityRepositoryManager: AmityCommunityRepositoryManagerProt
     private var communityObject: AmityObject<AmityCommunity>?
     private let feedRepository: AmityFeedRepository
     private var feedToken: AmityNotificationToken?
+    private var communityToken: AmityNotificationToken?
     
     init(communityId: String) {
         self.communityId = communityId
@@ -32,8 +33,12 @@ final class AmityCommunityRepositoryManager: AmityCommunityRepositoryManagerProt
         feedRepository = AmityFeedRepository(client: AmityUIKitManagerInternal.shared.client)
     }
     
-    func getCurrentCommunity() -> AmityCommunity? {
-        return communityRepository.getCommunity(withId: self.communityId).object
+    func getCurrentCommunity(completion: @escaping (AmityCommunity?)->()) {
+        let communityObject = communityRepository.getCommunity(withId: self.communityId)
+        communityToken = communityObject.observe { [weak self] community, error in
+            guard let strongSelf = self else { return }
+            completion(community.object)
+        }
     }
  
     func retrieveCommunity(_ completion: ((Result<AmityCommunityModel, AmityError>) -> Void)?) {

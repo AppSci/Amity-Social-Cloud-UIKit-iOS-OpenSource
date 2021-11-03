@@ -57,12 +57,37 @@ import Photos
     private func authorize(_ authorized: @escaping () -> Void) {
         PHPhotoLibrary.requestAuthorization { (status) in
             switch status {
-            case .authorized:
+            case .authorized, .limited:
                 DispatchQueue.main.async(execute: authorized)
+            case .denied, .restricted:
+                DispatchQueue.main.async {
+                    self.presentAlertController()
+                }
             default:
                 break
             }
         }
+    }
+    
+    private func presentAlertController() {
+        let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.imagesPermissionDeniedText, message: "", preferredStyle: .alert)
+
+        let settingsAction = UIAlertAction(title: "OK", style: .default) { (_) -> Void in
+
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Settings opened: \(success)") // Prints true
+                })
+            }
+        }
+        alertController.addAction(settingsAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

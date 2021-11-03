@@ -63,6 +63,11 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
         screenViewModel.action.fetchFollowInfo()
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+    }
+    
     // MARK: - Refreshable
     
     func handleRefreshing() {
@@ -184,7 +189,7 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     }
     
     private func updateView(with user: AmityUserModel) {
-        avatarView.setImage(withImageURL: user.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        avatarView.setImage(withImageURL: user.avatarURL, size: .full, placeholder: AmityIconSet.defaultAvatar)
         displayNameLabel.text = user.displayName
         descriptionLabel.text = user.about
         editProfileButton.isHidden = !user.isCurrentUser
@@ -284,6 +289,11 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     @IBAction func followRequestsAction(_ sender: UIButton) {
         let requestsViewController = AmityFollowRequestsViewController.make(withUserId: screenViewModel.dataSource.userId)
         navigationController?.pushViewController(requestsViewController, animated: true)
+    }
+    
+    override func reloadView() {
+        screenViewModel.action.fetchUserData()
+        screenViewModel.action.fetchFollowInfo()
     }
 }
 

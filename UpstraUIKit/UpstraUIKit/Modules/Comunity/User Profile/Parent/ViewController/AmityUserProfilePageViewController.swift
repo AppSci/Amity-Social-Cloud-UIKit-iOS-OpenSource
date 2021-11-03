@@ -22,9 +22,8 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
     private var settings: AmityUserProfilePageSettings!
     private var header: AmityUserProfileHeaderViewController!
     private var bottom: AmityUserProfileBottomViewController!
-    private let postButton: AmityFloatingButton = AmityFloatingButton()
+//    private let postButton: AmityFloatingButton = AmityFloatingButton()
     private var screenViewModel: AmityUserProfileScreenViewModelType!
-    
     // MARK: - Initializer
     
     public static func make(withUserId userId: String, settings: AmityUserProfilePageSettings = AmityUserProfilePageSettings()) -> AmityUserProfilePageViewController {
@@ -35,6 +34,7 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
         vc.header = AmityUserProfileHeaderViewController.make(withUserId: userId, settings: settings)
         vc.bottom = AmityUserProfileBottomViewController.make(withUserId: userId)
         vc.screenViewModel = viewModel
+        
         return vc
     }
     
@@ -42,7 +42,7 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+//        setupView()
         setupNavigationItem()
         setupViewModel()
     }
@@ -59,15 +59,16 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
     
     // MARK: - Private functions
     
-    private func setupView() {
-        postButton.image = AmityIconSet.iconCreatePost
-        postButton.add(to: view, position: .bottomRight)
-        postButton.actionHandler = { [weak self] _ in
-            guard let strongSelf = self else { return }
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .myFeed)
-        }
-        postButton.isHidden = !screenViewModel.isCurrentUser
-    }
+//    private func setupView() {
+//        guard self.isPostButtonShowed else { return }
+//        postButton.image = AmityIconSet.iconCreatePost
+//        postButton.add(to: view, position: .bottomRight)
+//        postButton.actionHandler = { [weak self] _ in
+//            guard let strongSelf = self else { return }
+//            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .myFeed)
+//        }
+//        postButton.isHidden = !screenViewModel.isCurrentUser
+//    }
     
     private func setupNavigationItem() {
         let item = UIBarButtonItem(image: AmityIconSet.iconOption, style: .plain, target: self, action: #selector(optionTap))

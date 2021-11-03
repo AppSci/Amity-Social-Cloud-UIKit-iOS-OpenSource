@@ -46,11 +46,13 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     var pullRefreshHandler: (() -> Void)?
     var onViewDidLoad: (() -> Void)?
     
+    
+    private var isPostButtonTapped = false
     // To determine if the vc is visible or not
-    private var isVisible: Bool = true
+//    private var isVisible: Bool = true
     
     // It will be marked as dirty when data source changed on view disappear.
-    private var isDataSourceDirty: Bool = false
+//    private var isDataSourceDirty: Bool = false
     
     private let debouncer = Debouncer(delay: 0.3)
     
@@ -63,24 +65,24 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         super.viewDidLoad()
         setupView()
         setupProtocolHandler()
-        setupScreenViewModel()
         onViewDidLoad?()
+        setupScreenViewModel()
 //        setupPostButton()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isVisible = true
+//        isVisible = true
         
-        if isDataSourceDirty {
-            isDataSourceDirty = false
+//        if isDataSourceDirty {
+//            isDataSourceDirty = false
             reloadTableViewAndClearHeightCaches()
-        }
+//        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        isVisible = false
+//        isVisible = false
     }
     
     public static func make(feedType: AmityPostFeedType) -> AmityFeedViewController {
@@ -145,12 +147,14 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         createPostButton.image = AmityIconSet.iconCreatePost
         createPostButton.add(to: view, position: .bottomRight)
         createPostButton.actionHandler = { [weak self] button in
-            guard
-                let strongSelf = self,
-                let community = strongSelf.screenViewModel.getCurrentCommunity()
-            else { return }
-//            AmityEventHandler.shared.postTargetDidSelect(from: strongSelf, postTarget: .myFeed, postContentType: .post)
-            AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .community(object: community))
+            self?.isPostButtonTapped = true
+            self?.screenViewModel.getCurrentCommunity(completion: { [weak self] community in
+                guard let strongSelf = self, let community = community, strongSelf.isPostButtonTapped else {
+                    return
+                }
+                self?.isPostButtonTapped = false
+                AmityEventHandler.shared.createPostBeingPrepared(from: strongSelf, postTarget: .community(object: community))
+            })
         }
     }
     
@@ -239,10 +243,14 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
     
     func tableView(_ tableView: AmityPostTableView, didSelectRowAt indexPath: IndexPath) {
         // skip header section handling
-        guard indexPath.section > 0 else { return }
-        
+        guard
+            indexPath.section > 0
+        else {
+            return
+        }
         let singleComponent = screenViewModel.dataSource.postComponents(in: indexPath.section)
-        let postId = singleComponent._composable.post.postId
+        
+        let postId = singleComponent?._composable.post.postId ?? ""
         AmityEventHandler.shared.postDidtap(from: self, postId: postId)
     }
     
@@ -283,7 +291,7 @@ extension AmityFeedViewController: AmityPostTableViewDataSource {
         if section == 0 {
             return headerView == nil ? 0 : 1
         } else {
-            let singleComponent = screenViewModel.dataSource.postComponents(in: section)
+            guard let singleComponent = screenViewModel.dataSource.postComponents(in: section) else { return 0 }
             if let component = tableView.feedDataSource?.getUIComponentForPost(post: singleComponent._composable.post, at: section) {
                 return component.getComponentCount(for: section)
             }
@@ -298,7 +306,7 @@ extension AmityFeedViewController: AmityPostTableViewDataSource {
             return cell
         }
         
-        let singleComponent = screenViewModel.dataSource.postComponents(in: indexPath.section)
+        guard let singleComponent = screenViewModel.dataSource.postComponents(in: indexPath.section) else { return UITableViewCell() }
         
         if let clientComponent = tableView.feedDataSource?.getUIComponentForPost(post: singleComponent._composable.post, at: indexPath.section) {
             return clientComponent.getComponentCell(tableView, at: indexPath)
@@ -313,10 +321,10 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     func screenViewModelDidUpdateDataSuccess(_ viewModel: AmityFeedScreenViewModelType) {
         // When view is invisible but data source request updates, mark it as a dirty data source.
         // Then after view already appear, reload table view for refreshing data.
-        guard isVisible else {
-            isDataSourceDirty = true
-            return
-        }
+//        guard isVisible else {
+////            isDataSourceDirty = true
+//            return
+//        }
         debouncer.run { [weak self] in
             self?.reloadTableViewAndClearHeightCaches()
         }

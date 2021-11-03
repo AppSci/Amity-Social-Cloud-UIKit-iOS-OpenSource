@@ -181,6 +181,8 @@ open class AmityViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
     }
     
+    open func reloadView() { }
+    
 }
 
 extension AmityViewController: UIGestureRecognizerDelegate {

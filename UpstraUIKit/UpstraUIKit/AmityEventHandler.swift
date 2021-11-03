@@ -116,7 +116,9 @@ open class AmityEventHandler {
     ///
     /// A default behavior is navigating to `AmityEditUserProfileViewController`
     open func editUserDidTap(from source: AmityViewController, userId: String) {
-        let editProfileViewController = AmityUserProfileEditorViewController.make()
+        let editProfileViewController = AmityUserProfileEditorViewController.make() { [weak source] in
+            source?.reloadView()
+        }
         source.navigationController?.pushViewController(editProfileViewController, animated: true)
     }
     

@@ -51,16 +51,17 @@ final class AmityFeedScreenViewModel: AmityFeedScreenViewModelType {
 // MARK: Post component
 extension AmityFeedScreenViewModel {
     
-    func getCurrentCommunity() -> AmityCommunity? {
-        self.manager?.getCurrentCommunity()
+    func getCurrentCommunity(completion: @escaping (AmityCommunity?)->()) {
+        self.manager?.getCurrentCommunity(completion: completion)
     }
     
     func getFeedType() -> AmityPostFeedType {
         return feedType
     }
     
-    func postComponents(in section: Int) -> AmityPostComponent {
-        return postComponents[section - 1]
+    func postComponents(in section: Int) -> AmityPostComponent? {
+        
+        return postComponents[safe: section - 1]
     }
     
     // Plus 1 is for the header view section
@@ -335,4 +336,11 @@ extension AmityFeedScreenViewModel {
         }
     }
     
+}
+
+extension Collection {
+    /// Returns the element at the specified index if it is within bounds, otherwise nil.
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
+    }
 }

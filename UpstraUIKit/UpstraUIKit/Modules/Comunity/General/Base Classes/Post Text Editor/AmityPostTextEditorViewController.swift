@@ -525,10 +525,9 @@ public class AmityPostTextEditorViewController: AmityViewController {
         present(alertController, animated: true, completion: nil)
     }
     
-    private func presentMediaPickerCamera() {
+    private func showCameraPicker() {
         let cameraPicker = UIImagePickerController()
         cameraPicker.sourceType = .camera
-        
         // Currently users can only select one media type when create a post.
         // After users choose the media, we will not `presentAskMediaTypeDialogue` after that.
         // We automatically choose media type based on last media pick.
@@ -544,7 +543,50 @@ public class AmityPostTextEditorViewController: AmityViewController {
             break
         }
         cameraPicker.delegate = self
-        present(cameraPicker, animated: true, completion: nil)
+        self.present(cameraPicker, animated: true, completion: nil)
+    }
+    
+    private func presentMediaPickerCamera() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            self.showCameraPicker()
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
+                if granted {
+                    self?.showCameraPicker()
+                } else {
+                    DispatchQueue.main.async {
+                        self?.presentAlertController()
+                    }
+                }
+            })
+        case .denied, .restricted:
+            DispatchQueue.main.async {
+                self.presentAlertController()
+            }
+        }
+    }
+
+    private func presentAlertController() {
+        let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
+
+        let settingsAction = UIAlertAction(title: "OK", style: .default) { (_) -> Void in
+
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
+            }
+
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                    print("Settings opened: \(success)") // Prints true
+                })
+            }
+        }
+        alertController.addAction(settingsAction)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        alertController.addAction(cancelAction)
+
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func presentMediaPickerAlbum(type: AmityMediaType) {
@@ -875,28 +917,27 @@ extension AmityPostTextEditorViewController: UIImagePickerControllerDelegate, UI
 extension AmityPostTextEditorViewController {
     
     public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-            guard isValueChanged else {
-                return super.gestureRecognizerShouldBegin(gestureRecognizer)
-            }
-            
-            if let view = gestureRecognizer.view,
-               let directions = (gestureRecognizer as? UIPanGestureRecognizer)?.direction(in: view),
-               directions.contains(.right) {
-                let alertController = UIAlertController(title: AmityLocalizedStringSet.postCreationDiscardPostTitle.localizedString, message: AmityLocalizedStringSet.postCreationDiscardPostMessage.localizedString, preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.cancel.localizedString, style: .cancel, handler: nil)
-                let discardAction = UIAlertAction(title: AmityLocalizedStringSet.General.discard.localizedString, style: .destructive) { [weak self] _ in
-                    self?.generalDismiss()
-                }
-                alertController.addAction(cancelAction)
-                alertController.addAction(discardAction)
-                present(alertController, animated: true, completion: nil)
-
-                // prevents swiping back and present confirmation message
-                return false
-            }
-            
-            // falls back to normal behaviour, swipe back to previous page
+        guard isValueChanged else {
             return super.gestureRecognizerShouldBegin(gestureRecognizer)
         }
         
+        if let view = gestureRecognizer.view,
+           let directions = (gestureRecognizer as? UIPanGestureRecognizer)?.direction(in: view),
+           directions.contains(.right) {
+            let alertController = UIAlertController(title: AmityLocalizedStringSet.postCreationDiscardPostTitle.localizedString, message: AmityLocalizedStringSet.postCreationDiscardPostMessage.localizedString, preferredStyle: .alert)
+            let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.cancel.localizedString, style: .cancel, handler: nil)
+            let discardAction = UIAlertAction(title: AmityLocalizedStringSet.General.discard.localizedString, style: .destructive) { [weak self] _ in
+                self?.generalDismiss()
+            }
+            alertController.addAction(cancelAction)
+            alertController.addAction(discardAction)
+            present(alertController, animated: true, completion: nil)
+
+            // prevents swiping back and present confirmation message
+            return false
+        }
+        
+        // falls back to normal behaviour, swipe back to previous page
+        return super.gestureRecognizerShouldBegin(gestureRecognizer)
     }
+}

@@ -22,15 +22,15 @@ public final class AmityUIKitManager {
     ///   - apiKey: API key provided by Amity.
     ///   - httpUrl: Custom url to be used as base url.
     ///   - socketUrl: Custom url to be used as base url.
-    public static func setup(apiKey: String, httpUrl: String? = nil, socketUrl: String? = nil) {
+    public static func setup(apiKey: String, httpUrl: String? = nil, socketUrl: String? = nil, cameraPermissionDeniedText: String, imagesPermissionDeniedText: String) {
         if let httpUrl = httpUrl, let socketUrl = socketUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, socketUrl: socketUrl)
+            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText)
         } else if let httpUrl = httpUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl)
+            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText)
         } else if let socketUrl = socketUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, socketUrl: socketUrl)
+            AmityUIKitManagerInternal.shared.setup(apiKey, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText)
         } else {
-            AmityUIKitManagerInternal.shared.setup(apiKey)
+            AmityUIKitManagerInternal.shared.setup(apiKey, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText)
         }
     }
     
@@ -100,6 +100,9 @@ final class AmityUIKitManagerInternal: NSObject {
     private var httpUrl: String = ""
     private var socketUrl: String = ""
     
+    private(set) var cameraPermissionDeniedText = ""
+    private(set) var imagesPermissionDeniedText = ""
+    
     private(set) var fileService = AmityFileService()
     private(set) var messageMediaService = AmityMessageMediaService()
     
@@ -120,10 +123,12 @@ final class AmityUIKitManagerInternal: NSObject {
     
     // MARK: - Setup functions
 
-    func setup(_ apiKey: String, httpUrl: String = "", socketUrl: String = "") {
+    func setup(_ apiKey: String, httpUrl: String = "", socketUrl: String = "", cameraPermissionDeniedText: String, imagesPermissionDeniedText: String) {
         self.apiKey = apiKey
         self.httpUrl = httpUrl
         self.socketUrl = socketUrl
+        self.cameraPermissionDeniedText = cameraPermissionDeniedText
+        self.imagesPermissionDeniedText = imagesPermissionDeniedText
         
         // Passing empty string over `httpUrl` and `socketUrl` is acceptable.
         // `AmityClient` will be using the default endpoint instead.
