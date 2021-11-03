@@ -46,17 +46,15 @@ final class AmityPostFooterProtocolHandler: AmityPostFooterDelegate {
         
         var items = [TextItemOption]()
         
-        if AmityPostSharePermission.canShareToMyTimeline(post: post) {
-            items.append(shareToTimeline)
-        }
+//        if AmityPostSharePermission.canShareToMyTimeline(post: post) {
+//            items.append(shareToTimeline)
+//        }
         
-        if AmityPostSharePermission.canSharePostToGroup(post: post) {
-            items.append(shareToGroup)
-        }
+//        if AmityPostSharePermission.canSharePostToGroup(post: post) {
+//            items.append(shareToGroup)
+//        }
         
-        if AmityPostSharePermission.canSharePostToExternal(post: post) {
-            items.append(moreOptions)
-        }
+        items.append(moreOptions)
         
         if items.isEmpty { return }
         
