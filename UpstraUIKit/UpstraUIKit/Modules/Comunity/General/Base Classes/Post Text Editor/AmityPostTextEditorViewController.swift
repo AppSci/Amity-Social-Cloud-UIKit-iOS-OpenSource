@@ -754,12 +754,16 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorMenuViewDelegate
         
         switch action {
         case .camera:
+            AmityEventHandler.shared.trackCommunityAddAttachment(type: "camera")
             presentMediaPickerCamera()
         case .album:
+            AmityEventHandler.shared.trackCommunityAddAttachment(type: "photo")
             presentMediaPickerAlbum(type: .image)
         case .video:
+            AmityEventHandler.shared.trackCommunityAddAttachment(type: "video")
             presentMediaPickerAlbum(type: .video)
         case .file:
+            AmityEventHandler.shared.trackCommunityAddAttachment(type: "file")
             filePicker.present(from: view, files: fileView.files)
         case .expand:
             presentBottomSheetMenus()

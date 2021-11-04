@@ -44,7 +44,8 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
     
     public static func make(
         withCommunityId communityId: String,
-        settings: AmityCommunityProfilePageSettings = .init()
+        settings: AmityCommunityProfilePageSettings = .init(),
+        sourceType: String
     ) -> AmityCommunityProfilePageViewController {
         
         let communityRepositoryManager = AmityCommunityRepositoryManager(communityId: communityId)
@@ -54,7 +55,7 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
         )
         let vc = AmityCommunityProfilePageViewController()
         vc.screenViewModel = viewModel
-        vc.header = AmityCommunityProfileHeaderViewController.make(rootViewController: vc, viewModel: viewModel, settings: settings)
+        vc.header = AmityCommunityProfileHeaderViewController.make(rootViewController: vc, viewModel: viewModel, settings: settings, sourceType: sourceType)
         vc.bottom = AmityCommunityFeedViewController.make(communityId: communityId)
         vc.settings = settings
         return vc
@@ -203,8 +204,8 @@ extension AmityCommunityProfilePageViewController: AmityRefreshable {
 
 extension AmityCommunityProfilePageViewController: AmityCommunityProfileEditorViewControllerDelegate {
 
-    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String) {
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String, category: String) {
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "profile")
     }
 
     public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFailWithNoPermission: Bool) {

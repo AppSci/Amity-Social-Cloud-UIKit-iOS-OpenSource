@@ -127,6 +127,7 @@ extension AmityCommunitySettingsViewController: AmityCommunitySettingsScreenView
         
     func screenViewModelDidLeaveCommunity() {
         AmityHUD.hide()
+        AmityEventHandler.shared.trackCommunityLeaveGroup(id: screenViewModel.communityId, category: screenViewModel.community?.category ?? "")
         AmityEventHandler.shared.leaveCommunityDidTap(from: self, communityId: screenViewModel.communityId)
     }
     
@@ -170,8 +171,8 @@ extension AmityCommunitySettingsViewController: AmityCommunitySettingsScreenView
 
 extension AmityCommunitySettingsViewController: AmityCommunityProfileEditorViewControllerDelegate {
 
-    func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String) {
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+    func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String, category: String) {
+//        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
     }
 
     func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFailWithNoPermission: Bool) {

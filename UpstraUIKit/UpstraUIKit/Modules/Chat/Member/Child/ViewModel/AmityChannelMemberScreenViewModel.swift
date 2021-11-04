@@ -160,6 +160,7 @@ extension AmityChannelMemberScreenViewModel {
 extension AmityChannelMemberScreenViewModel {
     func reportUser(at indexPath: IndexPath) {
         guard let user = member(at: indexPath).user else { return }
+        AmityEventHandler.shared.trackCommunityReport(id: user.userId, target: "user")
         flagger = AmityUserFlagger(client: AmityUIKitManagerInternal.shared.client, userId: user.userId)
         flagger?.flag { (success, error) in
             if let error = error {

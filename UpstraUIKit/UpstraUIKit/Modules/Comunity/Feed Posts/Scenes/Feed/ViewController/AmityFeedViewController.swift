@@ -438,9 +438,12 @@ extension AmityFeedViewController: AmityPostFooterProtocolHandlerDelegate {
             if post.isLiked {
                 screenViewModel.action.unlike(id: post.postId, referenceType: .post)
             } else {
+                post.reactionsCount
+                AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
                 screenViewModel.action.like(id: post.postId, referenceType: .post)
             }
         case .tapComment:
+            AmityEventHandler.shared.trackCommunityCommentPost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
             AmityEventHandler.shared.postDidtap(from: self, postId: post.postId)
         }
     }
@@ -453,14 +456,20 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
         guard let post = cell.post else { return }
         switch action {
         case .tapAvatar(let comment):
-            AmityEventHandler.shared.userDidTap(from: self, userId: comment.userId)
+            AmityEventHandler.shared.userDidTap(from: self, userId: comment.userId, sourseType: "feed")
         case .tapLike(let comment):
             if let comment = post.latestComments.first(where: { $0.id == comment.id}) {
-                comment.isLiked ? screenViewModel.action.unlike(id: comment.id, referenceType: .comment) : screenViewModel.action.like(id: comment.id, referenceType: .comment)
+                if comment.isLiked {
+                    screenViewModel.action.unlike(id: comment.id, referenceType: .comment)
+                } else {
+                    AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
+                    screenViewModel.action.like(id: comment.id, referenceType: .comment)
+                }
             }
         case .tapOption(let comment):
             if let comment = post.latestComments.first(where: { $0.id == comment.id }) {
                 handleCommentOption(comment: comment)
+                AmityEventHandler.shared.trackCommunityCommentPost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
             }
         case .tapReply:
             AmityEventHandler.shared.postDidtap(from: self, postId: post.postId)

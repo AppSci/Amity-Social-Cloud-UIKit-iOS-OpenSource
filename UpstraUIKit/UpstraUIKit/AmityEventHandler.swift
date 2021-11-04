@@ -40,9 +40,43 @@ open class AmityEventHandler {
     /// It will be triggered when community avatar or community label is tapped
     ///
     /// A default behavior is navigating to `AmityCommunityProfilePageViewController`
-    open func communityDidTap(from source: AmityViewController, communityId: String) {
-        let viewController = AmityCommunityProfilePageViewController.make(withCommunityId: communityId)
+    open func communityDidTap(from source: AmityViewController, communityId: String, tab: String, category: String, sourceType: String) {
+        let viewController = AmityCommunityProfilePageViewController.make(withCommunityId: communityId, sourceType: sourceType)
         source.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    open func trackCommunityAddAttachment(type: String) { //✅
+        
+    }
+    open func trackCommunityWriteNewPost() { //✅
+        
+    }
+    open func trackCommunityLikePost(id: String, author: String, community: String, likes: Int, comments: Int) { //✅
+        
+    }
+    open func trackCommunityCommentPost(id: String, author: String, community: String, likes: Int, comments: Int) { //✅
+        
+    }
+    open func trackCommunityViewMembers(id: String, type: String) { //✅
+        
+    }
+    open func trackCommunityFollowUser(id: String, source: String) { //✅
+        
+    }
+    open func trackCommunityJoinGroup(id: String, category: String, source: String) { //✅
+        
+    }
+    open func trackCommunityUnfollowUser(id: String) { //✅
+        
+    }
+    open func trackCommunityLeaveGroup(id: String, category: String) { //✅
+        
+    }
+    open func trackCommunitySaveProfile(name: String, bio: String, photo: String) {
+        
+    }
+    open func trackCommunityReport(id: String, target: String) { //✅
+        
     }
     
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
@@ -106,8 +140,8 @@ open class AmityEventHandler {
     /// It will be triggered when user avatar or user label is tapped
     ///
     /// A default behavior is navigating to `AmityUserProfilePageViewController`
-    open func userDidTap(from source: AmityViewController, userId: String) {
-        let viewController = AmityUserProfilePageViewController.make(withUserId: userId)
+    open func userDidTap(from source: AmityViewController, userId: String, sourseType: String) {
+        let viewController = AmityUserProfilePageViewController.make(withUserId: userId, sourseType: sourseType)
         source.navigationController?.pushViewController(viewController, animated: true)
     }
     

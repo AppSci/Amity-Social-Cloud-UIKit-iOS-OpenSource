@@ -17,7 +17,7 @@ final public class AmityMyCommunityPreviewViewController: UIViewController {
     
     public enum ActionType {
         case seeAll
-        case communityItem(communityId: String)
+        case communityItem(communityId: String, category: String)
     }
 
     // MARK: -  IBOutlet Properties
@@ -111,8 +111,8 @@ extension AmityMyCommunityPreviewViewController: UICollectionViewDelegate {
         if screenViewModel.action.shouldShowSeeAll(indexPath: indexPath) {
             delegate?.viewController(self, didPerformAction: .seeAll)
         } else {
-            let communityId = screenViewModel.dataSource.item(at: indexPath).communityId
-            delegate?.viewController(self, didPerformAction: .communityItem(communityId: communityId))
+            let community = screenViewModel.dataSource.item(at: indexPath)
+            delegate?.viewController(self, didPerformAction: .communityItem(communityId: community.communityId, category: community.category))
         }
     }
 }

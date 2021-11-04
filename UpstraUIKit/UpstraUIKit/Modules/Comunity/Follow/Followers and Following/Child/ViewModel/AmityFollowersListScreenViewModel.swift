@@ -75,6 +75,7 @@ extension AmityFollowersListScreenViewModel {
     
     func reportUser(at indexPath: IndexPath) {
         guard let user = getUser(at: indexPath) else { return }
+        AmityEventHandler.shared.trackCommunityReport(id: user.userId, target: "user")
         flagger = AmityUserFlagger(client: AmityUIKitManagerInternal.shared.client, userId: user.userId)
         flagger?.flag { [weak self] (success, error) in
             guard let strongSelf = self else { return }

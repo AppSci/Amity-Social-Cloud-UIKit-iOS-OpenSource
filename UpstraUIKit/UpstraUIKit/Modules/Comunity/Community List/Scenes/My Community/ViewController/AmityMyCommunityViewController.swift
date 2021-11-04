@@ -123,8 +123,10 @@ extension AmityMyCommunityViewController: UITableViewDelegate {
 //        searchController.isActive = false
 //        searchController.searchBar.setShowsCancelButton(false, animated: true)
 //        searchController.searchBar.text = screenViewModel.dataSource.searchText
-        guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId else { return }
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+        guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId,
+                let category = screenViewModel.dataSource.item(at: indexPath)?.category else { return }
+        
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "feed")
     }
     
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -156,8 +158,10 @@ extension AmityMyCommunityViewController: AmityMyCommunityTableViewCellDelegate 
 //        searchController.isActive = false
 //        searchController.searchBar.setShowsCancelButton(false, animated: true)
 //        searchController.searchBar.text = screenViewModel.dataSource.searchText
-        guard let community = screenViewModel.dataSource.item(at: indexPath) else { return }
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: community.communityId)
+        guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId,
+                let category = screenViewModel.dataSource.item(at: indexPath)?.category else { return }
+        
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "feed")
     }
     
 }
@@ -220,8 +224,8 @@ extension AmityMyCommunityViewController: AmityMyCommunityScreenViewModelDelegat
 
 extension AmityMyCommunityViewController: AmityCommunityProfileEditorViewControllerDelegate {
     
-    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String) {
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String,  category: String) {
+//        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
     }
     
 }

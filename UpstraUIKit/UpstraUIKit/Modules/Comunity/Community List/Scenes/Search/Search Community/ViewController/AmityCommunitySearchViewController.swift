@@ -62,8 +62,10 @@ final class AmityCommunitySearchViewController: AmityViewController, IndicatorIn
 
 extension AmityCommunitySearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId else { return }
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+        guard let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId,
+                let category = screenViewModel.dataSource.item(at: indexPath)?.category else { return }
+        
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "search")
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -89,8 +91,11 @@ extension AmityCommunitySearchViewController: UITableViewDataSource {
 
 extension AmityCommunitySearchViewController: AmitySearchCommunityTableViewCellDelegate {
     func cellDidTapOnAvatar(_ cell: AmitySearchCommunityTableViewCell) {
-        guard let indexPath = tableView.indexPath(for: cell), let community = screenViewModel.dataSource.item(at: indexPath) else { return }
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: community.communityId)
+        guard let indexPath = tableView.indexPath(for: cell),
+              let communityId = screenViewModel.dataSource.item(at: indexPath)?.communityId,
+              let category = screenViewModel.dataSource.item(at: indexPath)?.category else { return }
+        
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "search")
     }
 }
 

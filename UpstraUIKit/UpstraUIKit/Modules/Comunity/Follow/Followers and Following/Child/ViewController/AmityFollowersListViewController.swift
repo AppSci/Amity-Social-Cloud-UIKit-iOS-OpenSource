@@ -164,7 +164,7 @@ extension AmityFollowersListViewController: AmityFollowerTableViewCellDelegate {
         switch action {
         case .tapAvatar, .tapDisplayName:
             guard let user = screenViewModel.dataSource.item(at: indexPath) else { return }
-            AmityEventHandler.shared.userDidTap(from: self, userId: user.userId)
+            AmityEventHandler.shared.userDidTap(from: self, userId: user.userId, sourseType: "follows")
         case .tapOption:
             handleOptionTap(for: indexPath)
         }

@@ -50,7 +50,7 @@ public class AmityCategoryCommunityListViewController: AmityViewController {
 
     private func communityDidTap(at indexPath: IndexPath) {
         guard let community = screenViewModel.dataSource.item(at: indexPath) else { return }
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: community.communityId)
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: community.communityId, tab: "timeline", category: community.category, sourceType: "categories")
     }
 }
 

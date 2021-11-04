@@ -14,7 +14,7 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     // MARK: - Properties
     private var screenViewModel: AmityUserProfileHeaderScreenViewModelType!
     private var settings: AmityUserProfilePageSettings!
-    
+    private var sourseType: String?
     // MARK: - IBOutlet Properties
     @IBOutlet weak private var avatarView: AmityAvatarView!
     @IBOutlet weak private var displayNameLabel: UILabel!
@@ -32,11 +32,12 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     @IBOutlet weak private var followRequestDescriptionLabel: UILabel!
     
     // MARK: Initializer
-    static func make(withUserId userId: String, settings: AmityUserProfilePageSettings) -> AmityUserProfileHeaderViewController {
+    static func make(withUserId userId: String, sourseType: String, settings: AmityUserProfilePageSettings) -> AmityUserProfileHeaderViewController {
         let viewModel = AmityUserProfileHeaderScreenViewModel(userId: userId)
         let vc = AmityUserProfileHeaderViewController(nibName: AmityUserProfileHeaderViewController.identifier, bundle: AmityUIKitManager.bundle)
         vc.screenViewModel = viewModel
         vc.settings = settings
+        vc.sourseType = sourseType
         return vc
     }
     
@@ -300,10 +301,12 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
 // MARK:- Follow/Unfollow handlers
 private extension AmityUserProfileHeaderViewController {
     func follow() {
+        AmityEventHandler.shared.trackCommunityFollowUser(id: screenViewModel.dataSource.userId, source: self.sourseType ?? "")
         screenViewModel.action.follow()
     }
     
     func unfollow() {
+        AmityEventHandler.shared.trackCommunityUnfollowUser(id: screenViewModel.dataSource.userId)
         screenViewModel.action.unfollow()
     }
     

@@ -90,8 +90,8 @@ private extension AmityNewsfeedViewController {
 
 extension AmityNewsfeedViewController: AmityCommunityProfileEditorViewControllerDelegate {
     
-    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String) {
-        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+    public func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String, category: String) {
+        AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "feed")
     }
     
 }
@@ -102,8 +102,8 @@ extension AmityNewsfeedViewController: AmityMyCommunityPreviewViewControllerDele
         switch action {
         case .seeAll:
             AmityEventHandler.shared.seeAllCommunitiesDidTap(from: self)
-        case .communityItem(let communityId):
-            AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId)
+        case .communityItem(let communityId, let category):
+            AmityEventHandler.shared.communityDidTap(from: self, communityId: communityId, tab: "timeline", category: category, sourceType: "feed")
         }
     }
 

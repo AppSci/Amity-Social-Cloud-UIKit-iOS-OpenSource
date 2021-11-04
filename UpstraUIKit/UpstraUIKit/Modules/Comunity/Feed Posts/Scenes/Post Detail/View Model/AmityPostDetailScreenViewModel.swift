@@ -257,6 +257,7 @@ extension AmityPostDetailScreenViewModel {
     }
     
     func reportPost() {
+        AmityEventHandler.shared.trackCommunityReport(id: postId, target: "post")
         postController.report(withPostId: postId) { [weak self] (success, error) in
             self?.reportHandler(success: success, error: error)
         }
@@ -330,6 +331,7 @@ extension AmityPostDetailScreenViewModel {
     }
     
     func reportComment(withCommentId commentId: String) {
+        AmityEventHandler.shared.trackCommunityReport(id: commentId, target: "comment")
         commentController.report(withCommentId: commentId) { [weak self] (success, error) in
             self?.reportHandler(success: success, error: error)
         }

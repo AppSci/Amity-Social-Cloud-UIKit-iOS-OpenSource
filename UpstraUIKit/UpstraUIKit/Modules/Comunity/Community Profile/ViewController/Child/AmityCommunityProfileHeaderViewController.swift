@@ -36,6 +36,7 @@ final class AmityCommunityProfileHeaderViewController: UIViewController {
     private weak var rootViewController: AmityCommunityProfilePageViewController?
     private let gradient = CAGradientLayer()
     
+    private var sourceType: String?
     var isUpdateInProgress = false
     
     // MARK: - Callback
@@ -55,11 +56,12 @@ final class AmityCommunityProfileHeaderViewController: UIViewController {
         setupChatButton()
     }
     
-    static func make(rootViewController: AmityCommunityProfilePageViewController?, viewModel: AmityCommunityProfileScreenViewModelType, settings: AmityCommunityProfilePageSettings) -> AmityCommunityProfileHeaderViewController {
+    static func make(rootViewController: AmityCommunityProfilePageViewController?, viewModel: AmityCommunityProfileScreenViewModelType, settings: AmityCommunityProfilePageSettings, sourceType: String) -> AmityCommunityProfileHeaderViewController {
         let vc = AmityCommunityProfileHeaderViewController(nibName: AmityCommunityProfileHeaderViewController.identifier, bundle: AmityUIKitManager.bundle)
         vc.rootViewController = rootViewController
         vc.screenViewModel = viewModel
         vc.settings = settings
+        vc.sourceType = sourceType
         return vc
     }
     
@@ -261,6 +263,7 @@ private extension AmityCommunityProfileHeaderViewController {
     @objc func actionTap(_ sender: AmityButton) {
         switch screenViewModel.dataSource.memberStatusCommunity {
         case .guest:
+            AmityEventHandler.shared.trackCommunityJoinGroup(id: screenViewModel.communityId, category: screenViewModel.community?.category ?? "", source: self.sourceType ?? "")
             AmityHUD.show(.loading)
             screenViewModel.action.joinCommunity()
         case .member:

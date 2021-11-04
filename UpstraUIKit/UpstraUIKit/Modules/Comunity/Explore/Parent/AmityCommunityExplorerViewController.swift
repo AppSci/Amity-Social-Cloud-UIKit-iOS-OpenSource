@@ -72,7 +72,7 @@ private extension AmityCommunityExplorerViewController {
         
         recommendedVC.selectedCommunityHandler = { [weak self] community in
             guard let strongSelf = self else { return }
-            AmityEventHandler.shared.communityDidTap(from: strongSelf, communityId: community.communityId)
+            AmityEventHandler.shared.communityDidTap(from: strongSelf, communityId: community.communityId, tab: "timeline", category: community.categories.first?.name ?? "", sourceType: "recommendations")
         }
 
         recommendedVC.emptyHandler = { [weak self] isEmpty in
@@ -87,7 +87,7 @@ private extension AmityCommunityExplorerViewController {
         
         trendingVC.selectedCommunityHandler = { [weak self] community in
             guard let strongSelf = self else { return }
-            AmityEventHandler.shared.communityDidTap(from: strongSelf, communityId: community.communityId)
+            AmityEventHandler.shared.communityDidTap(from: strongSelf, communityId: community.communityId, tab: "timeline", category: community.categories.first?.name ?? "", sourceType: "trends")
         }
         
         trendingVC.emptyHandler = { [weak self] isEmpty in

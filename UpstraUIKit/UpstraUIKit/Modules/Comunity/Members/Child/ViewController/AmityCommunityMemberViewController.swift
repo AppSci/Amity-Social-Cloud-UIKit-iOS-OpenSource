@@ -9,7 +9,7 @@
 import UIKit
 import AmitySDK
 
-enum AmityCommunityMemberViewType {
+enum AmityCommunityMemberViewType: String {
     case moderator, member
 }
 
@@ -28,6 +28,12 @@ class AmityCommunityMemberViewController: AmityViewController {
     private var pageTitle: String!
     private var screenViewModel: AmityCommunityMemberScreenViewModelType!
     private var viewType: AmityCommunityMemberViewType = .member
+    private var communityId: String?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AmityEventHandler.shared.trackCommunityViewMembers(id: self.communityId ?? "", type: viewType.rawValue)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +58,7 @@ class AmityCommunityMemberViewController: AmityViewController {
         vc.pageTitle = pageTitle
         vc.screenViewModel = viewModel
         vc.viewType = viewType
+        vc.communityId = community.communityId
         return vc
     }
 
@@ -171,7 +178,7 @@ extension AmityCommunityMemberViewController: AmityCommunityMemberSettingsTableV
         switch action {
         case .tapAvatar, .tapDisplayName:
             let member = screenViewModel.dataSource.member(at: indexPath)
-            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId)
+            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId, sourseType: "member")
         case .tapOption:
             openOptionsBottomSheet(for: indexPath)
         }

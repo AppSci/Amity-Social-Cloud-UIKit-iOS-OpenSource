@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol AmityCommunityProfileEditorViewControllerDelegate: AnyObject {
-    func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String)
+    func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFinishCreateCommunity communityId: String, category: String)
     func viewController(_ viewController: AmityCommunityProfileEditorViewController, didFailWithNoPermission: Bool)
 }
 
@@ -94,6 +94,10 @@ public class AmityCommunityProfileEditorViewController: AmityViewController {
     private let selectMemberListViewModel: AmityMemberPickerScreenViewModelType = AmityMemberPickerScreenViewModel()
     private var rightItem: UIBarButtonItem?
     private let viewType: ViewType
+    
+    private var isPhotoChanged = false
+    private var isNameChanged = false
+    private var isBioChanged = false
     
     public weak var delegate: AmityCommunityProfileEditorViewControllerDelegate?
     
@@ -327,6 +331,7 @@ public class AmityCommunityProfileEditorViewController: AmityViewController {
 private extension AmityCommunityProfileEditorViewController {
     
     @objc func updateProfile() {
+        AmityEventHandler.shared.trackCommunitySaveProfile(name: String(self.isNameChanged), bio: String(self.isBioChanged), photo: String(self.isPhotoChanged))
         AmityHUD.show(.loading)
         screenViewModel.action.update()
     }
@@ -354,6 +359,7 @@ private extension AmityCommunityProfileEditorViewController {
                 asset.getImage { result in
                     switch result {
                     case .success(let avatar):
+                        self?.isPhotoChanged = true
                         self?.avatarView.image = avatar
                         self?.screenViewModel.action.setImage(for: avatar)
                     case .failure:
@@ -493,8 +499,10 @@ extension AmityCommunityProfileEditorViewController: AmityCreateCommunityScreenV
     func screenViewModel(_ viewModel: AmityCreateCommunityScreenViewModel, state: AmityCreateCommunityState) {
         switch state {
         case let .textFieldOnChanged(_, lenght):
+            self.isNameChanged = true
             communityNameCountLabel.text = "\(lenght)/\(Constant.nameMaxLength)"
         case let .textViewOnChanged(_, lenght, hasValue):
+            self.isBioChanged = true
             communityAboutCountLabel.text = "\(lenght)/\(Constant.aboutMaxlength)"
             communityAboutClearButton.alpha = hasValue ? 1 : 0
         case .selectedCommunityType(let type):
@@ -521,7 +529,7 @@ extension AmityCommunityProfileEditorViewController: AmityCreateCommunityScreenV
             AmityHUD.hide { [weak self] in
                 guard let strongSelf = self else { return }
                 strongSelf.dismiss(animated: true) {
-                    strongSelf.delegate?.viewController(strongSelf, didFinishCreateCommunity: communityId)
+                    strongSelf.delegate?.viewController(strongSelf, didFinishCreateCommunity: communityId, category: viewModel.community.value?.category ?? "")
                 }
             }
         case .onDismiss(let isChange):
