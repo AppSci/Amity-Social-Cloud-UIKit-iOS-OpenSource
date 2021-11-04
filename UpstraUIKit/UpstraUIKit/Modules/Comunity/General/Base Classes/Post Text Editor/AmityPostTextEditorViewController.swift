@@ -552,11 +552,9 @@ public class AmityPostTextEditorViewController: AmityViewController {
             self.showCameraPicker()
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
-                if granted {
-                    self?.showCameraPicker()
-                } else {
-                    DispatchQueue.main.async {
-                        self?.presentAlertController()
+                DispatchQueue.main.async {
+                    if granted {
+                        self?.showCameraPicker()
                     }
                 }
             })
