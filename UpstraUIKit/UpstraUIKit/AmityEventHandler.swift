@@ -78,6 +78,24 @@ open class AmityEventHandler {
     open func trackCommunityReport(id: String, target: String) { //✅
         
     }
+    open func trackCommunityViewCameraRequest() {
+        
+    }
+    open func trackCommunityViewPhotoRequest() {
+        
+    }
+    open func trackCommunityClickCameraRequest(access: String) {
+        
+    }
+    open func trackCommunityClickPhotoRequest(access: String) {
+        
+    }
+    open func trackCommunityViewCameraReminder() {
+        
+    }
+    open func trackCommunityViewPhotoReminder() {
+        
+    }
     
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
         let viewController = AmityMyCommunityViewController.make()

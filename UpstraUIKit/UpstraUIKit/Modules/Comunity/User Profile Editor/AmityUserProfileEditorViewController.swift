@@ -218,8 +218,10 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         case .authorized:
             self.showCameraPicker()
         case .notDetermined:
+            AmityEventHandler.shared.trackCommunityViewCameraRequest()
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] granted in
                 DispatchQueue.main.async {
+                    AmityEventHandler.shared.trackCommunityClickCameraRequest(access: granted ? "authorized" : "denied")
                     if granted {
                         self?.showCameraPicker()
                     }
@@ -227,6 +229,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
             })
         case .denied, .restricted:
             DispatchQueue.main.async {
+                AmityEventHandler.shared.trackCommunityViewCameraReminder()
                 self.presentAlertController()
             }
         }

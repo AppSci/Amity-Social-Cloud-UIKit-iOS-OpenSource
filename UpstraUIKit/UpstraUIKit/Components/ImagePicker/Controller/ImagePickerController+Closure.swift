@@ -38,6 +38,10 @@ import Photos
     ///   - finish: Finish callback
     ///   - completion: Presentation completion callback
     public func presentImagePicker(_ imagePicker: AmityImagePickerController, animated: Bool = true, select: ((_ asset: PHAsset) -> Void)?, deselect: ((_ asset: PHAsset) -> Void)?, cancel: (([PHAsset]) -> Void)?, finish: (([PHAsset]) -> Void)?, completion: (() -> Void)? = nil) {
+        
+        if AmityImagePickerController.currentAuthorization == .notDetermined {
+            AmityEventHandler.shared.trackCommunityViewPhotoRequest()
+        }
         authorize { [weak self] in
             // Set closures
             imagePicker.onSelection = select
@@ -55,18 +59,32 @@ import Photos
     }
 
     private func authorize(_ authorized: @escaping () -> Void) {
-        PHPhotoLibrary.requestAuthorization { (status) in
-            switch status {
-            case .authorized, .limited:
-                DispatchQueue.main.async(execute: authorized)
-            case .denied, .restricted:
-                DispatchQueue.main.async {
-                    self.presentAlertController()
+        switch PHPhotoLibrary.authorizationStatus() {
+        case .authorized, .limited:
+            DispatchQueue.main.async(execute: authorized)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { (status) in
+                switch status {
+                case .authorized, .limited:
+                    DispatchQueue.main.async {
+                        AmityEventHandler.shared.trackCommunityClickPhotoRequest(access: "authorized")
+                        authorized()
+                    }
+                case .denied, .restricted:
+                    DispatchQueue.main.async {
+                        AmityEventHandler.shared.trackCommunityClickPhotoRequest(access: "denied")
+                    }
+                default:
+                    break
                 }
-            default:
-                break
+            }
+        case .denied, .restricted:
+            DispatchQueue.main.async {
+                AmityEventHandler.shared.trackCommunityViewPhotoReminder()
+                self.presentAlertController()
             }
         }
+        
     }
     
     private func presentAlertController() {
