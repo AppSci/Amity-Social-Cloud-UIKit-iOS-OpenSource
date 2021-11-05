@@ -90,7 +90,7 @@ import Photos
     private func presentAlertController() {
         let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.imagesPermissionDeniedText, message: "", preferredStyle: .alert)
 
-        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.settingsString, style: .default) { (_) -> Void in
 
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
@@ -103,7 +103,7 @@ import Photos
             }
         }
         alertController.addAction(settingsAction)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.cancelString, style: .default, handler: nil)
         alertController.addAction(cancelAction)
         self.present(alertController, animated: true, completion: nil)
     }

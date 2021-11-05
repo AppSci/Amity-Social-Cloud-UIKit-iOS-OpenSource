@@ -26,6 +26,10 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     
     private var screenViewModel: AmityUserProfileEditorScreenViewModelType?
     
+    private var isPhotoChanged = false
+    private var isNameChanged = false
+    private var isBioChanged = false
+    
     // To support reuploading image
     // use this variable to store a new image
     private var uploadingAvatarImage: UIImage?
@@ -119,7 +123,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     
     @objc private func saveButtonTap() {
         view.endEditing(true)
-        
+        AmityEventHandler.shared.trackCommunitySaveProfile(name: String(self.isNameChanged), bio: String(self.isBioChanged), photo: String(self.isPhotoChanged))
         // Update display name and about
         screenViewModel?.action.update(displayName: displayNameTextField.text ?? "", about: aboutTextView.text ?? "")
         
@@ -238,7 +242,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     private func presentAlertController() {
         let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
 
-        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.settingsString, style: .default) { (_) -> Void in
 
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
@@ -251,7 +255,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
             }
         }
         alertController.addAction(settingsAction)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.cancelString, style: .default, handler: nil)
         alertController.addAction(cancelAction)
 
         self.present(alertController, animated: true, completion: nil)
@@ -263,6 +267,9 @@ extension AmityUserProfileEditorViewController: AmityUserProfileEditorScreenView
     
     func screenViewModelDidUpdate(_ viewModel: AmityUserProfileEditorScreenViewModelType) {
         guard let user = screenViewModel?.dataSource.user else { return }
+        self.isNameChanged = aboutTextView?.text != user.about
+        self.isBioChanged = aboutTextView?.text != user.about
+        
         displayNameTextField?.text = user.displayName
         aboutTextView?.text = user.about
         
@@ -300,6 +307,7 @@ extension AmityUserProfileEditorViewController: UIImagePickerControllerDelegate 
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true) { [weak self] in
             let image = info[.originalImage] as? UIImage
+            self?.isPhotoChanged = true
             self?.handleImage(image)
         }
     }

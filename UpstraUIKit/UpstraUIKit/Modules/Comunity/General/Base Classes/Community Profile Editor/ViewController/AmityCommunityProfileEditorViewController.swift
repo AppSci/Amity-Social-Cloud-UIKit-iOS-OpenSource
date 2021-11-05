@@ -95,10 +95,6 @@ public class AmityCommunityProfileEditorViewController: AmityViewController {
     private var rightItem: UIBarButtonItem?
     private let viewType: ViewType
     
-    private var isPhotoChanged = false
-    private var isNameChanged = false
-    private var isBioChanged = false
-    
     public weak var delegate: AmityCommunityProfileEditorViewControllerDelegate?
     
     public override func viewDidLoad() {
@@ -331,7 +327,6 @@ public class AmityCommunityProfileEditorViewController: AmityViewController {
 private extension AmityCommunityProfileEditorViewController {
     
     @objc func updateProfile() {
-        AmityEventHandler.shared.trackCommunitySaveProfile(name: String(self.isNameChanged), bio: String(self.isBioChanged), photo: String(self.isPhotoChanged))
         AmityHUD.show(.loading)
         screenViewModel.action.update()
     }

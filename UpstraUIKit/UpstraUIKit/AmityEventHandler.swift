@@ -102,6 +102,9 @@ open class AmityEventHandler {
     open func trackCommunitySharePostSuccess(id: String, author: String, communityId: String, likes: Int, comments: Int, source: String) {
         
     }
+    open func moveToExploreTab() {
+        
+    }
     
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
         let viewController = AmityMyCommunityViewController.make()

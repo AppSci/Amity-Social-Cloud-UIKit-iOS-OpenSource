@@ -247,6 +247,7 @@ public class AmityPostTextEditorViewController: AmityViewController {
     // MARK: - Action
     
     @objc private func onPostButtonTap() {
+        AmityEventHandler.shared.trackCommunityWriteNewPost()
         guard let text = textView.text else { return }
         let medias = galleryView.medias
         let files = fileView.files
@@ -571,7 +572,7 @@ public class AmityPostTextEditorViewController: AmityViewController {
     private func presentAlertController() {
         let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
 
-        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.settingsString, style: .default) { (_) -> Void in
 
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
@@ -584,7 +585,7 @@ public class AmityPostTextEditorViewController: AmityViewController {
             }
         }
         alertController.addAction(settingsAction)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        let cancelAction = UIAlertAction(title: AmityUIKitManagerInternal.shared.cancelString, style: .default, handler: nil)
         alertController.addAction(cancelAction)
 
         self.present(alertController, animated: true, completion: nil)

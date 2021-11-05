@@ -62,7 +62,8 @@ final class AmityUserSettingsViewController: AmityViewController {
                     actions: [.cancel(handler: nil),
                               .custom(title: AmityLocalizedStringSet.UserSettings.itemUnfollow.localizedString,
                                       style: .destructive, handler: { [weak self] in
-                                        self?.screenViewModel.action.unfollowUser()
+                                          AmityEventHandler.shared.trackCommunityUnfollowUser(id: self?.screenViewModel.dataSource.userId ?? "")
+                                          self?.screenViewModel.action.unfollowUser()
                                       })],
                     from: self)
             case .report:

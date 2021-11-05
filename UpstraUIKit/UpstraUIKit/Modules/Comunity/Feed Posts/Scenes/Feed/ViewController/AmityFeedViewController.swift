@@ -443,7 +443,6 @@ extension AmityFeedViewController: AmityPostFooterProtocolHandlerDelegate {
                 screenViewModel.action.like(id: post.postId, referenceType: .post)
             }
         case .tapComment:
-            AmityEventHandler.shared.trackCommunityCommentPost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
             AmityEventHandler.shared.postDidtap(from: self, postId: post.postId)
         }
     }
@@ -469,7 +468,6 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
         case .tapOption(let comment):
             if let comment = post.latestComments.first(where: { $0.id == comment.id }) {
                 handleCommentOption(comment: comment)
-                AmityEventHandler.shared.trackCommunityCommentPost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
             }
         case .tapReply:
             AmityEventHandler.shared.postDidtap(from: self, postId: post.postId)

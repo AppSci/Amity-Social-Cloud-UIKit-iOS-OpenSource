@@ -272,6 +272,7 @@ extension AmityPostDetailScreenViewModel {
     // MARK: Commend
     
     func createComment(withText text: String, parentId: String?) {
+        AmityEventHandler.shared.trackCommunityCommentPost(id: post?.postId ?? "", author: post?.displayName ?? "", community: post?.targetCommunity?.communityId ?? "", likes: post?.reactionsCount ?? 0, comments: post?.allCommentCount ?? 0)
         commentController.createComment(withReferenceId: postId, referenceType: .post, parentId: parentId, text: text) { [weak self] (comment, error) in
             guard let strongSelf = self else { return }
             // check if the recent comment is contains banned word

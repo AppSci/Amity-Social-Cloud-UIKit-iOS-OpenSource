@@ -306,7 +306,6 @@ private extension AmityUserProfileHeaderViewController {
     }
     
     func unfollow() {
-        AmityEventHandler.shared.trackCommunityUnfollowUser(id: screenViewModel.dataSource.userId)
         screenViewModel.action.unfollow()
     }
     

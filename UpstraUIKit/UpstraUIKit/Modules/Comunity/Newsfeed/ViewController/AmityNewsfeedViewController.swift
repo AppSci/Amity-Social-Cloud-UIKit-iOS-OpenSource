@@ -61,9 +61,7 @@ private extension AmityNewsfeedViewController {
     
     private func setupEmptyView() {
         emptyView.exploreHandler = { [weak self] in
-            guard let parent = self?.parent as? AmityCommunityHomePageViewController else { return }
-            // Switch to explore tap which is an index 1.
-            parent.setCurrentIndex(1)
+            AmityEventHandler.shared.moveToExploreTab()
         }
         emptyView.createHandler = { [weak self] in
 //            let vc = AmityCommunityCreatorViewController.make()

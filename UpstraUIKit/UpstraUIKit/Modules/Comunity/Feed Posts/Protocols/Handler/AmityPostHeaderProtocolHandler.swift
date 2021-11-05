@@ -79,6 +79,7 @@ final class AmityPostHeaderProtocolHandler: AmityPostHeaderDelegate {
         
         let reportOption = TextItemOption(title: AmityLocalizedStringSet.General.report.localizedString) { [weak self] in
             guard let strongSelf = self else { return }
+            AmityEventHandler.shared.trackCommunityReport(id: post.postId, target: "post")
             strongSelf.delegate?.headerProtocolHandlerDidPerformAction(strongSelf, action: .tapReport, withPost: post)
         }
         
