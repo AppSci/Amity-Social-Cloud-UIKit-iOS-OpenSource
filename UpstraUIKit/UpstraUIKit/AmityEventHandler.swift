@@ -96,6 +96,12 @@ open class AmityEventHandler {
     open func trackCommunityViewPhotoReminder() {
         
     }
+    open func trackCommunitySharePost(id: String, author: String, communityId: String, likes: Int, comments: Int) {
+        
+    }
+    open func trackCommunitySharePostSuccess(id: String, author: String, communityId: String, likes: Int, comments: Int, source: String) {
+        
+    }
     
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
         let viewController = AmityMyCommunityViewController.make()

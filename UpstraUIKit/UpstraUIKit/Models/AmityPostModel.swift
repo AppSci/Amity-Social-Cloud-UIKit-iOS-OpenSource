@@ -261,7 +261,7 @@ public class AmityPostModel {
     private(set) var files: [AmityFile] = []
     private(set) var liveStream: AmityStream?
     private let post: AmityPost
-    private let childrenPosts: [AmityPost]
+    public let childrenPosts: [AmityPost]
     
     // Maps fileId to PostId for child post
     private var fileMap = [String: String]()

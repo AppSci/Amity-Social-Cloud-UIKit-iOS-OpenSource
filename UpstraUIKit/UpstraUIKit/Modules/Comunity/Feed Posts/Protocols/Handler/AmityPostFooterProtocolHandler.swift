@@ -38,45 +38,46 @@ final class AmityPostFooterProtocolHandler: AmityPostFooterDelegate {
     
     private func handleShareOption(post: AmityPostModel) {
         guard let viewController = viewController else { return }
-        let bottomSheet = BottomSheetViewController()
-        
-        let shareToTimeline = TextItemOption(title: AmityLocalizedStringSet.SharingType.shareToMyTimeline.localizedString)
-        let shareToGroup = TextItemOption(title: AmityLocalizedStringSet.SharingType.shareToGroup.localizedString)
-        let moreOptions = TextItemOption(title: AmityLocalizedStringSet.SharingType.moreOptions.localizedString)
-        
-        var items = [TextItemOption]()
-        
-//        if AmityPostSharePermission.canShareToMyTimeline(post: post) {
-//            items.append(shareToTimeline)
+        AmityEventHandler.shared.trackCommunitySharePost(id: post.postId, author: post.postedUserId, communityId: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
+//        let bottomSheet = BottomSheetViewController()
+//
+//        let shareToTimeline = TextItemOption(title: AmityLocalizedStringSet.SharingType.shareToMyTimeline.localizedString)
+//        let shareToGroup = TextItemOption(title: AmityLocalizedStringSet.SharingType.shareToGroup.localizedString)
+//        let moreOptions = TextItemOption(title: AmityLocalizedStringSet.SharingType.moreOptions.localizedString)
+        AmityFeedEventHandler.shared.sharePostDidTap(from: viewController, post: post)
+//        var items = [TextItemOption]()
+//
+////        if AmityPostSharePermission.canShareToMyTimeline(post: post) {
+////            items.append(shareToTimeline)
+////        }
+//
+////        if AmityPostSharePermission.canSharePostToGroup(post: post) {
+////            items.append(shareToGroup)
+////        }
+//
+//        items.append(moreOptions)
+//
+//        if items.isEmpty { return }
+//
+//        let contentView = ItemOptionView<TextItemOption>()
+//        contentView.configure(items: items, selectedItem: nil)
+//        contentView.didSelectItem = { [weak bottomSheet] action in
+//            bottomSheet?.dismissBottomSheet {
+//                switch action {
+//                case shareToTimeline:
+//                    AmityFeedEventHandler.shared.sharePostToMyTimelineDidTap(from: viewController, postId: post.postId)
+//                case shareToGroup:
+//                    AmityFeedEventHandler.shared.sharePostToGroupDidTap(from: viewController, postId: post.postId)
+//                case moreOptions:
+//                    AmityFeedEventHandler.shared.sharePostDidTap(from: viewController, postId: post.postId)
+//                default: break
+//                }
+//            }
 //        }
-        
-//        if AmityPostSharePermission.canSharePostToGroup(post: post) {
-//            items.append(shareToGroup)
-//        }
-        
-        items.append(moreOptions)
-        
-        if items.isEmpty { return }
-        
-        let contentView = ItemOptionView<TextItemOption>()
-        contentView.configure(items: items, selectedItem: nil)
-        contentView.didSelectItem = { [weak bottomSheet] action in
-            bottomSheet?.dismissBottomSheet {
-                switch action {
-                case shareToTimeline:
-                    AmityFeedEventHandler.shared.sharePostToMyTimelineDidTap(from: viewController, postId: post.postId)
-                case shareToGroup:
-                    AmityFeedEventHandler.shared.sharePostToGroupDidTap(from: viewController, postId: post.postId)
-                case moreOptions:
-                    AmityFeedEventHandler.shared.sharePostDidTap(from: viewController, postId: post.postId)
-                default: break
-                }
-            }
-        }
-        
-        bottomSheet.sheetContentView = contentView
-        bottomSheet.isTitleHidden = true
-        bottomSheet.modalPresentationStyle = .overFullScreen
-        viewController.present(bottomSheet, animated: false, completion: nil)
+//
+//        bottomSheet.sheetContentView = contentView
+//        bottomSheet.isTitleHidden = true
+//        bottomSheet.modalPresentationStyle = .overFullScreen
+//        viewController.present(bottomSheet, animated: false, completion: nil)
     }
 }

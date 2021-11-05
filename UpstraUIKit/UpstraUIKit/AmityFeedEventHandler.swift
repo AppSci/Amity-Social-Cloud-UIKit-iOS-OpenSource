@@ -24,8 +24,8 @@ open class AmityFeedEventHandler {
     /// It will be triggered when more option is tapped
     ///
     /// A default behavior is presenting a `AmityActivityController`
-    open func sharePostDidTap(from source: AmityViewController, postId: String) {
-        let viewController = AmityActivityController.make(activityItems: [postId])
+    open func sharePostDidTap(from source: AmityViewController, post: AmityPostModel) {
+        let viewController = AmityActivityController.make(activityItems: [post.postId])
         source.present(viewController, animated: true, completion: nil)
     }
     
