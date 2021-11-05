@@ -354,7 +354,6 @@ private extension AmityCommunityProfileEditorViewController {
                 asset.getImage { result in
                     switch result {
                     case .success(let avatar):
-                        self?.isPhotoChanged = true
                         self?.avatarView.image = avatar
                         self?.screenViewModel.action.setImage(for: avatar)
                     case .failure:
@@ -494,10 +493,8 @@ extension AmityCommunityProfileEditorViewController: AmityCreateCommunityScreenV
     func screenViewModel(_ viewModel: AmityCreateCommunityScreenViewModel, state: AmityCreateCommunityState) {
         switch state {
         case let .textFieldOnChanged(_, lenght):
-            self.isNameChanged = true
             communityNameCountLabel.text = "\(lenght)/\(Constant.nameMaxLength)"
         case let .textViewOnChanged(_, lenght, hasValue):
-            self.isBioChanged = true
             communityAboutCountLabel.text = "\(lenght)/\(Constant.aboutMaxlength)"
             communityAboutClearButton.alpha = hasValue ? 1 : 0
         case .selectedCommunityType(let type):
