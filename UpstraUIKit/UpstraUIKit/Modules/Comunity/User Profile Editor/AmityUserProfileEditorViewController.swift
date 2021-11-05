@@ -238,7 +238,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     private func presentAlertController() {
         let alertController = UIAlertController (title: AmityUIKitManagerInternal.shared.cameraPermissionDeniedText, message: "", preferredStyle: .alert)
 
-        let settingsAction = UIAlertAction(title: "OK", style: .default) { (_) -> Void in
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (_) -> Void in
 
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
