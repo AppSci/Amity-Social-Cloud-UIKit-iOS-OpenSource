@@ -50,11 +50,12 @@ extension AmityFollowersListScreenViewModel {
 extension AmityFollowersListScreenViewModel {
     func getFollowsList() {
         followManager.clearAmityFollowRelationshipLocalData()
-        if userId == AmityUIKitManagerInternal.shared.client.currentUserId {
-            followersCollection = type == .followers ? followManager.getMyFollowerList(with: .accepted) : followManager.getMyFollowingList(with: .accepted)
-        } else {
+        // MARK: Restore this code when Amity team fix this
+//        if userId == AmityUIKitManagerInternal.shared.client.currentUserId {
+//            followersCollection = type == .followers ? followManager.getMyFollowerList(with: .all) : followManager.getMyFollowingList(with: .all)
+//        } else {
             followersCollection = type == .followers ? followManager.getUserFollowerList(withUserId: userId) : followManager.getUserFollowingList(withUserId: userId)
-        }
+//        }
         
         followToken = followersCollection?.observe { [weak self] collection, _, error in
             self?.prepareDataSource(collection: collection, error: error)

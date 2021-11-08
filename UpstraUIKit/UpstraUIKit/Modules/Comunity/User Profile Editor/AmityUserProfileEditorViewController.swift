@@ -29,6 +29,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     private var isPhotoChanged = false
     private var isNameChanged = false
     private var isBioChanged = false
+    private var isNeedToCheckChanges = false
     
     // To support reuploading image
     // use this variable to store a new image
@@ -72,6 +73,11 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         super.viewDidLoad()
         setupNavigationBar()
         setupView()
+    }
+    
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.isNeedToCheckChanges = true
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -126,7 +132,9 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
         AmityEventHandler.shared.trackCommunitySaveProfile(name: String(self.isNameChanged), bio: String(self.isBioChanged), photo: String(self.isPhotoChanged))
         // Update display name and about
         screenViewModel?.action.update(displayName: displayNameTextField.text ?? "", about: aboutTextView.text ?? "")
-        
+        self.isBioChanged = false
+        self.isNameChanged = false
+        self.isPhotoChanged = false
         // Update user avatar
         if let avatar = uploadingAvatarImage {
             userAvatarView.state = .loading
@@ -203,6 +211,16 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     
     private func updateViewState() {
         saveBarButtonItem?.isEnabled = isValueChanged
+        
+        if self.isNeedToCheckChanges {
+            if displayNameCounterLabel?.text != "\(displayNameTextField.text?.count ?? 0)/\(displayNameTextField.maxLength)" {
+                self.isNameChanged = true
+            }
+            if aboutCounterLabel?.text != "\(aboutTextView.text.utf16.count)/\(aboutTextView.maxCharacters)" {
+                self.isBioChanged = true
+            }
+        }
+        
         displayNameCounterLabel?.text = "\(displayNameTextField.text?.count ?? 0)/\(displayNameTextField.maxLength)"
         aboutCounterLabel?.text = "\(aboutTextView.text.utf16.count)/\(aboutTextView.maxCharacters)"
     }
@@ -267,8 +285,6 @@ extension AmityUserProfileEditorViewController: AmityUserProfileEditorScreenView
     
     func screenViewModelDidUpdate(_ viewModel: AmityUserProfileEditorScreenViewModelType) {
         guard let user = screenViewModel?.dataSource.user else { return }
-        self.isNameChanged = aboutTextView?.text != user.about
-        self.isBioChanged = aboutTextView?.text != user.about
         
         displayNameTextField?.text = user.displayName
         aboutTextView?.text = user.about

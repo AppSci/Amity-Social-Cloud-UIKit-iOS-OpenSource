@@ -15,6 +15,8 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
     private var galleryVC: AmityPostGalleryViewController?
     
     private var communityId: String = ""
+    private var category: String = ""
+    private var source: String = ""
     
     var dataDidUpdateHandler: (() -> Void)?
     
@@ -29,9 +31,11 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
         timelineVC?.handleRefreshing()
     }
     
-    public static func make(communityId: String) -> AmityCommunityFeedViewController {
+    public static func make(communityId: String, category: String, source: String) -> AmityCommunityFeedViewController {
         let vc = AmityCommunityFeedViewController()
         vc.communityId = communityId
+        vc.category = category
+        vc.source = source
         // Timeline
         vc.timelineVC = AmityFeedViewController.make(feedType: .communityFeed(communityId: communityId))
         vc.timelineVC?.pageTitle = AmityLocalizedStringSet.timelineTitle.localizedString
@@ -69,5 +73,20 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
             let emptyView = emptyView as? AmityEmptyStateHeaderFooterView
             emptyView?.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts))
         }
+    }
+    
+    override func updateIndicator(for viewController: AmityPagerTabViewController, fromIndex: Int, toIndex: Int, withProgressPercentage progressPercentage: CGFloat, indexWasChanged: Bool) {
+        super.updateIndicator(for: viewController, fromIndex: fromIndex, toIndex: toIndex, withProgressPercentage: progressPercentage, indexWasChanged: indexWasChanged)
+        
+        guard indexWasChanged == true else { return }
+      
+        if toIndex == 0 {
+            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: "timeline", category: self.category, source: self.source)
+        } else if toIndex == 1 {
+            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: "gallery", category: self.category, source: self.source)
+        }
+
+        //IMPORTANT!!!: call the following to let the master scroll controller know which view to control in the bottom section
+        self.pageDelegate?.pageViewController(self.currentViewController, didSelectPageAt: toIndex)
     }
 }
