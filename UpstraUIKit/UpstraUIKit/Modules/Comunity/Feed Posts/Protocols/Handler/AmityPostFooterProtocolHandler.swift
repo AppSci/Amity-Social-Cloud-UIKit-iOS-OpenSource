@@ -38,7 +38,7 @@ final class AmityPostFooterProtocolHandler: AmityPostFooterDelegate {
     
     private func handleShareOption(post: AmityPostModel) {
         guard let viewController = viewController else { return }
-        AmityEventHandler.shared.trackCommunitySharePost(id: post.postId, author: post.postedUser?.displayName ?? "", communityId: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
+        AmityEventHandler.shared.trackCommunitySharePost(id: post.postId, author: post.postedUserId, communityId: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
 //        let bottomSheet = BottomSheetViewController()
 //
 //        let shareToTimeline = TextItemOption(title: AmityLocalizedStringSet.SharingType.shareToMyTimeline.localizedString)

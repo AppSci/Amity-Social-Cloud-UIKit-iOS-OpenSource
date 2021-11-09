@@ -439,7 +439,7 @@ extension AmityFeedViewController: AmityPostFooterProtocolHandlerDelegate {
                 screenViewModel.action.unlike(id: post.postId, referenceType: .post)
             } else {
                 post.reactionsCount
-                AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
+                AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.postedUserId, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
                 screenViewModel.action.like(id: post.postId, referenceType: .post)
             }
         case .tapComment:
@@ -461,7 +461,7 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
                 if comment.isLiked {
                     screenViewModel.action.unlike(id: comment.id, referenceType: .comment)
                 } else {
-                    AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.displayName, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
+                    AmityEventHandler.shared.trackCommunityLikePost(id: post.postId, author: post.postedUserId, community: post.targetCommunity?.communityId ?? "", likes: post.reactionsCount, comments: post.allCommentCount)
                     screenViewModel.action.like(id: comment.id, referenceType: .comment)
                 }
             }

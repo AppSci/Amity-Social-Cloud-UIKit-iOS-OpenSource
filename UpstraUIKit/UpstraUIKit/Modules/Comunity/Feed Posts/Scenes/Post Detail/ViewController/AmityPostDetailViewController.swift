@@ -538,7 +538,7 @@ extension AmityPostDetailViewController: AmityExpandableLabelDelegate {
 extension AmityPostDetailViewController: AmityCommentTableViewCellDelegate {
     
     func commentCellDidTapAvatar(_ cell: AmityCommentTableViewCell, userId: String) {
-        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourseType: "feed")
+        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourseType: "comments")
     }
     
     func commentCellDidTapReadMore(_ cell: AmityCommentTableViewCell) {

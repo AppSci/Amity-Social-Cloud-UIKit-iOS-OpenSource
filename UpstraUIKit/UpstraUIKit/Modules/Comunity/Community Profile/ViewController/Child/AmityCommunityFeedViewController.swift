@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum CommunityFeedTab: String {
+    case timeline
+    case gallery
+}
+
 final public class AmityCommunityFeedViewController: AmityProfileBottomViewController {
     
     // MARK: - Properties
@@ -17,6 +22,9 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
     private var communityId: String = ""
     private var category: String = ""
     private var source: String = ""
+    private var tab: CommunityFeedTab = .timeline
+    private var isTimelineTracked = false
+    private var isGalleryTracked = false
     
     var dataDidUpdateHandler: (() -> Void)?
     
@@ -62,6 +70,27 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
         return viewControllers
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if self.tab == .timeline && !self.isTimelineTracked {
+            self.isTimelineTracked = true
+            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: self.tab.rawValue, category: self.category, source: self.source)
+        }
+        
+        if self.tab == .gallery && !self.isTimelineTracked {
+            self.isTimelineTracked = true
+            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: self.tab.rawValue, category: self.category, source: self.source)
+        }
+        
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.isTimelineTracked = false
+        self.isGalleryTracked = false
+    }
+    
     private func setupFeed() {
         timelineVC?.dataDidUpdateHandler = { [weak self] _ in
             self?.dataDidUpdateHandler?()
@@ -81,9 +110,17 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
         guard indexWasChanged == true else { return }
       
         if toIndex == 0 {
-            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: "timeline", category: self.category, source: self.source)
+            self.tab = .timeline
+            if !self.isTimelineTracked {
+                self.isTimelineTracked = true
+                AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: self.tab.rawValue, category: self.category, source: self.source)
+            }
         } else if toIndex == 1 {
-            AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: "gallery", category: self.category, source: self.source)
+            self.tab = .gallery
+            if !self.isGalleryTracked {
+                self.isGalleryTracked = true
+                AmityEventHandler.shared.trackCommunityViewGroup(id: self.communityId, tab: self.tab.rawValue, category: self.category, source: self.source)
+            }
         }
 
         //IMPORTANT!!!: call the following to let the master scroll controller know which view to control in the bottom section
