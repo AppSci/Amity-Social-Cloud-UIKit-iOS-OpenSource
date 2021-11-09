@@ -455,7 +455,7 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
         guard let post = cell.post else { return }
         switch action {
         case .tapAvatar(let comment):
-            AmityEventHandler.shared.userDidTap(from: self, userId: comment.userId, sourseType: "feed")
+            AmityEventHandler.shared.userDidTap(from: self, userId: comment.userId, sourseType: "comments")
         case .tapLike(let comment):
             if let comment = post.latestComments.first(where: { $0.id == comment.id}) {
                 if comment.isLiked {
