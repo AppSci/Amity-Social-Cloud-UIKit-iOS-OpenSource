@@ -45,7 +45,8 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
     public static func make(
         withCommunityId communityId: String,
         settings: AmityCommunityProfilePageSettings = .init(),
-        sourceType: String
+        sourceType: String,
+        category: String
     ) -> AmityCommunityProfilePageViewController {
         
         let communityRepositoryManager = AmityCommunityRepositoryManager(communityId: communityId)
@@ -56,7 +57,7 @@ public final class AmityCommunityProfilePageViewController: AmityProfileViewCont
         let vc = AmityCommunityProfilePageViewController()
         vc.screenViewModel = viewModel
         vc.header = AmityCommunityProfileHeaderViewController.make(rootViewController: vc, viewModel: viewModel, settings: settings, sourceType: sourceType)
-        vc.bottom = AmityCommunityFeedViewController.make(communityId: communityId, category: viewModel.community?.category ?? "", source: sourceType)
+        vc.bottom = AmityCommunityFeedViewController.make(communityId: communityId, category: category, source: sourceType)
         vc.settings = settings
         return vc
         
