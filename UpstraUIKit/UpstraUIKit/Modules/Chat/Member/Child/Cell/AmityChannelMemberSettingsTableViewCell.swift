@@ -39,7 +39,14 @@ final class AmityChannelMemberSettingsTableViewCell: UITableViewCell, Nibbable {
     
     func display(with model: AmityChannelMembershipModel, isJoined: Bool) {
         let displayName = model.displayName
-        avatarView.setImage(withImageURL: model.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        
+        let splitedUserID = model.userId.components(separatedBy: "_")
+        if splitedUserID.count > 1 {
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
+        } else {
+            avatarView.setImage(withImageURL: model.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        }
+        
         displayNameLabel.text = (displayName)
         optionButton.isHidden = model.isCurrentUser || !isJoined
     }

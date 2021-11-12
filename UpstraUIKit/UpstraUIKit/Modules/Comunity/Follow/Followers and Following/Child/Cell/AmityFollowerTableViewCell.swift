@@ -49,7 +49,13 @@ final class AmityFollowerTableViewCell: UITableViewCell, Nibbable {
     func display(with model: AmityUserModel) {
         displayNameLabel.text = model.displayName
         optionButton.isHidden = model.isCurrentUser
-        avatarView.setImage(withImageURL: model.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        
+        let splitedUserID = model.userId.components(separatedBy: "_")
+        if splitedUserID.count > 1 {
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
+        } else {
+            avatarView.setImage(withImageURL: model.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        }
     }
     
     func setIndexPath(with _indexPath: IndexPath) {

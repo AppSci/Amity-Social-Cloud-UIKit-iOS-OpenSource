@@ -190,7 +190,13 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     }
     
     private func updateView(with user: AmityUserModel) {
-        avatarView.setImage(withImageURL: user.avatarURL, size: .full, placeholder: AmityIconSet.defaultAvatar)
+        
+        let splitedUserID = user.userId.components(separatedBy: "_")
+        if splitedUserID.count > 1 {
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
+        } else {
+            avatarView.setImage(withImageURL: user.avatarURL, size: .full, placeholder: AmityIconSet.defaultAvatar)
+        }
         displayNameLabel.text = user.displayName
         descriptionLabel.text = user.about
         editProfileButton.isHidden = !user.isCurrentUser

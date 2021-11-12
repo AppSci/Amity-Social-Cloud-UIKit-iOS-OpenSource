@@ -102,7 +102,15 @@ class AmityPostDetailCompostView: UIView {
     }
     
     func configure(with post: AmityPostModel) {
-        avatarView.setImage(withImageURL: post.postedUser?.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        
+        let splitedUserID = post.postedUserId.components(separatedBy: "_")
+        if splitedUserID.count > 1 {
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
+        } else {
+            avatarView.setImage(withImageURL: post.postedUser?.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        }
+        
+        
         isHidden = !post.isCommentable
         textContainerView.isHidden = !post.isCommentable
     }

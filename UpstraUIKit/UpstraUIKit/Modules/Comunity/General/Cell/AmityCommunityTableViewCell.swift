@@ -40,7 +40,21 @@ class AmityCommunityTableViewCell: UITableViewCell, Nibbable {
     func configure(with type: CommunityCellType) {
         switch type {
         case .myFeed:
-            avatarView.setImage(withImageURL: AmityUIKitManagerInternal.shared.client.currentUser?.object?.getAvatarInfo()?.fileURL ?? "", placeholder: AmityIconSet.defaultAvatar)
+            
+            
+            guard
+                let splitedUserID = AmityUIKitManagerInternal.shared.client.currentUserId?.components(separatedBy: "_"),
+                splitedUserID.count > 1
+            else {
+                avatarView.setImage(withImageURL: AmityUIKitManagerInternal.shared.client.currentUser?.object?.getAvatarInfo()?.fileURL ?? "", placeholder: AmityIconSet.defaultAvatar)
+                avatarView.placeholderPostion = .center
+                titleLabel.text = AmityLocalizedStringSet.postCreationMyTimelineTitle.localizedString
+                badgeImageView.isHidden = true
+                privateBadgeImageView.isHidden = true
+                return
+            }
+            
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
             avatarView.placeholderPostion = .center
             titleLabel.text = AmityLocalizedStringSet.postCreationMyTimelineTitle.localizedString
             badgeImageView.isHidden = true

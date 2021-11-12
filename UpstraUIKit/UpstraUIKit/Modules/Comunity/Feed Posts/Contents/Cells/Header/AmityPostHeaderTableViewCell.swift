@@ -36,7 +36,14 @@ public final class AmityPostHeaderTableViewCell: UITableViewCell, Nibbable, Amit
     
     public func display(post: AmityPostModel) {
         self.post = post
-        avatarView.setImage(withImageURL: post.postedUser?.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        
+        let splitedUserID = post.postedUserId.components(separatedBy: "_")
+        if splitedUserID.count > 1 {
+            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
+        } else {
+            avatarView.setImage(withImageURL: post.postedUser?.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        }
+        
         avatarView.actionHandler = { [weak self] in
             self?.avatarTap()
         }
