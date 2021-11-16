@@ -76,6 +76,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         isVisible = true
+        self.activitybackgroundView.alpha = 0
         
         let feedType = self.screenViewModel.dataSource.getFeedType()
         switch feedType {

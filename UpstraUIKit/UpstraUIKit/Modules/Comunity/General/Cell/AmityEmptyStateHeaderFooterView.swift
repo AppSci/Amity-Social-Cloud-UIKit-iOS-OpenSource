@@ -67,7 +67,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 100.0),
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 120.0),
         ])
     }
     
@@ -77,14 +77,16 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
     }
     
     private func setupTitle() {
-        titleLabel.text = AmityLocalizedStringSet.emptyNewsfeedTitle.localizedString
+        titleLabel.text = AmityUIKitManagerInternal.shared.loadingTitle
         titleLabel.font = AmityFontSet.title
-        titleLabel.textColor = AmityColorSet.base.blend(.shade3)
+        titleLabel.textColor = AmityColorSet.base
         titleLabel.textAlignment = .center
+        titleLabel.numberOfLines = 0
+        titleLabel.lineBreakMode = .byWordWrapping
     }
     
     private func setupSubtitle() {
-        subtitleLabel.text = AmityLocalizedStringSet.emptyNewsfeedStartYourFirstPost.localizedString
+        subtitleLabel.text = ""
         subtitleLabel.font = AmityFontSet.headerLine
         subtitleLabel.textColor = AmityColorSet.base
         subtitleLabel.textAlignment = .center
