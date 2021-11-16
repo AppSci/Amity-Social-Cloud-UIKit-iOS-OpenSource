@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
 
 public protocol FeedHeaderPresentable {
     var headerView: UIView { get }
@@ -21,6 +22,8 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     // MARK: - IBOutlet Properties
     @IBOutlet private var tableView: AmityPostTableView!
     
+    @IBOutlet weak var activitybackgroundView: UIView!
+    @IBOutlet weak var activityView: NVActivityIndicatorView!
     // MARK: - Properties
     private var screenViewModel: AmityFeedScreenViewModelType!
     private let createPostButton: AmityFloatingButton = AmityFloatingButton()
@@ -49,10 +52,10 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     private var isPostButtonTapped = false
     // To determine if the vc is visible or not
-//    private var isVisible: Bool = true
+    private var isVisible: Bool = true
     
     // It will be marked as dirty when data source changed on view disappear.
-//    private var isDataSourceDirty: Bool = false
+    private var isDataSourceDirty: Bool = false
     
     private let debouncer = Debouncer(delay: 0.3)
     
@@ -72,17 +75,28 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        isVisible = true
+        isVisible = true
         
-//        if isDataSourceDirty {
-//            isDataSourceDirty = false
+        let feedType = self.screenViewModel.dataSource.getFeedType()
+        switch feedType {
+        case .communityFeed(let communityId):
+            if communityId.contains("aca52dd") {
+                self.activitybackgroundView.alpha = 0.3
+                self.activityView.startAnimating()
+                AmityUIKitManagerInternal.shared.startStrackingFeedLoading?()
+            }
+        default: ()
+        }
+        
+        if isDataSourceDirty {
+            isDataSourceDirty = false
             reloadTableViewAndClearHeightCaches()
-//        }
+        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-//        isVisible = false
+        isVisible = false
     }
     
     public static func make(feedType: AmityPostFeedType) -> AmityFeedViewController {
@@ -141,6 +155,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     private func setupView() {
         setupTableView()
         setupRefreshControl()
+        self.activitybackgroundView.layer.cornerRadius = 10
     }
     
     private func setupPostButton() {
@@ -178,6 +193,16 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     }
     
     private func reloadTableViewAndClearHeightCaches() {
+        let feedType = self.screenViewModel.dataSource.getFeedType()
+        switch feedType {
+        case .communityFeed(let communityId):
+            if communityId.contains("aca52dd") {
+                self.activitybackgroundView.alpha = 0
+                self.activityView.stopAnimating()
+                AmityUIKitManagerInternal.shared.stopStrackingFeedLoading?()
+            }
+        default: ()
+        }
         tableView.reloadData()
     }
     
@@ -321,10 +346,10 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     func screenViewModelDidUpdateDataSuccess(_ viewModel: AmityFeedScreenViewModelType) {
         // When view is invisible but data source request updates, mark it as a dirty data source.
         // Then after view already appear, reload table view for refreshing data.
-//        guard isVisible else {
-////            isDataSourceDirty = true
-//            return
-//        }
+        guard isVisible else {
+            isDataSourceDirty = true
+            return
+        }
         debouncer.run { [weak self] in
             self?.reloadTableViewAndClearHeightCaches()
         }

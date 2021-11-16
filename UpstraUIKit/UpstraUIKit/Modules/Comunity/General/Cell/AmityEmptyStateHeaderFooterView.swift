@@ -67,7 +67,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -36.0),
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 100.0),
         ])
     }
     

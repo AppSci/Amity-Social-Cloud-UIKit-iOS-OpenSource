@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityFeedViewController" customModule="AmityUIKit" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityFeedViewController" customModule="WBAmityUIKit" customModuleProvider="target">
             <connections>
+                <outlet property="activityView" destination="Zvq-y5-g1l" id="64H-vr-OBl"/>
+                <outlet property="activitybackgroundView" destination="aiW-0g-V3g" id="hvF-ke-D96"/>
                 <outlet property="tableView" destination="XOB-JW-neK" id="31c-5v-s8A"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -20,18 +22,43 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XOB-JW-neK" customClass="AmityPostTableView" customModule="AmityUIKit" customModuleProvider="target">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="XOB-JW-neK" customClass="AmityPostTableView" customModule="WBAmityUIKit" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aiW-0g-V3g">
+                    <rect key="frame" x="147" y="388" width="120" height="120"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="120" id="e3v-dU-kjO"/>
+                        <constraint firstAttribute="width" constant="120" id="rqQ-NR-t07"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zvq-y5-g1l" customClass="NVActivityIndicatorView" customModule="NVActivityIndicatorView">
+                    <rect key="frame" x="167" y="408" width="80" height="80"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="EEP-Rz-BQ5"/>
+                        <constraint firstAttribute="width" constant="80" id="Pn9-3N-jP8"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="color">
+                            <color key="value" red="0.82352941176470584" green="0.94901960784313721" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="zN9-du-z87"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="aiW-0g-V3g" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="3an-Bo-ihI"/>
+                <constraint firstItem="Zvq-y5-g1l" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8dY-sq-akT"/>
                 <constraint firstItem="zN9-du-z87" firstAttribute="trailing" secondItem="XOB-JW-neK" secondAttribute="trailing" id="CT5-az-UeL"/>
                 <constraint firstItem="XOB-JW-neK" firstAttribute="top" secondItem="zN9-du-z87" secondAttribute="top" id="JZk-Ub-NDv"/>
+                <constraint firstItem="aiW-0g-V3g" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="Jzo-Sm-VLs"/>
                 <constraint firstItem="XOB-JW-neK" firstAttribute="leading" secondItem="zN9-du-z87" secondAttribute="leading" id="QJx-zR-Kpl"/>
                 <constraint firstItem="zN9-du-z87" firstAttribute="bottom" secondItem="XOB-JW-neK" secondAttribute="bottom" id="kuJ-nN-JHT"/>
+                <constraint firstItem="Zvq-y5-g1l" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="yaY-30-7i9"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="104.46428571428571"/>
         </view>

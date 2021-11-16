@@ -22,15 +22,15 @@ public final class AmityUIKitManager {
     ///   - apiKey: API key provided by Amity.
     ///   - httpUrl: Custom url to be used as base url.
     ///   - socketUrl: Custom url to be used as base url.
-    public static func setup(apiKey: String, httpUrl: String? = nil, socketUrl: String? = nil, cameraPermissionDeniedText: String, imagesPermissionDeniedText: String, settingsString: String, cancelString: String) {
+    public static func setup(apiKey: String, httpUrl: String? = nil, socketUrl: String? = nil, cameraPermissionDeniedText: String, imagesPermissionDeniedText: String, settingsString: String, cancelString: String, startStrackingFeedLoading: @escaping (()->()), stopStrackingFeedLoading: @escaping (()->())) {
         if let httpUrl = httpUrl, let socketUrl = socketUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString)
+            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString, startStrackingFeedLoading: startStrackingFeedLoading, stopStrackingFeedLoading: stopStrackingFeedLoading)
         } else if let httpUrl = httpUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString)
+            AmityUIKitManagerInternal.shared.setup(apiKey, httpUrl: httpUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString, startStrackingFeedLoading: startStrackingFeedLoading, stopStrackingFeedLoading: stopStrackingFeedLoading)
         } else if let socketUrl = socketUrl {
-            AmityUIKitManagerInternal.shared.setup(apiKey, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString)
+            AmityUIKitManagerInternal.shared.setup(apiKey, socketUrl: socketUrl, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString, startStrackingFeedLoading: startStrackingFeedLoading, stopStrackingFeedLoading: stopStrackingFeedLoading)
         } else {
-            AmityUIKitManagerInternal.shared.setup(apiKey, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString)
+            AmityUIKitManagerInternal.shared.setup(apiKey, cameraPermissionDeniedText: cameraPermissionDeniedText, imagesPermissionDeniedText: imagesPermissionDeniedText, settingsString: settingsString, cancelString: cancelString, startStrackingFeedLoading: startStrackingFeedLoading, stopStrackingFeedLoading: stopStrackingFeedLoading)
         }
     }
     
@@ -119,13 +119,24 @@ final class AmityUIKitManagerInternal: NSObject {
     
     var env: [String: Any] = [:]
     
+    var startStrackingFeedLoading: (()->())?
+    var stopStrackingFeedLoading: (()->())?
+    
     // MARK: - Initializer
     
     private override init() { }
     
     // MARK: - Setup functions
 
-    func setup(_ apiKey: String, httpUrl: String = "", socketUrl: String = "", cameraPermissionDeniedText: String, imagesPermissionDeniedText: String, settingsString: String, cancelString: String) {
+    func setup(_ apiKey: String,
+               httpUrl: String = "",
+               socketUrl: String = "",
+               cameraPermissionDeniedText: String,
+               imagesPermissionDeniedText: String,
+               settingsString: String,
+               cancelString: String,
+               startStrackingFeedLoading: @escaping (()->()),
+               stopStrackingFeedLoading: @escaping (()->())) {
         self.apiKey = apiKey
         self.httpUrl = httpUrl
         self.socketUrl = socketUrl
@@ -133,6 +144,8 @@ final class AmityUIKitManagerInternal: NSObject {
         self.imagesPermissionDeniedText = imagesPermissionDeniedText
         self.settingsString = settingsString
         self.cancelString = cancelString
+        self.startStrackingFeedLoading = startStrackingFeedLoading
+        self.stopStrackingFeedLoading = stopStrackingFeedLoading
         
         // Passing empty string over `httpUrl` and `socketUrl` is acceptable.
         // `AmityClient` will be using the default endpoint instead.

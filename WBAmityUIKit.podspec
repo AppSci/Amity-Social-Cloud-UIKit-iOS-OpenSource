@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'WBAmityUIKit'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'WBAmityUIKit is a form of AmityUIKit'
 
 # This description is used to generate tags and improve search results.
@@ -35,4 +35,5 @@ TODO: Add long description of the pod here.
 
   s.dependency 'AmitySDK'
   s.dependency 'RealmSwift'
+  s.dependency 'NVActivityIndicatorView'
 end
