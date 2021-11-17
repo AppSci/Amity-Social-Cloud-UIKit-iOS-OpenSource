@@ -33,6 +33,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
         }
     }
     
+    private var centerYAnchorOffset: CGFloat = AmityUIKitManagerInternal.shared.isExploreAllowed ? -36 : 120.0
     private let imageView = UIImageView(frame: .zero)
     private let titleLabel = UILabel(frame: .zero)
     private let subtitleLabel = UILabel(frame: .zero)
@@ -62,12 +63,13 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
         setupSubtitle()
         setupStackView()
         contentView.addSubview(stackView)
+        
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor),
-            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: 120.0),
+            stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor, constant: self.centerYAnchorOffset),
         ])
     }
     
@@ -102,7 +104,8 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
         stackView.addArrangedSubview(subtitleLabel)
     }
     
-    func setLayout(layout: EmptyStateLayout) {
+    func setLayout(layout: EmptyStateLayout, centerYOffset: CGFloat) {
+        self.centerYAnchorOffset = centerYOffset
         switch layout {
         case .label(let title, let subtitle, let image):
             titleLabel.text = title
@@ -118,6 +121,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
             stackView.arrangedSubviews.forEach({ $0.removeFromSuperview() })
             stackView.addArrangedSubview(view)
         }
+        self.layoutSubviews()
     }
     
 }

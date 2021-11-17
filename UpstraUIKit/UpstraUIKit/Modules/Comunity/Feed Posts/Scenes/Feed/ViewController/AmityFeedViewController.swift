@@ -71,11 +71,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         onViewDidLoad?()
         setupScreenViewModel()
 //        setupPostButton()
-    }
-    
-    public override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        isVisible = true
+        
         self.activitybackgroundView.alpha = 0
         
         let feedType = self.screenViewModel.dataSource.getFeedType()
@@ -88,6 +84,11 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
             }
         default: ()
         }
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        isVisible = true
         
         if isDataSourceDirty {
             isDataSourceDirty = false
@@ -287,15 +288,26 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
 
     func tableView(_ tableView: AmityPostTableView, viewForFooterInSection section: Int) -> UIView?  {
         guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else { return nil }
+        
+        var centerYOffset: CGFloat = -36
+        let feedType = self.screenViewModel.dataSource.getFeedType()
+        switch feedType {
+        case .communityFeed(let communityId):
+            if communityId.contains("aca52dd") {
+                centerYOffset = 120
+            }
+        default: ()
+        }
+        
         if let emptyView = emptyView {
-            bottomView.setLayout(layout: .custom(emptyView))
+            bottomView.setLayout(layout: .custom(emptyView), centerYOffset: centerYOffset)
         } else {
             switch screenViewModel.dataSource.getFeedType() {
             case .userFeed:
                 if screenViewModel.dataSource.isPrivate {
-                    bottomView.setLayout(layout: .custom(AmityPrivateAccountView(frame: .zero)))
+                    bottomView.setLayout(layout: .custom(AmityPrivateAccountView(frame: .zero)), centerYOffset: centerYOffset)
                 } else {
-                    bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts))
+                    bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts), centerYOffset: centerYOffset)
                 }
             default:
                 emptyViewHandler?(bottomView)

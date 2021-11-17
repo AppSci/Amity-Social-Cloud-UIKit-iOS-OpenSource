@@ -89,7 +89,7 @@ extension AmityCategoryCommunityListViewController: UITableViewDelegate {
             return nil
         }
         let emptyView = AmityCategoryCommunityListViewEmptyView()
-        bottomView.setLayout(layout: .custom(emptyView))
+        bottomView.setLayout(layout: .custom(emptyView), centerYOffset: -36)
         return bottomView
     }
     

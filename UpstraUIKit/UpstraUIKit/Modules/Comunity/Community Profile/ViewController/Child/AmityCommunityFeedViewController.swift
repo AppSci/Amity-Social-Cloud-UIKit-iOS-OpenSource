@@ -100,7 +100,7 @@ final public class AmityCommunityFeedViewController: AmityProfileBottomViewContr
     private func setupEmptyState() {
         timelineVC?.emptyViewHandler = { emptyView in
             let emptyView = emptyView as? AmityEmptyStateHeaderFooterView
-            emptyView?.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts))
+            emptyView?.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts), centerYOffset: -36)
         }
     }
     

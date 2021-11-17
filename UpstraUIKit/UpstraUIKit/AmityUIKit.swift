@@ -34,6 +34,10 @@ public final class AmityUIKitManager {
         }
     }
     
+    public static func setup(isExploreAllowed: Bool) {
+        AmityUIKitManagerInternal.shared.setup(isExploreAllowed: isExploreAllowed)
+    }
+    
     public static func registerDevice(
         withUserId userId: String,
         displayName: String?,
@@ -105,6 +109,7 @@ final class AmityUIKitManagerInternal: NSObject {
     private(set) var settingsString = ""
     private(set) var cancelString = ""
     private(set) var loadingTitle = ""
+    private(set) var isExploreAllowed = false
     
     private(set) var fileService = AmityFileService()
     private(set) var messageMediaService = AmityMessageMediaService()
@@ -158,6 +163,10 @@ final class AmityUIKitManagerInternal: NSObject {
         }
         _client = client
         _client?.clientErrorDelegate = self
+    }
+    
+    func setup(isExploreAllowed: Bool) {
+        self.isExploreAllowed = isExploreAllowed
     }
 
     func registerDevice(_ userId: String,
