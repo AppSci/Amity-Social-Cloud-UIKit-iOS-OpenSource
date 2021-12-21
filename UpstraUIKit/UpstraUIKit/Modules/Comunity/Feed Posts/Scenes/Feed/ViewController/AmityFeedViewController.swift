@@ -513,24 +513,26 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
             AmityEventHandler.shared.postDidtap(from: self, postId: post.postId)
         case .willExpandExpandableLabel:
             tableView.beginUpdates()
-        case .didExpandExpandableLabel(let label):
-            let point = label.convert(CGPoint.zero, to: tableView)
-            if let indexPath = tableView.indexPathForRow(at: point) as IndexPath? {
-                DispatchQueue.main.async { [weak self] in
-                    self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-                }
-            }
             tableView.endUpdates()
+        case .didExpandExpandableLabel(let label): ()
+//            let point = label.convert(CGPoint.zero, to: tableView)
+//            if let indexPath = tableView.indexPathForRow(at: point) as IndexPath? {
+//                DispatchQueue.main.async { [weak self] in
+//                    self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+//                }
+//            }
+//            tableView.endUpdates()
         case .willCollapseExpandableLabel:
             tableView.beginUpdates()
-        case .didCollapseExpandableLabel(let label):
-            let point = label.convert(CGPoint.zero, to: tableView)
-            if let indexPath = tableView.indexPathForRow(at: point) as IndexPath? {
-                DispatchQueue.main.async { [weak self] in
-                    self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
-                }
-            }
             tableView.endUpdates()
+        case .didCollapseExpandableLabel(let label): ()
+//            let point = label.convert(CGPoint.zero, to: tableView)
+//            if let indexPath = tableView.indexPathForRow(at: point) as IndexPath? {
+//                DispatchQueue.main.async { [weak self] in
+//                    self?.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
+//                }
+//            }
+//            tableView.endUpdates()
         }
     }
    
