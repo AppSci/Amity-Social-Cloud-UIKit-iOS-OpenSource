@@ -82,11 +82,6 @@ open class AmityPostDetailViewController: AmityViewController {
         navigationController?.reset()
     }
     
-    public override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.stopAnimation()
-    }
-    
     // MARK: Setup Post Protocol Handler
     private func setupProtocolHandler() {
         postHeaderProtocolHandler = AmityPostHeaderProtocolHandler(viewController: self)
