@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import NVActivityIndicatorView
 
 /// A view controller for providing post and relevant comments.
 open class AmityPostDetailViewController: AmityViewController {
     
+    @IBOutlet private var activityBackgroundView: UIView!
+    @IBOutlet private var activityView: NVActivityIndicatorView!
     // MARK: - IBOutlet Properties
     @IBOutlet private var tableView: AmityPostTableView!
     @IBOutlet private var commentComposeBarView: AmityPostDetailCompostView!
@@ -42,10 +45,10 @@ open class AmityPostDetailViewController: AmityViewController {
         let reactionController = AmityReactionController()
         let childrenController = AmityCommentChildrenController(postId: postId)
         screenViewModel = AmityPostDetailScreenViewModel(withPostId: postId,
-                                                             postController: postController,
-                                                             commentController: commentController,
-                                                             reactionController: reactionController,
-                                                             childrenController: childrenController)
+                                                         postController: postController,
+                                                         commentController: commentController,
+                                                         reactionController: reactionController,
+                                                         childrenController: childrenController)
         super.init(nibName: AmityPostDetailViewController.identifier, bundle: AmityUIKitManager.bundle)
     }
     
@@ -79,6 +82,11 @@ open class AmityPostDetailViewController: AmityViewController {
         navigationController?.reset()
     }
     
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.stopAnimation()
+    }
+    
     // MARK: Setup Post Protocol Handler
     private func setupProtocolHandler() {
         postHeaderProtocolHandler = AmityPostHeaderProtocolHandler(viewController: self)
@@ -98,11 +106,23 @@ open class AmityPostDetailViewController: AmityViewController {
         screenViewModel.delegate = self
         screenViewModel.action.fetchPost()
         screenViewModel.action.fetchComments()
+        self.startAnimation()
+    }
+    
+    func startAnimation() {
+        self.activityBackgroundView.alpha = 0.3
+        self.activityView.startAnimating()
+    }
+    
+    func stopAnimation() {
+        self.activityBackgroundView.alpha = 0
+        self.activityView.stopAnimating()
     }
     
     // MARK: Setup views
     private func setupView() {
         view.backgroundColor = AmityColorSet.backgroundColor
+        self.activityBackgroundView.layer.cornerRadius = 10
     }
     
     private func setupNavigationBar() {
@@ -209,6 +229,10 @@ extension AmityPostDetailViewController: AmityPostTableViewDelegate {
         if tableView.cellForRow(at: indexPath)?.reuseIdentifier == AmityViewMoreReplyTableViewCell.identifier {
             screenViewModel.action.getReplyComments(at: indexPath.section)
         }
+    }
+    
+    func stopLoadingAnimation() {
+        self.stopAnimation()
     }
     
     func tableView(_ tableView: AmityPostTableView, heightForFooterInSection section: Int) -> CGFloat {

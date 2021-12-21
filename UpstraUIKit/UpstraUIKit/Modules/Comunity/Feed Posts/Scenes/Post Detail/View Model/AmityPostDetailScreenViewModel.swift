@@ -186,6 +186,7 @@ extension AmityPostDetailScreenViewModel {
     
     func fetchPost() {
         postController.getPostForPostId(withPostId: postId) { [weak self] (result) in
+            self?.delegate?.stopLoadingAnimation()
             switch result {
             case .success(let post):
                 self?.post = post

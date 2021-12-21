@@ -53,6 +53,7 @@ protocol AmityPostDetailScreenViewModelDelegate: AnyObject {
     func screenViewModel(_ viewModel: AmityPostDetailScreenViewModelType, comment: AmityCommentModel, didReceiveCommentReportStatus isReported: Bool)
     func screenViewModel(_ viewModel: AmityPostDetailScreenViewModelType, didFinishWithMessage message: String)
     func screenViewModel(_ viewModel: AmityPostDetailScreenViewModelType, didFinishWithError error: AmityError)
+    func stopLoadingAnimation()
 }
 
 protocol AmityPostDetailScreenViewModelDataSource {

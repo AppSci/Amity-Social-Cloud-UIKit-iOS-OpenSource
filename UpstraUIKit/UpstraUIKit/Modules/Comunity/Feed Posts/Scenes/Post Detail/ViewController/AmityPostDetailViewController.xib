@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityPostDetailViewController" customModule="UpstraUIKit" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityPostDetailViewController" customModule="WBAmityUIKit" customModuleProvider="target">
             <connections>
+                <outlet property="activityBackgroundView" destination="cv8-Gb-feF" id="Rxo-8P-z7g"/>
+                <outlet property="activityView" destination="ode-Vz-aby" id="41l-dt-IFi"/>
                 <outlet property="commentComposeBarBottomConstraint" destination="UKz-Zi-AVg" id="cUz-oX-7ad"/>
                 <outlet property="commentComposeBarView" destination="gMP-ip-qOd" id="4qr-Wq-oNn"/>
                 <outlet property="tableView" destination="nxX-G7-dP4" id="xhW-BB-aco"/>
@@ -22,21 +25,45 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nxX-G7-dP4" customClass="AmityPostTableView" customModule="UpstraUIKit" customModuleProvider="target">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nxX-G7-dP4" customClass="AmityPostTableView" customModule="WBAmityUIKit" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="44" width="414" height="784"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
-                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gMP-ip-qOd" customClass="AmityPostDetailCompostView" customModule="UpstraUIKit" customModuleProvider="target">
+                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gMP-ip-qOd" customClass="AmityPostDetailCompostView" customModule="WBAmityUIKit" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="836" width="414" height="26"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cv8-Gb-feF">
+                    <rect key="frame" x="147" y="388" width="120" height="120"/>
+                    <color key="backgroundColor" name="black"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="120" id="Rvm-ju-7Dd"/>
+                        <constraint firstAttribute="height" constant="120" id="Zg2-ZB-lR9"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ode-Vz-aby" customClass="NVActivityIndicatorView" customModule="NVActivityIndicatorView">
+                    <rect key="frame" x="167" y="408" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="hMZ-EP-6sG"/>
+                        <constraint firstAttribute="width" constant="80" id="hkj-mu-tUB"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="color" keyPath="color">
+                            <color key="value" red="0.82352941180000006" green="0.94901960780000005" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Wb0-7q-vLN"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="ode-Vz-aby" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="CKc-GN-jpf"/>
                 <constraint firstItem="nxX-G7-dP4" firstAttribute="leading" secondItem="Wb0-7q-vLN" secondAttribute="leading" id="FUa-U5-VBJ"/>
+                <constraint firstItem="ode-Vz-aby" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="Jwm-hR-oxS"/>
+                <constraint firstItem="cv8-Gb-feF" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="RFo-9K-F39"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="trailing" secondItem="Wb0-7q-vLN" secondAttribute="trailing" id="T46-Hg-UVd"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="bottom" secondItem="Wb0-7q-vLN" secondAttribute="bottom" id="UKz-Zi-AVg"/>
+                <constraint firstItem="cv8-Gb-feF" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="eRF-Vu-QDv"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="leading" secondItem="Wb0-7q-vLN" secondAttribute="leading" id="k2S-06-qGU"/>
                 <constraint firstItem="nxX-G7-dP4" firstAttribute="top" secondItem="Wb0-7q-vLN" secondAttribute="top" id="qQI-fA-KRR"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="top" secondItem="nxX-G7-dP4" secondAttribute="bottom" id="vB3-bY-uTZ"/>
@@ -46,6 +73,9 @@
         </view>
     </objects>
     <resources>
+        <namedColor name="black">
+            <color red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
