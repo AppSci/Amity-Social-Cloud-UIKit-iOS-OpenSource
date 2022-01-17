@@ -75,13 +75,13 @@ open class AmityPostDetailViewController: AmityViewController {
         setupProtocolHandler()
         setupScreenViewModel()
         setupMentionTableView()
+        startAnimation()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setBackgroundColor(with: .white)
         AmityKeyboardService.shared.delegate = self
-        self.startAnimation()
         mentionManager?.delegate = self
     }
     
