@@ -208,19 +208,18 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         tableView.refreshControl = refreshControl
     }
     
-//    private func reloadTableViewAndClearHeightCaches() {
-//        let feedType = self.screenViewModel.dataSource.getFeedType()
-//        switch feedType {
-//        case .communityFeed(let communityId):
-//            if communityId.contains("aca52dd") {
-//                self.activitybackgroundView.alpha = 0
-//                self.activityView.stopAnimating()
-//                AmityUIKitManagerInternal.shared.stopStrackingFeedLoading?()
-//            }
-//        default: ()
-//        }
-//        tableView.reloadData()
-//    }
+    private func stopAnimating() {
+        let feedType = self.screenViewModel.dataSource.getFeedType()
+        switch feedType {
+        case .communityFeed(let communityId):
+            if communityId.contains("aca52dd") {
+                self.activitybackgroundView.alpha = 0
+                self.activityView.stopAnimating()
+                AmityUIKitManagerInternal.shared.stopTrackingFeedLoading?()
+            }
+        default: break
+        }
+    }
     
     // MARK: SrollToTop
     private func scrollToTop() {
@@ -304,29 +303,17 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
     }
 
     func tableView(_ tableView: AmityPostTableView, viewForFooterInSection section: Int) -> UIView?  {
-//<<<<<<< HEAD
-//        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else { return nil }
-//
+
+        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else { return nil }
+
         var centerYOffset: CGFloat = -36
-//        let feedType = self.screenViewModel.dataSource.getFeedType()
-//        switch feedType {
-//        case .communityFeed(let communityId):
-//            if communityId.contains("aca52dd") {
-//                centerYOffset = 120
-//            }
-//        default: ()
-//=======
-        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else {
-            return nil
-        }
-        
-        // 1) if the datasource is loading, shows loading indicator at the center of page.
-        // 2) if the refresh control is working, skip showing a loading indicator.
-        //    otherwise, there will be 2 spinners working together.
-        if screenViewModel.dataSource.isLoading && !refreshControl.isRefreshing && shouldShowLoader {
-            bottomView.setLayout(layout: .loading, centerYOffset: centerYOffset)
-            return bottomView
-//>>>>>>> da291f038c2ad402b1ec95cf543a21e570b1159b
+        let feedType = self.screenViewModel.dataSource.getFeedType()
+        switch feedType {
+        case .communityFeed(let communityId):
+            if communityId.contains("aca52dd") {
+                centerYOffset = 120
+            }
+        default: break
         }
         
         if let emptyView = emptyView {
@@ -340,9 +327,6 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
                     bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts), centerYOffset: centerYOffset)
                 }
             default:
-                bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyNewsfeedTitle.localizedString,
-                                                    subtitle: AmityLocalizedStringSet.emptyNewsfeedStartYourFirstPost.localizedString,
-                                                    image: nil), centerYOffset: centerYOffset)
                 emptyViewHandler?(bottomView)
                 return bottomView
             }
@@ -473,6 +457,9 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     }
     
     func screenViewModelLoadingStatusDidChange(_ viewModel: AmityFeedScreenViewModelType, isLoading: Bool) {
+        if !isLoading {
+            stopAnimating()
+        }
         tableView.reloadData()
     }
     
