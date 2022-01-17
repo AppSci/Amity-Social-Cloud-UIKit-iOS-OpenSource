@@ -34,11 +34,15 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     private var postPostProtocolHandler: AmityPostProtocolHandler?
 
     private let refreshControl = UIRefreshControl()
+    
+    // A flag represents for loading indicator visibility
+    private var shouldShowLoader: Bool = true
+    
     public var headerView: FeedHeaderPresentable? {
         didSet {
             debouncer.run { [weak self] in
                 DispatchQueue.main.async { [weak self] in
-                    self?.reloadTableViewAndClearHeightCaches()
+                    self?.tableView.reloadData()
                 }
             }
         }
@@ -80,7 +84,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
             if communityId.contains("aca52dd") {
                 self.activitybackgroundView.alpha = 0.3
                 self.activityView.startAnimating()
-                AmityUIKitManagerInternal.shared.startStrackingFeedLoading?()
+                AmityUIKitManagerInternal.shared.startTrackingFeedLoading?()
             }
         default: ()
         }
@@ -92,13 +96,23 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         
         if isDataSourceDirty {
             isDataSourceDirty = false
-            reloadTableViewAndClearHeightCaches()
+            tableView.reloadData()
         }
+        
+        // this line solves issue where refresh control sticks to the top while switching tab
+        resetRefreshControlStateIfNeeded()
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         isVisible = false
+        refreshControl.endRefreshing()
+    }
+    
+    private func resetRefreshControlStateIfNeeded() {
+        if !refreshControl.isHidden {
+            tableView.setContentOffset(.zero, animated: false)
+        }
     }
     
     public static func make(feedType: AmityPostFeedType) -> AmityFeedViewController {
@@ -194,19 +208,19 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         tableView.refreshControl = refreshControl
     }
     
-    private func reloadTableViewAndClearHeightCaches() {
-        let feedType = self.screenViewModel.dataSource.getFeedType()
-        switch feedType {
-        case .communityFeed(let communityId):
-            if communityId.contains("aca52dd") {
-                self.activitybackgroundView.alpha = 0
-                self.activityView.stopAnimating()
-                AmityUIKitManagerInternal.shared.stopStrackingFeedLoading?()
-            }
-        default: ()
-        }
-        tableView.reloadData()
-    }
+//    private func reloadTableViewAndClearHeightCaches() {
+//        let feedType = self.screenViewModel.dataSource.getFeedType()
+//        switch feedType {
+//        case .communityFeed(let communityId):
+//            if communityId.contains("aca52dd") {
+//                self.activitybackgroundView.alpha = 0
+//                self.activityView.stopAnimating()
+//                AmityUIKitManagerInternal.shared.stopStrackingFeedLoading?()
+//            }
+//        default: ()
+//        }
+//        tableView.reloadData()
+//    }
     
     // MARK: SrollToTop
     private func scrollToTop() {
@@ -220,11 +234,14 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     // MARK: - Refreshing
     func handleRefreshing() {
+        // when refresh control is working, we don't need to show this loader.
+        shouldShowLoader = false
         screenViewModel.action.fetchPosts()
     }
     
     @objc private func handleRefreshingControl() {
-        guard Reachability.isConnectedToNetwork() else {
+        guard Reachability.isConnectedToNetwork() && AmityUIKitManagerInternal.shared.client.connectionStatus == .connected else {
+            tableView.reloadData()
             dataDidUpdateHandler?(0)
             refreshControl.endRefreshing()
             return
@@ -287,16 +304,29 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
     }
 
     func tableView(_ tableView: AmityPostTableView, viewForFooterInSection section: Int) -> UIView?  {
-        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else { return nil }
-        
+//<<<<<<< HEAD
+//        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else { return nil }
+//
         var centerYOffset: CGFloat = -36
-        let feedType = self.screenViewModel.dataSource.getFeedType()
-        switch feedType {
-        case .communityFeed(let communityId):
-            if communityId.contains("aca52dd") {
-                centerYOffset = 120
-            }
-        default: ()
+//        let feedType = self.screenViewModel.dataSource.getFeedType()
+//        switch feedType {
+//        case .communityFeed(let communityId):
+//            if communityId.contains("aca52dd") {
+//                centerYOffset = 120
+//            }
+//        default: ()
+//=======
+        guard let bottomView = tableView.dequeueReusableHeaderFooterView(withIdentifier: AmityEmptyStateHeaderFooterView.identifier) as? AmityEmptyStateHeaderFooterView else {
+            return nil
+        }
+        
+        // 1) if the datasource is loading, shows loading indicator at the center of page.
+        // 2) if the refresh control is working, skip showing a loading indicator.
+        //    otherwise, there will be 2 spinners working together.
+        if screenViewModel.dataSource.isLoading && !refreshControl.isRefreshing && shouldShowLoader {
+            bottomView.setLayout(layout: .loading, centerYOffset: centerYOffset)
+            return bottomView
+//>>>>>>> da291f038c2ad402b1ec95cf543a21e570b1159b
         }
         
         if let emptyView = emptyView {
@@ -310,6 +340,9 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
                     bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyTitleNoPosts.localizedString, subtitle: nil, image: AmityIconSet.emptyNoPosts), centerYOffset: centerYOffset)
                 }
             default:
+                bottomView.setLayout(layout: .label(title: AmityLocalizedStringSet.emptyNewsfeedTitle.localizedString,
+                                                    subtitle: AmityLocalizedStringSet.emptyNewsfeedStartYourFirstPost.localizedString,
+                                                    image: nil), centerYOffset: centerYOffset)
                 emptyViewHandler?(bottomView)
                 return bottomView
             }
@@ -356,6 +389,7 @@ extension AmityFeedViewController: AmityPostTableViewDataSource {
 
 // MARK: - AmityFeedScreenViewModelDelegate
 extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
+    
     func screenViewModelDidUpdateDataSuccess(_ viewModel: AmityFeedScreenViewModelType) {
         // When view is invisible but data source request updates, mark it as a dirty data source.
         // Then after view already appear, reload table view for refreshing data.
@@ -364,7 +398,7 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
             return
         }
         debouncer.run { [weak self] in
-            self?.reloadTableViewAndClearHeightCaches()
+            self?.tableView.reloadData()
         }
         dataDidUpdateHandler?(screenViewModel.dataSource.numberOfPostComponents())
         refreshControl.endRefreshing()
@@ -395,7 +429,7 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
             AmityHUD.show(.error(message: AmityLocalizedStringSet.HUD.somethingWentWrong.localizedString))
         case .noUserAccessPermission:
             debouncer.run { [weak self] in
-                self?.reloadTableViewAndClearHeightCaches()
+                self?.tableView.reloadData()
             }
         default:
             break
@@ -434,9 +468,14 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     
     func screenViewModelDidGetUserSettings(_ viewModel: AmityFeedScreenViewModelType) {
         debouncer.run { [weak self] in
-            self?.reloadTableViewAndClearHeightCaches()
+            self?.tableView.reloadData()
         }
     }
+    
+    func screenViewModelLoadingStatusDidChange(_ viewModel: AmityFeedScreenViewModelType, isLoading: Bool) {
+        tableView.reloadData()
+    }
+    
 }
 
 // MARK: - AmityPostHeaderProtocolHandlerDelegate
@@ -533,6 +572,8 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
 //                }
 //            }
 //            tableView.endUpdates()
+        case .tapOnMention(let userId):
+            AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourseType: "feed")
         }
     }
    
@@ -545,10 +586,17 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
         
         let editOption = TextItemOption(title: AmityLocalizedStringSet.PostDetail.editComment.localizedString) { [weak self] in
             guard let strongSelf = self else { return }
-            let editTextViewController = AmityCommentEditorViewController.make(text: comment.text)
+            let feedType = strongSelf.screenViewModel.getFeedType()
+            var commId: String? = nil
+            switch feedType {
+            case .communityFeed(let communityId), .pendingPostsFeed(let communityId):
+                commId = communityId
+            default: break
+            }
+            let editTextViewController = AmityCommentEditorViewController.make(comment: comment, communityId: commId)
             editTextViewController.title = AmityLocalizedStringSet.PostDetail.editComment.localizedString
-            editTextViewController.editHandler = { [weak self] text in
-                self?.screenViewModel.action.edit(withComment: comment, text: text)
+            editTextViewController.editHandler = { [weak self] text, metadata, mentionees in
+                self?.screenViewModel.action.edit(withComment: comment, text: text, metadata: metadata, mentionees: mentionees)
                 editTextViewController.dismiss(animated: true, completion: nil)
             }
             editTextViewController.dismissHandler = {

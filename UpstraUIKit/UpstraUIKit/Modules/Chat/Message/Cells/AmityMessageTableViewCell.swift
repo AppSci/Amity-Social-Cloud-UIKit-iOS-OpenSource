@@ -64,6 +64,7 @@ class AmityMessageTableViewCell: UITableViewCell, AmityMessageCellProtocol {
         containerMessageView?.isHidden = false
         metadataLabel?.isHidden = false
         errorButton?.isHidden = true
+        avatarView?.image = nil
     }
     
     func setViewModel(with viewModel: AmityMessageListScreenViewModelType) {
@@ -83,7 +84,9 @@ class AmityMessageTableViewCell: UITableViewCell, AmityMessageCellProtocol {
     }
     
     func display(message: AmityMessageModel) {
+        
         self.message = message
+        
         if message.isOwner {
             
             containerView.layer.maskedCorners = setRoundCorner(isOwner: message.isOwner)
@@ -113,7 +116,17 @@ class AmityMessageTableViewCell: UITableViewCell, AmityMessageCellProtocol {
             
             setDisplayName(for: message)
         }
+        
         setMetadata(message: message)
+        
+        if message.flagCount > 0 {
+            containerView.layer.borderColor = UIColor.red.cgColor
+            containerView.layer.borderWidth = 1
+        } else {
+            containerView.layer.borderColor = UIColor.clear.cgColor
+            containerView.layer.borderWidth = 0
+        }
+        
     }
     
     func setMetadata(message: AmityMessageModel) {

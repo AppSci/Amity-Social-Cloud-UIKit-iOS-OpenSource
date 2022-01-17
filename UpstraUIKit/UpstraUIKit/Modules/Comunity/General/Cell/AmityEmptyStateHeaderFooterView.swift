@@ -10,6 +10,7 @@ import UIKit
 
 enum EmptyStateLayout {
     case label(title: String, subtitle: String?, image: UIImage?)
+    case loading
     case custom(UIView)
 }
 
@@ -38,6 +39,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
     private let titleLabel = UILabel(frame: .zero)
     private let subtitleLabel = UILabel(frame: .zero)
     private let stackView = UIStackView(frame: .zero)
+    private let loadingIndicator = UIActivityIndicatorView()
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -50,10 +52,11 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
         imageView.image = nil
         titleLabel.text = ""
         subtitleLabel.text = ""
+        loadingIndicator.stopAnimating()
     }
     
     private func setupView() {
@@ -62,6 +65,7 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
         setupTitle()
         setupSubtitle()
         setupStackView()
+        setupLoadingIndicator()
         contentView.addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -94,14 +98,31 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
         subtitleLabel.textAlignment = .center
     }
     
+    private func setupLoadingIndicator() {
+        loadingIndicator.style = .whiteLarge
+        loadingIndicator.color = AmityColorSet.base.blend(.shade2)
+    }
+    
     private func setupStackView() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(titleLabel)
-        stackView.addArrangedSubview(subtitleLabel)
+    }
+    
+    private func setupDefaultSubviews() {
+        if !stackView.arrangedSubviews.contains(imageView) {
+            stackView.addArrangedSubview(imageView)
+        }
+        if !stackView.arrangedSubviews.contains(titleLabel) {
+            stackView.addArrangedSubview(titleLabel)
+        }
+        if !stackView.arrangedSubviews.contains(subtitleLabel) {
+            stackView.addArrangedSubview(subtitleLabel)
+        }
+        if !stackView.arrangedSubviews.contains(loadingIndicator) {
+            stackView.addArrangedSubview(loadingIndicator)
+        }
     }
     
     func setLayout(layout: EmptyStateLayout, centerYOffset: CGFloat) {
@@ -111,13 +132,25 @@ class AmityEmptyStateHeaderFooterView: UITableViewHeaderFooterView {
             titleLabel.text = title
             subtitleLabel.text = subtitle
             imageView.image = image
+            setupDefaultSubviews()
+            
+            // visibility
             titleLabel.isHidden = false
             subtitleLabel.isHidden = subtitle == nil
             imageView.isHidden = image == nil
-            break
-        case .custom(let view):
+            loadingIndicator.isHidden = true
+            
+        case .loading:
+            loadingIndicator.startAnimating()
+            setupDefaultSubviews()
+            
+            // visibility
             titleLabel.isHidden = true
             subtitleLabel.isHidden = true
+            imageView.isHidden = true
+            loadingIndicator.isHidden = false
+            
+        case .custom(let view):
             stackView.arrangedSubviews.forEach({ $0.removeFromSuperview() })
             stackView.addArrangedSubview(view)
         }

@@ -51,7 +51,7 @@ extension AmityMessageListTableViewController {
     func setupView() {
         tableView.separatorInset.left = UIScreen.main.bounds.width
         tableView.tableFooterView = UIView()
-        tableView.keyboardDismissMode = .interactive
+        tableView.keyboardDismissMode = .onDrag
         tableView.backgroundColor = AmityColorSet.backgroundColor
         screenViewModel.dataSource.allCells.forEach {
             tableView.register($0.value, forCellReuseIdentifier: $0.key)
@@ -74,13 +74,15 @@ extension AmityMessageListTableViewController {
     
     func scrollToBottom(indexPath: IndexPath) {
         tableView.layoutIfNeeded()
-        tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
     }
     
     func updateScrollPosition(to indexPath: IndexPath) {
+        
         let contentHeight = tableView.contentSize.height
         let contentYOffset = tableView.contentOffset.y
         let viewHeight = tableView.bounds.height
+        
         Log.add("Content Height: \(contentHeight), Content Offset: \(contentYOffset), ViewHeight: \(viewHeight)")
         
         // We update scroll position based on the view state. User can be in multiple view state.
@@ -96,10 +98,13 @@ extension AmityMessageListTableViewController {
         // User is seeing the latest message. So we just scroll to the bottom when new message appears
         if contentYOffset + viewHeight >= contentHeight {
             Log.add("Scrolling tableview to show latest message")
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            tableView.layoutIfNeeded()
+            tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
             return
         }
+        
     }
+    
 }
 
 // MARK: - Delegate
@@ -206,6 +211,10 @@ extension AmityMessageListTableViewController: AmityExpandableLabelDelegate {
     
     public func didCollapseLabel(_ label: AmityExpandableLabel) {
         tableView.endUpdates()
+    }
+    
+    public func didTapOnMention(_ label: AmityExpandableLabel, withUserId userId: String) {
+        // Intentionally left empty
     }
 }
 

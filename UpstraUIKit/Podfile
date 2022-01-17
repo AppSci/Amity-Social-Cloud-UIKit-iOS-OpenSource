@@ -5,7 +5,7 @@ target 'AmityUIKit' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   pod 'RealmSwift'
-  pod 'AmitySDK', '5.7.1'
+  pod 'AmitySDK'
   pod 'NVActivityIndicatorView'
   # Pods for AmityUIKit
 
