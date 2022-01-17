@@ -13,6 +13,8 @@ protocol AmityPostDetailCompostViewDelegate: AnyObject {
     func composeView(_ view: AmityPostDetailCompostView, didPostText text: String)
     func composeViewDidTapExpand(_ view: AmityPostDetailCompostView)
     func composeViewDidTapReplyDismiss(_ view: AmityPostDetailCompostView)
+    func composeView(_ view: AmityPostDetailCompostView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool
+    func composeViewDidChangeSelection(_ view: AmityPostDetailCompostView)
 }
 
 class AmityPostDetailCompostView: UIView {
@@ -37,7 +39,7 @@ class AmityPostDetailCompostView: UIView {
     private let replyLabel = UILabel(frame: .zero)
     private let dismissButton = UIButton(frame: .zero)
     private let avatarView = AmityAvatarView(frame: .zero)
-    private let textView = AmityTextView(frame: .zero)
+    let textView = AmityTextView(frame: .zero)
     private let postButton = UIButton(frame: .zero)
     private let expandButton = UIButton(frame: .zero)
     private let replyContainerView = UIView(frame: .zero)
@@ -96,21 +98,16 @@ class AmityPostDetailCompostView: UIView {
     
     func resetState() {
         textView.text = ""
+        textView.attributedText = nil
+        textView.textColor = AmityColorSet.base
         postButton.isEnabled = false
         isOversized = false
         textView.resignFirstResponder()
     }
     
     func configure(with post: AmityPostModel) {
-        
-        let splitedUserID = post.postedUserId.components(separatedBy: "_")
-        if splitedUserID.count > 1 {
-            avatarView.set(image: UIImage(named: splitedUserID.last ?? "", in: AmityUIKitManager.bundle, compatibleWith: nil))
-        } else {
-            avatarView.setImage(withImageURL: post.postedUser?.avatarURL, placeholder: AmityIconSet.defaultAvatar)
-        }
-        
-        
+        avatarView.setImage(withImageURL: AmityUIKitManagerInternal.shared.client.currentUser?.object?.getAvatarInfo()?.fileURL,
+                            placeholder: AmityIconSet.defaultAvatar)
         isHidden = !post.isCommentable
         textContainerView.isHidden = !post.isCommentable
     }
@@ -226,11 +223,7 @@ class AmityPostDetailCompostView: UIView {
 extension AmityPostDetailCompostView: AmityTextViewDelegate {
     
     func textView(_ textView: AmityTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard let currentText = textView.text else { return false }
-        if currentText.isEmpty {
-            return !text.allSatisfy({ $0.isNewline || $0.isWhitespace })
-        }
-        return true
+        return delegate?.composeView(self, shouldChangeTextIn: range, replacementText: text) ?? true
     }
     
     func textViewDidChange(_ textView: AmityTextView) {
@@ -248,4 +241,7 @@ extension AmityPostDetailCompostView: AmityTextViewDelegate {
         }
     }
     
+    func textViewDidChangeSelection(_ textView: AmityTextView) {
+        delegate?.composeViewDidChangeSelection(self)
+    }
 }

@@ -13,10 +13,12 @@ import AVKit
 import MobileCoreServices
 
 public class AmityPostEditorSettings {
+    
     public init() { }
-    public var shouldCameraButtonHide: Bool = false
-    public var shouldAlbumButtonHide: Bool = false
-    public var shouldFileButtonHide: Bool = false
+    
+    /// To set what are the attachment types to allow, the default value is `AmityPostAttachmentType.allCases`.
+    public var allowPostAttachments: Set<AmityPostAttachmentType> = Set<AmityPostAttachmentType>(AmityPostAttachmentType.allCases)
+    
 }
 
 protocol AmityPostViewControllerDelegate: AnyObject {
@@ -52,24 +54,40 @@ public class AmityPostTextEditorViewController: AmityViewController {
     private var fileViewHeightConstraint: NSLayoutConstraint!
     private var postMenuViewBottomConstraints: NSLayoutConstraint!
     private var filePicker: AmityFilePicker!
+    private var mentionTableView: AmityMentionTableView
+    private var mentionTableViewHeightConstraint: NSLayoutConstraint!
+    private var mentionManager: AmityMentionManager?
     
     private var isValueChanged: Bool {
         return !textView.text.isEmpty || !galleryView.medias.isEmpty || !fileView.files.isEmpty
     }
     
-    private var attachmentType: AmityPostAttachmentType = .none {
+    private var currentAttachmentState: AmityPostAttachmentType? {
         didSet {
-            postMenuView.attachmentType = attachmentType
+            postMenuView.currentAttachmentState = currentAttachmentState
         }
     }
     
     weak var delegate: AmityPostViewControllerDelegate?
     
     init(postTarget: AmityPostTarget, postMode: AmityPostMode, settings: AmityPostEditorSettings) {
+        
         self.postTarget = postTarget
         self.postMode = postMode
         self.settings = settings
-        self.postMenuView = AmityPostTextEditorMenuView(settings: settings)
+        self.postMenuView = AmityPostTextEditorMenuView(allowPostAttachments: settings.allowPostAttachments)
+        self.mentionTableView = AmityMentionTableView(frame: .zero)
+        
+        if postMode == .create {
+            var communityId: String? = nil
+            switch postTarget {
+            case .community(let community):
+                communityId = community.isPublic ? nil : community.communityId
+            default: break
+            }
+            mentionManager = AmityMentionManager(withType: .post(communityId: communityId))
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
         screenViewModel.delegate = self
@@ -128,10 +146,22 @@ public class AmityPostTextEditorViewController: AmityViewController {
         comunityPanelView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(comunityPanelView)
         
+        mentionTableView.isHidden = true
+        mentionTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mentionTableView)
+        mentionTableViewHeightConstraint = mentionTableView.heightAnchor.constraint(equalToConstant: 240.0)
+        
         galleryViewHeightConstraint = NSLayoutConstraint(item: galleryView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         fileViewHeightConstraint = NSLayoutConstraint(item: fileView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         postMenuViewBottomConstraints = NSLayoutConstraint(item: postMenuView, attribute: .bottom, relatedBy: .equal, toItem: view.layoutMarginsGuide, attribute: .bottom, multiplier: 1, constant: 0)
-        postMenuView.isHidden = (postMode != .create)
+        
+        switch postMode {
+        case .create:
+            // If there is no menu to show, so we don't show postMenuView.
+            postMenuView.isHidden = settings.allowPostAttachments.isEmpty
+        case .edit:
+            postMenuView.isHidden = true
+        }
         
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -162,7 +192,11 @@ public class AmityPostTextEditorViewController: AmityViewController {
             fileView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             fileView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             fileView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            fileViewHeightConstraint
+            fileViewHeightConstraint,
+            mentionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mentionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mentionTableView.bottomAnchor.constraint(equalTo: postMenuView.topAnchor),
+            mentionTableViewHeightConstraint
         ])
         updateConstraints()
         // keyboard
@@ -189,6 +223,9 @@ public class AmityPostTextEditorViewController: AmityViewController {
         if case .edit(let postId) = postMode {
             screenViewModel.dataSource.loadPost(for: postId)
         }
+        mentionTableView.delegate = self
+        mentionTableView.dataSource = self
+        mentionManager?.delegate = self
     }
     
     public override func didTapLeftBarButton() {
@@ -209,23 +246,6 @@ public class AmityPostTextEditorViewController: AmityViewController {
     private func updateConstraints() {
         fileViewHeightConstraint.constant = AmityFileTableView.height(for: fileView.files.count, isEdtingMode: true, isExpanded: false)
         galleryViewHeightConstraint.constant = AmityGalleryCollectionView.height(for: galleryView.contentSize.width, numberOfItems: galleryView.medias.count)
-    }
-    
-    private func presentAskMediaTypeDialogue(completion: @escaping (AmityMediaType?) -> Void) {
-        let controller = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        let photo = UIAlertAction(title: AmityLocalizedStringSet.General.generalPhoto.localizedString, style: .default) { _ in
-            completion(.image)
-        }
-        let video = UIAlertAction(title: AmityLocalizedStringSet.General.generalVideo.localizedString, style: .default) { _ in
-            completion(.video)
-        }
-        let cancel = UIAlertAction(title: AmityLocalizedStringSet.General.cancel.localizedString, style: .cancel) { _ in
-            completion(nil)
-        }
-        controller.addAction(photo)
-        controller.addAction(video)
-        controller.addAction(cancel)
-        present(controller, animated: true, completion: nil)
     }
     
     @objc func adjustForKeyboard(notification: Notification) {
@@ -254,17 +274,18 @@ public class AmityPostTextEditorViewController: AmityViewController {
         
         view.endEditing(true)
         postButton.isEnabled = false
-        
+        let metada = mentionManager?.getMetadata()
+        let mentionees = mentionManager?.getMentionees()
         if let post = currentPost {
             // update post
-            screenViewModel.updatePost(oldPost: post, text: text, medias: medias, files: files)
+            screenViewModel.updatePost(oldPost: post, text: text, medias: medias, files: files, metadata: metada, mentionees: mentionees)
         } else {
             // create post
             var communityId: String?
             if case .community(let community) = postTarget {
                 communityId = community.communityId
             }
-            screenViewModel.createPost(text: text, medias: medias, files: files, communityId: communityId)
+            screenViewModel.createPost(text: text, medias: medias, files: files, communityId: communityId, metadata: metada, mentionees: mentionees)
         }
         
     }
@@ -312,16 +333,20 @@ public class AmityPostTextEditorViewController: AmityViewController {
             postButton.isEnabled = isPostValid
         }
         
+        // Update postMenuView.currentAttachmentState to disable buttons based on the chosen attachment.
         if !fileView.files.isEmpty {
-            attachmentType = .file
+            currentAttachmentState = .file
         } else if galleryView.medias.contains(where: { $0.type == .image }) {
-            attachmentType = .image
+            currentAttachmentState = .image
         } else if galleryView.medias.contains(where: { $0.type == .video }) {
-            attachmentType = .video
+            currentAttachmentState = .video
         } else {
-            attachmentType = .none
+            currentAttachmentState = .none
         }
         
+        if textView.text.isEmpty {
+            textView.textColor = AmityColorSet.base
+        }
     }
     
     // MARK: Helper functions
@@ -529,20 +554,6 @@ public class AmityPostTextEditorViewController: AmityViewController {
     private func showCameraPicker() {
         let cameraPicker = UIImagePickerController()
         cameraPicker.sourceType = .camera
-        // Currently users can only select one media type when create a post.
-        // After users choose the media, we will not `presentAskMediaTypeDialogue` after that.
-        // We automatically choose media type based on last media pick.
-        switch attachmentType {
-        case .none:
-            cameraPicker.mediaTypes = [kUTTypeImage, kUTTypeMovie] as [String]
-        case .image:
-            cameraPicker.mediaTypes = [kUTTypeImage as String]
-        case .video:
-            cameraPicker.mediaTypes = [kUTTypeMovie as String]
-        case .file:
-            Log.add("Type mismatch")
-            break
-        }
         cameraPicker.delegate = self
         self.present(cameraPicker, animated: true, completion: nil)
     }
@@ -677,6 +688,17 @@ extension AmityPostTextEditorViewController: AmityTextViewDelegate {
         updateViewState()
     }
     
+    func textView(_ textView: AmityTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if textView.text.count > AmityMentionManager.maximumCharacterCountForPost {
+            showAlertForMaximumCharacters()
+            return false
+        }
+        return mentionManager?.shouldChangeTextIn(textView, inRange: range, replacementText: text, currentText: textView.text) ?? true
+    }
+    
+    func textViewDidChangeSelection(_ textView: AmityTextView) {
+        mentionManager?.changeSelection(textView)
+    }
 }
 
 extension AmityPostTextEditorViewController: AmityFilePickerDelegate {
@@ -718,9 +740,14 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorScreenViewModelD
     func screenViewModelDidLoadPost(_ viewModel: AmityPostTextEditorScreenViewModel, post: AmityPost) {
         // This will get call once when open with edit mode
         currentPost = AmityPostModel(post: post)
-        fileView.configure(files: currentPost!.files)
-        galleryView.configure(medias: currentPost!.medias)
-        textView.text = currentPost!.text
+        
+        guard let postModel = currentPost else { return }
+        
+        fileView.configure(files: postModel.files)
+        galleryView.configure(medias: postModel.medias)
+        textView.text = postModel.text
+        
+        setupMentionManager(withPost: postModel)
         updateConstraints()
     }
     
@@ -776,6 +803,7 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorMenuViewDelegate
     }
     
     private func presentBottomSheetMenus() {
+        
         let bottomSheet = BottomSheetViewController()
         let contentView = ItemOptionView<ImageItemOption>()
         let imageBackgroundColor = AmityColorSet.base.blend(.shade4)
@@ -807,43 +835,57 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorMenuViewDelegate
             strongSelf.filePicker.present(from: strongSelf.postMenuView, files: strongSelf.fileView.files)
         }
         
-        switch attachmentType {
-        case .none:
-            break
-        case .image:
-            videoOption.image = AmityIconSet.iconPlayVideo?.setTintColor(disabledColor)
-            videoOption.textColor = disabledColor
-            videoOption.completion = nil
-            fileOption.image = AmityIconSet.iconAttach?.setTintColor(disabledColor)
-            fileOption.textColor = disabledColor
-            fileOption.completion = nil
-        case .video:
-            galleryOption.image = AmityIconSet.iconPhoto?.setTintColor(disabledColor)
-            galleryOption.textColor = disabledColor
-            galleryOption.completion = nil
-            fileOption.image = AmityIconSet.iconAttach?.setTintColor(disabledColor)
-            fileOption.textColor = disabledColor
-            fileOption.completion = nil
-        case .file:
-            cameraOption.image = AmityIconSet.iconCameraSmall?.setTintColor(disabledColor)
-            cameraOption.textColor = disabledColor
-            cameraOption.completion = nil
-            galleryOption.image = AmityIconSet.iconPhoto?.setTintColor(disabledColor)
-            galleryOption.textColor = disabledColor
-            galleryOption.completion = nil
-            videoOption.image = AmityIconSet.iconPlayVideo?.setTintColor(disabledColor)
-            videoOption.textColor = disabledColor
-            videoOption.completion = nil
+        // Each option will be added, based on allowPostAttachments.
+        var items: [ImageItemOption] = []
+        if settings.allowPostAttachments.contains(.image) || settings.allowPostAttachments.contains(.video) {
+            items.append(cameraOption)
+            items.append(galleryOption)
+        }
+        if settings.allowPostAttachments.contains(.file) {
+            items.append(fileOption)
+        }
+        if settings.allowPostAttachments.contains(.video) {
+            items.append(videoOption)
         }
         
-        contentView.configure(items: [cameraOption, galleryOption, videoOption, fileOption], selectedItem: nil)
+        // NOTE: Once the currentAttachmentState has changed from `none` to something else.
+        // We still show the buttons, but we disable them based on the currentAttachmentState.
+        if currentAttachmentState != .none {
+            if currentAttachmentState != .image || currentAttachmentState != .video {
+                // Disable gallery option
+                galleryOption.image = AmityIconSet.iconPhoto?.setTintColor(disabledColor)
+                galleryOption.textColor = disabledColor
+                galleryOption.completion = nil
+                // Disable camera option
+                cameraOption.image = AmityIconSet.iconCameraSmall?.setTintColor(disabledColor)
+                cameraOption.textColor = disabledColor
+                cameraOption.completion = nil
+            }
+            if currentAttachmentState != .video {
+                // Disable video option
+                videoOption.image = AmityIconSet.iconPlayVideo?.setTintColor(disabledColor)
+                videoOption.textColor = disabledColor
+                videoOption.completion = nil
+            }
+            if currentAttachmentState != .file {
+                // Disable file option
+                fileOption.image = AmityIconSet.iconAttach?.setTintColor(disabledColor)
+                fileOption.textColor = disabledColor
+                fileOption.completion = nil
+            }
+        }
+        
+        contentView.configure(items: items, selectedItem: nil)
         contentView.didSelectItem = { _ in
             bottomSheet.dismissBottomSheet()
         }
+        
         bottomSheet.sheetContentView = contentView
         bottomSheet.isTitleHidden = true
         bottomSheet.modalPresentationStyle = .overFullScreen
+        
         present(bottomSheet, animated: false, completion: nil)
+        
     }
     
     private func addMedias(_ medias: [AmityMedia], type: AmityMediaType) {
@@ -865,6 +907,12 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorMenuViewDelegate
         updateConstraints()
     }
     
+    private func showAlertForMaximumCharacters() {
+        let alertController = UIAlertController(title: AmityLocalizedStringSet.postUnableToPostTitle.localizedString, message: AmityLocalizedStringSet.postUnableToPostDescription.localizedString, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.done.localizedString, style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
 }
 
 extension AmityPostTextEditorViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -884,7 +932,8 @@ extension AmityPostTextEditorViewController: UIImagePickerControllerDelegate, UI
         switch mediaType {
         case String(kUTTypeImage):
             if let image = info[.originalImage] as? UIImage {
-                selectedMedia = AmityMedia(state: .image(image), type: .image)
+                let img = image.fixedOrientation()
+                selectedMedia = AmityMedia(state: .image(img), type: .image)
             }
         case String(kUTTypeMovie):
             if let fileUrl = info[.mediaURL] as? URL {
@@ -923,13 +972,13 @@ extension AmityPostTextEditorViewController: UIImagePickerControllerDelegate, UI
 extension AmityPostTextEditorViewController {
     
     public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard isValueChanged else {
+        guard isValueChanged, !(mentionManager?.isSearchingStarted ?? false) else {
             return super.gestureRecognizerShouldBegin(gestureRecognizer)
         }
-        
+            
         if let view = gestureRecognizer.view,
-           let directions = (gestureRecognizer as? UIPanGestureRecognizer)?.direction(in: view),
-           directions.contains(.right) {
+            let directions = (gestureRecognizer as? UIPanGestureRecognizer)?.direction(in: view),
+            directions.contains(.right) {
             let alertController = UIAlertController(title: AmityLocalizedStringSet.postCreationDiscardPostTitle.localizedString, message: AmityLocalizedStringSet.postCreationDiscardPostMessage.localizedString, preferredStyle: .alert)
             let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.cancel.localizedString, style: .cancel, handler: nil)
             let discardAction = UIAlertAction(title: AmityLocalizedStringSet.General.discard.localizedString, style: .destructive) { [weak self] _ in
@@ -945,5 +994,83 @@ extension AmityPostTextEditorViewController {
         
         // falls back to normal behaviour, swipe back to previous page
         return super.gestureRecognizerShouldBegin(gestureRecognizer)
+    }
+}
+
+// MARK: - UITableViewDelegate
+extension AmityPostTextEditorViewController: UITableViewDelegate {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return AmityMentionTableViewCell.height
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        mentionManager?.addMention(from: textView, in: textView.text, at: indexPath)
+    }
+    
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == (mentionManager?.users.count ?? 0) - 4 {
+            mentionManager?.loadMore()
+        }
+    }
+}
+
+// MARK: - UITableViewDataSource
+extension AmityPostTextEditorViewController: UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return mentionManager?.users.count ?? 0
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AmityMentionTableViewCell.identifier) as? AmityMentionTableViewCell, let model = mentionManager?.getUser(at: indexPath) else { return UITableViewCell() }
+        cell.display(with: model)
+        return cell
+    }
+}
+
+// MARK: - AmityMentionManagerDelegate
+extension AmityPostTextEditorViewController: AmityMentionManagerDelegate {
+    func didCreateAttributedString(attributedString: NSAttributedString) {
+        textView.attributedText = attributedString
+        textView.font = AmityFontSet.body
+    }
+    
+    func didGetUsers(users: [AmityMentionUserModel]) {
+        if users.isEmpty {
+            mentionTableViewHeightConstraint.constant = 0
+            mentionTableView.isHidden = true
+        } else {
+            var heightConstant:CGFloat = 240.0
+            if users.count < 5 {
+                heightConstant = CGFloat(users.count) * 52.0
+            }
+            mentionTableViewHeightConstraint.constant = heightConstant
+            mentionTableView.isHidden = false
+            mentionTableView.reloadData()
+        }
+    }
+    
+    func didMentionsReachToMaximumLimit() {
+        let alertController = UIAlertController(title: AmityLocalizedStringSet.Mention.unableToMentionTitle.localizedString, message: AmityLocalizedStringSet.Mention.unableToMentionPostDescription.localizedString, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.done.localizedString, style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func didCharactersReachToMaximumLimit() {
+        showAlertForMaximumCharacters()
+    }
+}
+
+// MARK: - Private methods
+private extension AmityPostTextEditorViewController {
+    func setupMentionManager(withPost post: AmityPostModel) {
+        guard mentionManager == nil else { return }
+        let communityId: String? = (currentPost?.targetCommunity?.isPublic ?? true) ? nil : currentPost?.targetCommunity?.communityId
+        mentionManager = AmityMentionManager(withType: .post(communityId: communityId))
+        mentionManager?.delegate = self
+        
+        if let metadata = post.metadata {
+            mentionManager?.setMentions(metadata: metadata, inText: post.text)
+        }
     }
 }
