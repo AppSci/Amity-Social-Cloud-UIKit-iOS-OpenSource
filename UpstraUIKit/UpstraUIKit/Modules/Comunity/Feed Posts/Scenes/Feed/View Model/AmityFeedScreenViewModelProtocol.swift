@@ -16,6 +16,7 @@ protocol AmityFeedScreenViewModelDelegate: AnyObject {
     func screenViewModelDidSuccess(_ viewModel: AmityFeedScreenViewModelType, message: String)
     func screenViewModelDidFail(_ viewModel: AmityFeedScreenViewModelType, failure error: AmityError)
     func screenViewModelLoadingStatusDidChange(_ viewModel: AmityFeedScreenViewModelType, isLoading: Bool)
+    func screenViewModelDidGetMorePosts(_ haveNewPosts: Bool)
     
     // MARK: Post
     func screenViewModelDidLikePostSuccess(_ viewModel: AmityFeedScreenViewModelType)

@@ -37,6 +37,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     // A flag represents for loading indicator visibility
     private var shouldShowLoader: Bool = true
+    private var isLoadingNewPosts: Bool = false
     
     public var headerView: FeedHeaderPresentable? {
         didSet {
@@ -56,10 +57,10 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     private var isPostButtonTapped = false
     // To determine if the vc is visible or not
-    private var isVisible: Bool = true
+//    private var isVisible: Bool = true
     
     // It will be marked as dirty when data source changed on view disappear.
-    private var isDataSourceDirty: Bool = false
+//    private var isDataSourceDirty: Bool = false
     
     private let debouncer = Debouncer(delay: 0.3)
     
@@ -92,12 +93,13 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        isVisible = true
-        
-        if isDataSourceDirty {
-            isDataSourceDirty = false
-            tableView.reloadData()
-        }
+//        isVisible = true
+//
+//        if isDataSourceDirty {
+//            isDataSourceDirty = false
+//            tableView.reloadData()
+//        }
+        tableView.reloadData()
         
         // this line solves issue where refresh control sticks to the top while switching tab
         resetRefreshControlStateIfNeeded()
@@ -105,7 +107,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        isVisible = false
+//        isVisible = false
         refreshControl.endRefreshing()
     }
     
@@ -279,8 +281,10 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
     }
     
     func tableView(_ tableView: AmityPostTableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if tableView.isBottomReached {
+        if tableView.isBottomReached && !isLoadingNewPosts {
             screenViewModel.action.loadMore()
+            isLoadingNewPosts = true
+            tableView.showLoadingIndicator()
         }
     }
     
@@ -376,16 +380,21 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     
     func screenViewModelDidUpdateDataSuccess(_ viewModel: AmityFeedScreenViewModelType) {
         // When view is invisible but data source request updates, mark it as a dirty data source.
-        // Then after view already appear, reload table view for refreshing data.
-        guard isVisible else {
-            isDataSourceDirty = true
-            return
+        // Then after view already appear, reload table view for refreshing data.'
+        if isLoadingNewPosts {
+            isLoadingNewPosts = false
+            tableView.tableFooterView = nil
         }
+        
+        refreshControl.endRefreshing()
+//        guard isVisible else {
+//            isDataSourceDirty = true
+//            return
+//        }
         debouncer.run { [weak self] in
             self?.tableView.reloadData()
         }
         dataDidUpdateHandler?(screenViewModel.dataSource.numberOfPostComponents())
-        refreshControl.endRefreshing()
     }
     
     func screenViewModelLoadingState(_ viewModel: AmityFeedScreenViewModelType, for loadingState: AmityLoadingState) {
@@ -394,8 +403,14 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
             tableView.showLoadingIndicator()
         case .loaded:
             tableView.tableFooterView = UIView()
-        case .initial:
-            break
+        case .initial: break
+        }
+    }
+    
+    func screenViewModelDidGetMorePosts(_ haveNewPosts: Bool) {
+        if isLoadingNewPosts {
+            isLoadingNewPosts = false
+            tableView.tableFooterView = nil
         }
     }
     
@@ -408,6 +423,11 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     }
     
     func screenViewModelDidFail(_ viewModel: AmityFeedScreenViewModelType, failure error: AmityError) {
+        if isLoadingNewPosts {
+            isLoadingNewPosts = false
+            tableView.tableFooterView = nil
+        }
+        refreshControl.endRefreshing()
         switch error {
         case .unknown:
             AmityHUD.show(.error(message: AmityLocalizedStringSet.HUD.somethingWentWrong.localizedString))
@@ -415,8 +435,7 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
             debouncer.run { [weak self] in
                 self?.tableView.reloadData()
             }
-        default:
-            break
+        default: break
         }
     }
     

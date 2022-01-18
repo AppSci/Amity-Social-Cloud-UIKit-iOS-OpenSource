@@ -136,7 +136,8 @@ extension AmityFeedScreenViewModel {
     }
     
     func loadMore() {
-        postController.loadMore()
+        let isLoaded = postController.loadMore()
+        delegate?.screenViewModelDidGetMorePosts(isLoaded)
     }
     
 }
