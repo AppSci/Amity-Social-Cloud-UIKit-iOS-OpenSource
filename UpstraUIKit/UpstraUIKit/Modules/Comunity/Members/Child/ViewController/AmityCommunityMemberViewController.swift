@@ -178,7 +178,7 @@ extension AmityCommunityMemberViewController: AmityCommunityMemberSettingsTableV
         switch action {
         case .tapAvatar, .tapDisplayName:
             let member = screenViewModel.dataSource.member(at: indexPath)
-            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId, sourseType: "member")
+            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId, sourceType: "member")
         case .tapOption:
             openOptionsBottomSheet(for: indexPath)
         }

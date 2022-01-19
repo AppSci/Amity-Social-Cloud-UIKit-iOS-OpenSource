@@ -114,7 +114,7 @@ extension AmityFollowRequestsViewController: AmityFollowRequestTableViewCellDele
     func didPerformAction(at indexPath: IndexPath, action: AmityFollowRequestAction) {
         switch action {
         case .tapAvatar, .tapDisplayName:
-            AmityEventHandler.shared.userDidTap(from: self, userId: screenViewModel.dataSource.item(at: indexPath).sourceUserId, sourseType: "follow_request")
+            AmityEventHandler.shared.userDidTap(from: self, userId: screenViewModel.dataSource.item(at: indexPath).sourceUserId, sourceType: "follow_request")
         case .tapAccept:
             screenViewModel.action.acceptRequest(at: indexPath)
         case .tapDecline:

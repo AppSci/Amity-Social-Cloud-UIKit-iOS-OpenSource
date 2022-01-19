@@ -41,7 +41,7 @@ final class AmityPostHeaderProtocolHandler: AmityPostHeaderDelegate {
         self.post = post
         switch action {
         case .tapAvatar, .tapDisplayName:
-            AmityEventHandler.shared.userDidTap(from: viewController, userId: post.postedUserId, sourseType: "feed")
+            AmityEventHandler.shared.userDidTap(from: viewController, userId: post.postedUserId, sourceType: "feed")
         case .tapCommunityName:
             AmityEventHandler.shared.communityDidTap(from: viewController, communityId: post.targetCommunity?.communityId ?? "", tab: "timeline", category: post.targetCommunity?.categories.first?.name ?? "", sourceType: "feed")
         case .tapOption:

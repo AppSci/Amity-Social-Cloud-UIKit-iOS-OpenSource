@@ -603,13 +603,13 @@ extension AmityPostDetailViewController: AmityExpandableLabelDelegate {
     }
     
     public func didTapOnMention(_ label: AmityExpandableLabel, withUserId userId: String) {
-        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourseType: "comments")
+        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourceType: "comments")
     }
 }
 
 extension AmityPostDetailViewController: AmityCommentTableViewCellDelegate {    
     func commentCellDidTapAvatar(_ cell: AmityCommentTableViewCell, userId: String) {
-        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourseType: "comments")
+        AmityEventHandler.shared.userDidTap(from: self, userId: userId, sourceType: "comments")
     }
     
     func commentCellDidTapReadMore(_ cell: AmityCommentTableViewCell) {
