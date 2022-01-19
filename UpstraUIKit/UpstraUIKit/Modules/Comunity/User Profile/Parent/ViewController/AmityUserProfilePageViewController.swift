@@ -26,12 +26,12 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
     private var screenViewModel: AmityUserProfileScreenViewModelType!
     // MARK: - Initializer
     
-    public static func make(withUserId userId: String, sourseType: String, settings: AmityUserProfilePageSettings = AmityUserProfilePageSettings()) -> AmityUserProfilePageViewController {
+    public static func make(withUserId userId: String, sourceType: String, settings: AmityUserProfilePageSettings = AmityUserProfilePageSettings()) -> AmityUserProfilePageViewController {
         
         let viewModel: AmityUserProfileScreenViewModelType = AmityUserProfileScreenViewModel(userId: userId)
         
         let vc = AmityUserProfilePageViewController()
-        vc.header = AmityUserProfileHeaderViewController.make(withUserId: userId, sourseType: sourseType, settings: settings)
+        vc.header = AmityUserProfileHeaderViewController.make(withUserId: userId, sourceType: sourceType, settings: settings)
         vc.bottom = AmityUserProfileBottomViewController.make(withUserId: userId)
         vc.screenViewModel = viewModel
         

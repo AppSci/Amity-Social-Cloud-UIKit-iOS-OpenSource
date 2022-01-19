@@ -66,7 +66,7 @@ final class AmityMemberSearchViewController: AmityViewController, IndicatorInfoP
 extension AmityMemberSearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let model = screenViewModel.dataSource.item(at: indexPath) else { return }
-        AmityEventHandler.shared.userDidTap(from: self, userId: model.userId, sourseType: "search")
+        AmityEventHandler.shared.userDidTap(from: self, userId: model.userId, sourceType: "search")
     }
     
     func tableView(_ tablbeView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -134,6 +134,6 @@ extension AmityMemberSearchViewController: AmitySearchViewControllerAction {
 extension AmityMemberSearchViewController: AmitySearchMemberTableViewCellDelegate {
     func cellDidTapOnAvatar(_ cell: AmitySearchMemberTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell), let model = screenViewModel.dataSource.item(at: indexPath) else { return }
-        AmityEventHandler.shared.userDidTap(from: self, userId: model.userId, sourseType: "search")
+        AmityEventHandler.shared.userDidTap(from: self, userId: model.userId, sourceType: "search")
     }
 }

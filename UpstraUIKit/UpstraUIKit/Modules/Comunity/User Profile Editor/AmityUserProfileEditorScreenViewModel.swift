@@ -47,7 +47,7 @@ class AmityUserProfileEditorScreenViewModel: AmityUserProfileEditorScreenViewMod
         amityUserUpdateBuilder.setDisplayName(displayName)
         amityUserUpdateBuilder.setUserDescription(about)
         AmityUIKitManagerInternal.shared.client.updateUser(amityUserUpdateBuilder, completion: completion)
-        
+        AmityEventHandler.shared.didUpdate(username: displayName)
         dispatchGroup.notify(queue: DispatchQueue.main) { error in
             if let error = error {
                 Log.add("Error")

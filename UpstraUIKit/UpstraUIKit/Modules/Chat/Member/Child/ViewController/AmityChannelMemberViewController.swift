@@ -190,7 +190,7 @@ extension AmityChannelMemberViewController: AmityChannelMemberSettingsTableViewC
         switch action {
         case .tapAvatar, .tapDisplayName:
             let member = screenViewModel.dataSource.member(at: indexPath)
-            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId, sourseType: "members")
+            AmityEventHandler.shared.userDidTap(from: self, userId: member.userId, sourceType: "members")
         case .tapOption:
             openOptionsBottomSheet(for: indexPath)
         }

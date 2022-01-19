@@ -109,6 +109,10 @@ open class AmityEventHandler {
         
     }
     
+    open func didUpdate(username: String) {
+        
+    }
+    
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
         let viewController = AmityMyCommunityViewController.make()
         source.navigationController?.pushViewController(viewController, animated: true)
@@ -170,8 +174,8 @@ open class AmityEventHandler {
     /// It will be triggered when user avatar or user label is tapped
     ///
     /// A default behavior is navigating to `AmityUserProfilePageViewController`
-    open func userDidTap(from source: AmityViewController, userId: String, sourseType: String) {
-        let viewController = AmityUserProfilePageViewController.make(withUserId: userId, sourseType: sourseType)
+    open func userDidTap(from source: AmityViewController, userId: String, sourceType: String) {
+        let viewController = AmityUserProfilePageViewController.make(withUserId: userId, sourceType: sourceType)
         source.navigationController?.pushViewController(viewController, animated: true)
     }
     
