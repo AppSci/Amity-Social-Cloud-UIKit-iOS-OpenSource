@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'WBAmityUIKit'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = 'WBAmityUIKit is a form of AmityUIKit'
 
 # This description is used to generate tags and improve search results.
