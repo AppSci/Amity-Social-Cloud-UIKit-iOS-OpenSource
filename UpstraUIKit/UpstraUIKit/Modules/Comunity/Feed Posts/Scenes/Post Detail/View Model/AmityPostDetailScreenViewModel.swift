@@ -228,22 +228,20 @@ extension AmityPostDetailScreenViewModel {
     }
     
     func likePost() {
+        delegate?.screenViewModelDidLikePost(self)
         reactionController.addReaction(withReaction: .like, referanceId: postId, referenceType: .post) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
-            if success {
-                strongSelf.delegate?.screenViewModelDidLikePost(strongSelf)
-            } else {
+            if !success {
                 strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
             }
         }
     }
     
     func unlikePost() {
+        delegate?.screenViewModelDidUnLikePost(self)
         reactionController.removeReaction(withReaction: .like, referanceId: postId, referenceType: .post) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
             if success {
-                strongSelf.delegate?.screenViewModelDidUnLikePost(strongSelf)
-            } else {
                 strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
             }
         }
@@ -314,22 +312,20 @@ extension AmityPostDetailScreenViewModel {
     }
     
     func likeComment(withCommendId commentId: String) {
+        delegate?.screenViewModelDidLikeComment(self)
         reactionController.addReaction(withReaction: .like, referanceId: commentId, referenceType: .comment) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
-            if success {
-                strongSelf.delegate?.screenViewModelDidLikeComment(strongSelf)
-            } else {
+            if !success {
                 strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
             }
         }
     }
     
     func unlikeComment(withCommendId commentId: String) {
+        delegate?.screenViewModelDidUnLikeComment(self)
         reactionController.removeReaction(withReaction: .like, referanceId: commentId, referenceType: .comment) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
-            if success {
-                strongSelf.delegate?.screenViewModelDidUnLikeComment(strongSelf)
-            } else {
+            if !success {
                 strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
             }
         }

@@ -169,36 +169,32 @@ extension AmityFeedScreenViewModel {
 // MARK: Post&Comment
 extension AmityFeedScreenViewModel {
     func like(id: String, referenceType: AmityReactionReferenceType) {
+        switch referenceType {
+        case .post:
+            delegate?.screenViewModelDidLikePostSuccess(self)
+        case .comment:
+            delegate?.screenViewModelDidLikeCommentSuccess(self)
+        default: break
+        }
         reactionController.addReaction(withReaction: .like, referanceId: id, referenceType: referenceType) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
-            if success {
-                switch referenceType {
-                case .post:
-                    strongSelf.delegate?.screenViewModelDidLikePostSuccess(strongSelf)
-                case .comment:
-                    strongSelf.delegate?.screenViewModelDidLikeCommentSuccess(strongSelf)
-                default:
-                    break
-                }
-            } else {
+            if !success {
                 strongSelf.delegate?.screenViewModelDidFail(strongSelf, failure: AmityError(error: error) ?? .unknown)
             }
         }
     }
     
     func unlike(id: String, referenceType: AmityReactionReferenceType) {
+        switch referenceType {
+        case .post:
+            delegate?.screenViewModelDidUnLikePostSuccess(self)
+        case .comment:
+            delegate?.screenViewModelDidUnLikeCommentSuccess(self)
+        default: break
+        }
         reactionController.removeReaction(withReaction: .like, referanceId: id, referenceType: referenceType) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
-            if success {
-                switch referenceType {
-                case .post:
-                    strongSelf.delegate?.screenViewModelDidUnLikePostSuccess(strongSelf)
-                case .comment:
-                    strongSelf.delegate?.screenViewModelDidUnLikeCommentSuccess(strongSelf)
-                default:
-                    break
-                }
-            } else {
+            if !success {
                 strongSelf.delegate?.screenViewModelDidFail(strongSelf, failure: AmityError(error: error) ?? .unknown)
             }
         }
