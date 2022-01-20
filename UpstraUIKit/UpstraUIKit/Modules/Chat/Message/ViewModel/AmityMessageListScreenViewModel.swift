@@ -269,7 +269,6 @@ extension AmityMessageListScreenViewModel {
         })
     }
     
-    
     func deleteErrorMessage(with messageId: String, at indexPath: IndexPath) {
         messageRepository.deleteFailedMessage(messageId) { [weak self] (isSuccess, error) in
             if isSuccess {

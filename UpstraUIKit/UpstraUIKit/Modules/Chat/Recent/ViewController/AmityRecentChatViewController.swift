@@ -24,6 +24,7 @@ public final class AmityRecentChatViewController: AmityViewController, Indicator
     @IBOutlet private var tableView: UITableView!
     
     // MARK: - Properties
+    
     private var messageListVC: AmityMessageListViewController?
     private var screenViewModel: AmityRecentChatScreenViewModelType!
     

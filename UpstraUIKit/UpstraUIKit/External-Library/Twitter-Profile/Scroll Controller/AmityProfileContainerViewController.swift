@@ -35,7 +35,6 @@ class AmityProfileContainerViewController : UIViewController, UIScrollViewDelega
 
     private var contentOffsets: [Int: CGFloat] = [:]
     
-    
     deinit {
         self.panViews.forEach({ (arg0) in
             let (_, value) = arg0

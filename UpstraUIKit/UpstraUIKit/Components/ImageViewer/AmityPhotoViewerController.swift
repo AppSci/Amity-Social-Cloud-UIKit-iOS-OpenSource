@@ -185,7 +185,6 @@ public class AmityPhotoViewerController: UIViewController {
     /// This variable sets original frame of image view to animate from
     open private(set) var referenceSize: CGSize = CGSize.zero
     
-    
     /// This is the image view that is mainly used for the presentation and dismissal effect.
     /// How it animates from the original view to fullscreen and vice versa.
     public private(set) var imageView: UIImageView
@@ -289,7 +288,6 @@ public class AmityPhotoViewerController: UIViewController {
             break
         }
     }
-    
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

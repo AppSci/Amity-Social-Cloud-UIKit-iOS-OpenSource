@@ -91,7 +91,6 @@ final class AmityPostTableView: UITableView, UITableViewDelegate, UITableViewDat
         register(cell: AmityPostPollTableViewCell.self)
     }
     
-    
     // MARK: - Delegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         postDelegate?.tableView(self, didSelectRowAt: indexPath)

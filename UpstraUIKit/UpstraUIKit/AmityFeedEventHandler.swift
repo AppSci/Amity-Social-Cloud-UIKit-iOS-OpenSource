@@ -19,7 +19,6 @@ open class AmityFeedEventHandler {
     
     public init() { }
     
-    
     /// Event to share a post
     /// It will be triggered when more option is tapped
     ///

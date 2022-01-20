@@ -118,7 +118,6 @@ extension AmityPostGalleryViewController: UICollectionViewDataSource {
         screenViewModel.dataSource.numberOfItemsInSection(section)
     }
     
-    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let item = screenViewModel.dataSource.item(at: indexPath)

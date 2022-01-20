@@ -28,7 +28,6 @@ public class AmityEditTextViewController: AmityViewController {
     @IBOutlet private var mentionTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var mentionTableViewBottomConstraint: NSLayoutConstraint!
     
-    
     // MARK: - Properties
     private let editMode: EditMode
     private var saveBarButton: UIBarButtonItem!

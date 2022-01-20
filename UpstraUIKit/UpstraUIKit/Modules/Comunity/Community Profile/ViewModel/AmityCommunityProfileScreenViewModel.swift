@@ -102,7 +102,6 @@ extension AmityCommunityProfileScreenViewModel {
         }
     }
     
-    
     func joinCommunity() {
         communityRepositoryManager.join { [weak self] (error) in
             if let error = error {

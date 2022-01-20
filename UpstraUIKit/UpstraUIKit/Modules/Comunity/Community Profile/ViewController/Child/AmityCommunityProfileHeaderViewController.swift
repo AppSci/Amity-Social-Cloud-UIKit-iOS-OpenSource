@@ -232,7 +232,6 @@ final class AmityCommunityProfileHeaderViewController: UIViewController {
         actionStackView.isHidden = chatButton.isHidden && actionButton.isHidden
     }
     
-    
     private func shouldShowPendingsPostBanner() {
         switch screenViewModel.dataSource.memberStatusCommunity {
         case .guest:

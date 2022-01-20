@@ -270,7 +270,6 @@ extension AmityFeedScreenViewModel {
         }
     }
     
-    
     func getReportStatus(withCommendId commendId: String, completion: ((Bool) -> Void)?) {
         commentController.getReportStatus(withCommentId: commendId, completion: completion)
     }

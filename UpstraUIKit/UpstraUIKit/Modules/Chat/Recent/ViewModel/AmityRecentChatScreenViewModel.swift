@@ -56,7 +56,6 @@ public struct AmityChannelModel {
 final class AmityRecentChatScreenViewModel: AmityRecentChatScreenViewModelType {
     weak var delegate: AmityRecentChatScreenViewModelDelegate?
     
-    
     enum Route {
         case messageView(channelId: String)
     }
@@ -67,7 +66,6 @@ final class AmityRecentChatScreenViewModel: AmityRecentChatScreenViewModelType {
     
     // MARK: - Collection
     private var channelsCollection: AmityCollection<AmityChannel>?
-    
     
     
     // MARK: - Token

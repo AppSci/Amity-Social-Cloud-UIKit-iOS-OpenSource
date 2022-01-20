@@ -171,7 +171,6 @@ extension AmityPostDetailScreenViewModel {
         delegate?.screenViewModelDidUpdateData(self)
     }
     
-    
     private func loadChild(commentId: String) {
         childrenController.fetchChildren(for: commentId) { [weak self] in
             self?.debouncer.run {

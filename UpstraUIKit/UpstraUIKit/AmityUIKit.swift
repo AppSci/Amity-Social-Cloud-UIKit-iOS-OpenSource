@@ -14,7 +14,6 @@ public final class AmityUIKitManager {
     
     private init() { }
     
-    
     /// Setup AmityUIKit instance. Internally it creates AmityClient instance
     /// from AmitySDK.
     ///
@@ -48,7 +47,6 @@ public final class AmityUIKitManager {
                                                startTrackingFeedLoading: startTrackingFeedLoading,
                                                stopTrackingFeedLoading: stopTrackingFeedLoading)
     }
-    
     
     /// Setup AmityUIKit instance. Internally it creates AmityClient instance from AmitySDK.
     ///
@@ -103,7 +101,6 @@ public final class AmityUIKitManager {
     public static func unregisterDevice() {
         AmityUIKitManagerInternal.shared.unregisterDevice()
     }
-    
     
     /// Registers this device for receiving apple push notification
     /// - Parameter deviceToken: Correct apple push notificatoin token received from the app.

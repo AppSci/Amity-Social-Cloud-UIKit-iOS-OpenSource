@@ -54,7 +54,6 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     var pullRefreshHandler: (() -> Void)?
     var onViewDidLoad: (() -> Void)?
     
-    
     private var isPostButtonTapped = false
     // To determine if the vc is visible or not
 //    private var isVisible: Bool = true
@@ -193,7 +192,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     
     private func setupTableView() {
         tableView.backgroundColor = AmityColorSet.secondary.blend(.shade4)
-        tableView.tableFooterView = UIView()
+//        tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
         tableView.registerCustomCell()
@@ -282,9 +281,11 @@ extension AmityFeedViewController: AmityPostTableViewDelegate {
     
     func tableView(_ tableView: AmityPostTableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if tableView.isBottomReached && !isLoadingNewPosts {
-            screenViewModel.action.loadMore()
-            isLoadingNewPosts = true
             tableView.showLoadingIndicator()
+            isLoadingNewPosts = true
+            debouncer.run { [weak self] in
+                self?.screenViewModel.action.loadMore()
+            }
         }
     }
     
@@ -381,10 +382,8 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     func screenViewModelDidUpdateDataSuccess(_ viewModel: AmityFeedScreenViewModelType) {
         // When view is invisible but data source request updates, mark it as a dirty data source.
         // Then after view already appear, reload table view for refreshing data.'
-        if isLoadingNewPosts {
-            isLoadingNewPosts = false
-            tableView.tableFooterView = nil
-        }
+        isLoadingNewPosts = false
+        tableView.tableFooterView = nil
         
         refreshControl.endRefreshing()
 //        guard isVisible else {
@@ -408,10 +407,10 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     }
     
     func screenViewModelDidGetMorePosts(_ haveNewPosts: Bool) {
-        if isLoadingNewPosts {
-            isLoadingNewPosts = false
-            tableView.tableFooterView = nil
-        }
+        isLoadingNewPosts = false
+        tableView.tableFooterView?.removeFromSuperview()
+        tableView.tableFooterView = nil
+        tableView.layoutIfNeeded()
     }
     
     func screenViewModelScrollToTop(_ viewModel: AmityFeedScreenViewModelType) {

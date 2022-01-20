@@ -55,7 +55,6 @@ class AmityMemberCollectionViewCell: UICollectionViewCell {
 
     }
     
-    
     private func setupDisplayNameLabel() {
         displayNameLabel.text = ""
         displayNameLabel.font = AmityFontSet.body

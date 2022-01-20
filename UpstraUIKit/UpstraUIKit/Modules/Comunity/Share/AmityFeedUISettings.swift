@@ -61,7 +61,6 @@ public class AmityFeedUISettings {
     /// The object that acts as the data source of the feed view.
     public weak var dataSource: AmityFeedDataSource?
     
-    
     /// Registers a nib object containing a cell with the table view under a specified identifier.
     /// - Parameters:
     ///   - nib: A nib object that specifies the nib file to use to create the cell.

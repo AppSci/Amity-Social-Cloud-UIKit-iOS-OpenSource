@@ -14,6 +14,7 @@ final class AmityCommunitySearchViewController: AmityViewController, IndicatorIn
     @IBOutlet private var tableView: UITableView!
     
     // MARK: - Properties
+    
     private var screenViewModel: AmityCommunitySearchScreenViewModelType!
     private var emptyView = AmitySearchEmptyView()
     

@@ -25,7 +25,6 @@ class AmityTextComposeBarView: AmityView {
         get { return _inputView }
     }
     
-    
     // MARK: - IBOutlet Properties
     @IBOutlet var textView: AmityTextView!
     @IBOutlet private var heightConstraint: NSLayoutConstraint!
