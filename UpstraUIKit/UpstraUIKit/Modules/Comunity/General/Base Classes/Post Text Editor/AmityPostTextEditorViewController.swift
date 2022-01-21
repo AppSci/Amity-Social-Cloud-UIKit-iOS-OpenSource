@@ -751,6 +751,14 @@ extension AmityPostTextEditorViewController: AmityPostTextEditorScreenViewModelD
         updateConstraints()
     }
     
+    func screenViewModelDidFail(error: AmityError) {
+        switch error {
+        case .unknown:
+            AmityHUD.show(.error(message: AmityLocalizedStringSet.HUD.somethingWentWrong.localizedString))
+        default: break
+        }
+    }
+    
     func screenViewModelDidCreatePost(_ viewModel: AmityPostTextEditorScreenViewModel, post: AmityPost?, error: Error?) {
         if let post = post {
             switch post.getFeedType() {

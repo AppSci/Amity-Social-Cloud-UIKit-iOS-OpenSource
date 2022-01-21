@@ -361,12 +361,24 @@ class AmityPostTextEditorScreenViewModel: AmityPostTextEditorScreenViewModelType
     }
     
     private func createPostResponseHandler(forPost post: AmityPost?, error: Error?) {
+        
+        if let error = error as? AmityError {
+            delegate?.screenViewModelDidFail(error: error)
+            return
+        }
+        
         Log.add("File Post Created: \(post != nil) Error: \(String(describing: error))")
         delegate?.screenViewModelDidCreatePost(self, post: post, error: error)
         NotificationCenter.default.post(name: NSNotification.Name.Post.didCreate, object: nil)
     }
     
     private func updatePostResponseHandler(forPost post: AmityPost?, error: Error?) {
+        
+        if let error = error as? AmityError {
+            delegate?.screenViewModelDidFail(error: error)
+            return
+        }
+        
         Log.add("File Post updated: \(post != nil) Error: \(String(describing: error))")
         delegate?.screenViewModelDidUpdatePost(self, error: error)
         NotificationCenter.default.post(name: NSNotification.Name.Post.didUpdate, object: nil)

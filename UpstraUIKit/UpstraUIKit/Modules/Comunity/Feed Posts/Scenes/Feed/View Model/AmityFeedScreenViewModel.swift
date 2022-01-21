@@ -177,10 +177,6 @@ extension AmityFeedScreenViewModel {
         default: break
         }
         reactionController.addReaction(withReaction: .like, referanceId: id, referenceType: referenceType) { [weak self] (success, error) in
-            guard let strongSelf = self else { return }
-            if !success {
-                strongSelf.delegate?.screenViewModelDidFail(strongSelf, failure: AmityError(error: error) ?? .unknown)
-            }
         }
     }
     
@@ -193,10 +189,6 @@ extension AmityFeedScreenViewModel {
         default: break
         }
         reactionController.removeReaction(withReaction: .like, referanceId: id, referenceType: referenceType) { [weak self] (success, error) in
-            guard let strongSelf = self else { return }
-            if !success {
-                strongSelf.delegate?.screenViewModelDidFail(strongSelf, failure: AmityError(error: error) ?? .unknown)
-            }
         }
     }
     

@@ -229,10 +229,6 @@ extension AmityPostDetailScreenViewModel {
     func likePost() {
         delegate?.screenViewModelDidLikePost(self)
         reactionController.addReaction(withReaction: .like, referanceId: postId, referenceType: .post) { [weak self] (success, error) in
-            guard let strongSelf = self else { return }
-            if !success {
-                strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
-            }
         }
     }
     
@@ -278,6 +274,11 @@ extension AmityPostDetailScreenViewModel {
             guard let strongSelf = self else { return }
             // check if the recent comment is contains banned word
             // if containts, delete the particular comment
+            
+            if let error = error as? AmityError {
+                strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: error)
+            }
+            
             if let comment = comment, AmityError(error: error) == .bannedWord {
                 strongSelf.deleteComment(with: AmityCommentModel(comment: comment))
                 strongSelf.fetchComments()
@@ -313,10 +314,6 @@ extension AmityPostDetailScreenViewModel {
     func likeComment(withCommendId commentId: String) {
         delegate?.screenViewModelDidLikeComment(self)
         reactionController.addReaction(withReaction: .like, referanceId: commentId, referenceType: .comment) { [weak self] (success, error) in
-            guard let strongSelf = self else { return }
-            if !success {
-                strongSelf.delegate?.screenViewModel(strongSelf, didFinishWithError: AmityError(error: error) ?? .unknown)
-            }
         }
     }
     
