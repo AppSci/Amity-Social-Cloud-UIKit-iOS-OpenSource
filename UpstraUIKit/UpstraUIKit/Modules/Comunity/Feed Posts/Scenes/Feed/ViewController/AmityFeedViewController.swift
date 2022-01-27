@@ -244,6 +244,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
             tableView.reloadData()
             dataDidUpdateHandler?(0)
             refreshControl.endRefreshing()
+            AmityEventHandler.shared.showNoInternetToast()
             return
         }
         pullRefreshHandler?()
@@ -407,6 +408,11 @@ extension AmityFeedViewController: AmityFeedScreenViewModelDelegate {
     }
     
     func screenViewModelDidGetMorePosts(_ haveNewPosts: Bool) {
+        
+        if !Reachability.isConnectedToNetwork() && AmityUIKitManagerInternal.shared.client.connectionStatus != .connected {
+            AmityEventHandler.shared.showNoInternetToast()
+        }
+        
         isLoadingNewPosts = false
         tableView.tableFooterView?.removeFromSuperview()
         tableView.tableFooterView = nil

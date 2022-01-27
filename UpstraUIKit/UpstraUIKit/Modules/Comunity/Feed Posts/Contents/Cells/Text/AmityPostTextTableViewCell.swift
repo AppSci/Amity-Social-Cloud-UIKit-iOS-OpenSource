@@ -86,6 +86,7 @@ public final class AmityPostTextTableViewCell: UITableViewCell, Nibbable, AmityP
     
     // MARK: - Perform Action
     private func performAction(action: AmityPostAction) {
+        guard !(parentViewController is AmityPostDetailViewController) else { return }
         delegate?.didPerformAction(self, action: action)
     }
 }

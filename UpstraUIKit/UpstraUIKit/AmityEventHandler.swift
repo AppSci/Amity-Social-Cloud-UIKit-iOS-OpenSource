@@ -45,6 +45,10 @@ open class AmityEventHandler {
         source.navigationController?.pushViewController(viewController, animated: true)
     }
     
+    open func showNoInternetToast() { //✅
+        
+    }
+    
     open func trackCommunityAddAttachment(type: String) { //✅
         
     }
