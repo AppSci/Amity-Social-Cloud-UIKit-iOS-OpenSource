@@ -607,7 +607,7 @@ extension AmityFeedViewController: AmityPostPreviewCommentDelegate {
             let editTextViewController = AmityCommentEditorViewController.make(comment: comment, communityId: commId)
             editTextViewController.title = AmityLocalizedStringSet.PostDetail.editComment.localizedString
             editTextViewController.editHandler = { [weak self] text, metadata, mentionees in
-                self?.screenViewModel.action.edit(withComment: comment, text: text, metadata: metadata, mentionees: mentionees)
+                self?.screenViewModel.action.edit(withComment: comment, text: text)
                 editTextViewController.dismiss(animated: true, completion: nil)
             }
             editTextViewController.dismissHandler = {

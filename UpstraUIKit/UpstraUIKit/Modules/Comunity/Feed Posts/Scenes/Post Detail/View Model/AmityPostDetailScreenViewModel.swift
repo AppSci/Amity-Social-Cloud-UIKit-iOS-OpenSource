@@ -270,7 +270,7 @@ extension AmityPostDetailScreenViewModel {
     
     func createComment(withText text: String, parentId: String?, metadata: [String: Any]?, mentionees: AmityMentioneesBuilder?) {
         AmityEventHandler.shared.trackCommunityCommentPost(id: post?.postId ?? "", author: post?.postedUserId ?? "", community: post?.targetCommunity?.communityId ?? "", likes: post?.reactionsCount ?? 0, comments: post?.allCommentCount ?? 0)
-        commentController.createComment(withReferenceId: postId, referenceType: .post, parentId: parentId, text: text, metadata: metadata, mentionees: mentionees) { [weak self] (comment, error) in
+        commentController.createComment(withReferenceId: postId, referenceType: .post, parentId: parentId, text: text) { [weak self] (comment, error) in
             guard let strongSelf = self else { return }
             // check if the recent comment is contains banned word
             // if containts, delete the particular comment
@@ -301,7 +301,7 @@ extension AmityPostDetailScreenViewModel {
     }
     
     func editComment(with comment: AmityCommentModel, text: String, metadata: [String : Any]?, mentionees: AmityMentioneesBuilder?) {
-        commentController.edit(withComment: comment, text: text, metadata: metadata, mentionees: mentionees) { [weak self] (success, error) in
+        commentController.edit(withComment: comment, text: text) { [weak self] (success, error) in
             guard let strongSelf = self else { return }
             if success {
                 strongSelf.delegate?.screenViewModelDidEditComment(strongSelf)

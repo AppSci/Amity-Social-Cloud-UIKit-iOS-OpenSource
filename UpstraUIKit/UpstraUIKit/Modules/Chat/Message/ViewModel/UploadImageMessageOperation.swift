@@ -43,8 +43,8 @@ class UploadImageMessageOperation: AsyncOperation {
                     self?.finish()
                     return
                 }
-                let messageId = repository.createImageMessage(withChannelId: channelId, imageFile: imageUrl, caption: nil, fullImage: true, tags: nil, parentId: nil, completion: nil)
-                self?.token = repository.getMessage(messageId)?.observe { (liveObject, error) in
+                let message = repository.createImageMessage(withChannelId: channelId, imageFile: imageUrl, caption: nil, fullImage: true, tags: nil, parentId: nil)
+                self?.token = message.observe { (liveObject, error) in
                     guard error == nil, let message = liveObject.object else {
                         self?.token = nil
                         self?.finish()

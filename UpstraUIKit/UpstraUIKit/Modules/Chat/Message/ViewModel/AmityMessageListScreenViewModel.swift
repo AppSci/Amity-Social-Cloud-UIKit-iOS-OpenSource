@@ -234,7 +234,7 @@ extension AmityMessageListScreenViewModel {
         guard !textMessage.isEmpty else {
             return
         }
-        messageRepository.createTextMessage(withChannelId: channelId, text: textMessage, tags: nil, parentId: nil) { [weak self] _,_ in
+        messageRepository.createTextMessage(withChannelId: channelId, text: textMessage, tags: nil, parentId: nil).observe { [weak self] _, _ in
             self?.text = ""
             self?.delegate?.screenViewModelEvents(for: .didSendText)
             self?.shouldScrollToBottom(force: true)

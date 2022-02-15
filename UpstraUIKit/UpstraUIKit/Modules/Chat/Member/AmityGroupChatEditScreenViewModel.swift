@@ -52,7 +52,7 @@ class AmityGroupChatEditScreenViewModel: AmityGroupChatEditorScreenViewModelType
     
     init(channelId: String) {
         self.channelId = channelId
-        channelUpdateBuilder = AmityChannelUpdateBuilder(channelId: channelId)
+        channelUpdateBuilder = channelRepository.updateChannel(channelId)
         channelNotificationToken = channelRepository.getChannel(channelId)
             .observe({ [weak self] channel, error in
                 guard let weakself = self,
@@ -67,7 +67,7 @@ class AmityGroupChatEditScreenViewModel: AmityGroupChatEditorScreenViewModelType
         channelUpdateBuilder.setDisplayName(displayName)
         channelUpdateToken?.invalidate()
         
-        channelUpdateToken = channelRepository.updateChannel(with: channelUpdateBuilder).observe({ [weak self] (channel, error) in
+        channelUpdateToken = channelUpdateBuilder.update().observe({ [weak self] (channel, error) in
             guard let weakSelf = self else { return }
             
             if let error = error {
@@ -85,7 +85,7 @@ class AmityGroupChatEditScreenViewModel: AmityGroupChatEditorScreenViewModelType
         fileRepository.uploadImage(avatar, progress: nil) { [weak self] (imageData, error) in
             guard let weakSelf = self else { return }
             weakSelf.channelUpdateBuilder.setAvatar(imageData)
-            weakSelf.channelUpdateToken = weakSelf.channelRepository.updateChannel(with: weakSelf.channelUpdateBuilder).observe({ [weak self] (channel, error) in
+            weakSelf.channelUpdateToken = weakSelf.channelUpdateBuilder.update().observe({ [weak self] (channel, error) in
                 guard let weakSelf = self else { return }
                 completion(error == nil)
             })

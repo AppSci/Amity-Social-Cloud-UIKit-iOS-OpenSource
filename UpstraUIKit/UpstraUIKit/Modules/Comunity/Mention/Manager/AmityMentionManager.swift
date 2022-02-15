@@ -250,24 +250,25 @@ extension AmityMentionManager {
         }
     }
     
-    func getMetadata() -> [String: Any]? {
-        if mentions.isEmpty { return nil }
-        return AmityMentionMapper.metadata(from: mentions)
+    func getMetadata() -> [String: Any]? { nil
+//        if mentions.isEmpty { return nil }
+//        return AmityMentionMapper.metadata(from: mentions)
     }
     
     func getMentionees() -> AmityMentioneesBuilder? {
-        if mentions.isEmpty { return nil }
-        let userIds = mentions.filter{ $0.type == .user }.compactMap { $0.userId }
-        if !userIds.isEmpty {
-            mentionees.mentionUsers(userIds: userIds)
-        }
-        
-        return mentionees
+        nil
+//        if mentions.isEmpty { return nil }
+//        let userIds = mentions.filter{ $0.type == .user }.compactMap { $0.userId }
+//        if !userIds.isEmpty {
+//            mentionees.mentionUsers(userIds: userIds)
+//        }
+//
+//        return mentionees
     }
     
     func setMentions(metadata: [String: Any], inText text: String) {
-        mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
-        createAttributedText(text: text)
+//        mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
+//        createAttributedText(text: text)
     }
     
     func resetState() {
@@ -484,19 +485,20 @@ private extension AmityMentionManager {
 
 extension AmityMentionManager {
     static func getAttributes(fromText text: String, withMetadata metadata: [String: Any]) -> [MentionAttribute] {
-        var attributes = [MentionAttribute]()
-        
-        let mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
-        if mentions.isEmpty { return [] }
-        
-        for mention in mentions {
-            if mention.index < 0 || mention.length <= 0 { continue }
-            let range = NSRange(location: mention.index, length: mention.length + 1)
-            if range.location != NSNotFound && (range.location + range.length) <= text.count {
-                attributes.append(MentionAttribute(name: .foregroundColor, value: AmityColorSet.primary, range: range, userId: mention.userId ?? ""))
-            }
-        }
-
-        return attributes
+        []
+//        var attributes = [MentionAttribute]()
+//
+//        let mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
+//        if mentions.isEmpty { return [] }
+//
+//        for mention in mentions {
+//            if mention.index < 0 || mention.length <= 0 { continue }
+//            let range = NSRange(location: mention.index, length: mention.length + 1)
+//            if range.location != NSNotFound && (range.location + range.length) <= text.count {
+//                attributes.append(MentionAttribute(name: .foregroundColor, value: AmityColorSet.primary, range: range, userId: mention.userId ?? ""))
+//            }
+//        }
+//
+//        return attributes
     }
 }

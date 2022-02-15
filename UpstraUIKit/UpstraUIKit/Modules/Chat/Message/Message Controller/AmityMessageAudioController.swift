@@ -34,9 +34,9 @@ final class AmityMessageAudioController {
             return
         }
         
-        let messageId = repository.createAudioMessage(withChannelId: channelId, audioFile: audioURL, fileName: AmityAudioRecorder.shared.fileName, parentId: nil, tags: nil, completion: nil)
+        let message = repository.createAudioMessage(withChannelId: channelId, audioFile: audioURL, fileName: AmityAudioRecorder.shared.fileName, parentId: nil, tags: nil)
         
-        token = repository.getMessage(messageId)?.observe { [weak self] (collection, error) in
+        token = message?.observe { [weak self] (collection, error) in
             guard error == nil, let message = collection.object else {
                 self?.token = nil
                 return

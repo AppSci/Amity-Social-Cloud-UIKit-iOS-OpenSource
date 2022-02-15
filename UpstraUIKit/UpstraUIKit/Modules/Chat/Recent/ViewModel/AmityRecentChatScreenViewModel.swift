@@ -141,7 +141,7 @@ final class AmityRecentChatScreenViewModel: AmityRecentChatScreenViewModelType {
     }
     
     private func createNewCommiunityChannel(builder: AmityCommunityChannelBuilder) {
-        let channelObject = channelRepository.createChannel(with: builder)
+        let channelObject = channelRepository.createChannel().community(with: builder)
         communityToken?.invalidate()
         communityToken = channelObject.observe {[weak self] channelObject, error in
             guard let weakSelf = self else { return }
@@ -177,7 +177,7 @@ final class AmityRecentChatScreenViewModel: AmityRecentChatScreenViewModelType {
         builder.setTags(["ch-comm","ios-sdk"])
         
         
-        let channelObject = channelRepository.createChannel(with: builder)
+        let channelObject = channelRepository.createChannel().conversation(with: builder)
         communityToken?.invalidate()
         communityToken = channelObject.observe { channelObject, error in
             if let channelId = channelObject.object?.channelId {
@@ -232,16 +232,17 @@ private extension AmityRecentChatScreenViewModel {
     func getChannelList() {
         switch channelType {
         case .community:
-            let query = AmityChannelQuery()
-            query.types = [AmityChannelQueryType.community]
-            query.filter = .userIsMember
-            query.includeDeleted = false
-            channelsCollection = channelRepository.getChannels(with: query)
+            let builder = AmityCommunityChannelQueryBuilder(filter: .userIsMember, includingTags: [], excludingTags: [], includeDeleted: false)
+            channelsCollection = channelRepository
+                .getChannels()
+                .communityType(with: builder)
+                .query()
         case .conversation:
-            let query = AmityChannelQuery()
-            query.types = [AmityChannelQueryType.conversation]
-            query.includeDeleted = false
-            channelsCollection = channelRepository.getChannels(with: query)
+            let builder = AmityConversationChannelQueryBuilder(includingTags: [], excludingTags: [], includeDeleted: false)
+            channelsCollection = channelRepository
+                .getChannels()
+                .conversation(with: builder)
+                .query()
         default:
             break
         }
