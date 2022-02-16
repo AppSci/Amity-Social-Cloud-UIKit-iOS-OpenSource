@@ -9,9 +9,14 @@
 import UIKit
 import AmitySDK
 
-public class AmityUserProfilePageSettings {
-    public init() { }
-    public var shouldChatButtonHide: Bool = true
+public struct AmityUserProfilePageSettings {
+    
+    public let shouldChatButtonHide: Bool
+    
+    public init(shouldChatButtonHide: Bool = true) {
+        self.shouldChatButtonHide = shouldChatButtonHide
+    }
+    
 }
 
 /// User settings

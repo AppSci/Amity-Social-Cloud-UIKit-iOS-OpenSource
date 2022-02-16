@@ -8,9 +8,14 @@
 
 import UIKit
 
-public class AmityCommunityProfilePageSettings {
-    public init() { }
-    public var shouldChatButtonHide: Bool = true
+public struct AmityCommunityProfilePageSettings {
+    
+    public let shouldChatButtonHide: Bool
+    
+    public init(shouldChatButtonHide: Bool = true) {
+        self.shouldChatButtonHide = shouldChatButtonHide
+    }
+   
 }
 
 /// A view controller for providing community profile and community feed.
