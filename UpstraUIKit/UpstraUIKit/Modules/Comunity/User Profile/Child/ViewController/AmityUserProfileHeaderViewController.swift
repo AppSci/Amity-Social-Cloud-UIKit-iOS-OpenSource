@@ -111,9 +111,8 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     private func setupChatButton() {
         messageButton.setImage(AmityIconSet.iconChat, position: .left)
         messageButton.setTitle(AmityLocalizedStringSet.communityDetailMessageButton.localizedString, for: .normal)
-        messageButton.tintColor = AmityColorSet.secondary
-        messageButton.layer.borderColor = AmityColorSet.secondary.blend(.shade3).cgColor
-        messageButton.layer.borderWidth = 1
+        messageButton.backgroundColor = AmityColorSet.primary
+        messageButton.tintColor = AmityColorSet.baseInverse
         messageButton.layer.cornerRadius = 6
         messageButton.isHidden = settings.shouldChatButtonHide
     }
@@ -162,9 +161,12 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     private func setupFollowButton() {
         followButton.setTitleShadowColor(AmityColorSet.baseInverse, for: .normal)
         followButton.setTitleFont(AmityFontSet.bodyBold)
-        followButton.tintColor = AmityColorSet.baseInverse
-        followButton.backgroundColor = AmityColorSet.primary
-        followButton.layer.cornerRadius = 4
+        
+        followButton.tintColor = AmityColorSet.secondary
+        followButton.layer.borderColor = AmityColorSet.secondary.blend(.shade3).cgColor
+        followButton.layer.borderWidth = 1
+        followButton.layer.cornerRadius = 6
+        
         followButton.setTitle(AmityLocalizedStringSet.userDetailFollowButtonFollow.localizedString, for: .normal)
         followButton.setImage(AmityIconSet.iconAdd, position: .left)
         
@@ -249,9 +251,11 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
             followButton.isHidden = false
             followButton.setTitle(AmityLocalizedStringSet.userDetailFollowButtonFollow.localizedString, for: .normal)
             followButton.setImage(AmityIconSet.iconAdd, position: .left)
-            followButton.backgroundColor = AmityColorSet.primary
-            followButton.layer.borderWidth = 0
-            followButton.tintColor = AmityColorSet.baseInverse
+           
+            followButton.tintColor = AmityColorSet.secondary
+            followButton.layer.borderColor = AmityColorSet.secondary.blend(.shade3).cgColor
+            followButton.layer.borderWidth = 1
+            followButton.layer.cornerRadius = 6
         @unknown default:
             fatalError()
         }

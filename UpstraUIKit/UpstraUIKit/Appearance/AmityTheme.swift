@@ -56,7 +56,7 @@ public struct AmityTheme {
                 baseInverse: UIColor? = nil,
                 messageBubble: UIColor? = nil,
                 messageBubbleInverse: UIColor? = nil) {
-        self.primary = primary ?? UIColor(hex: "#1054DE")
+        self.primary = primary ?? UIColor(hex: "#2E476C")
         self.secondary = secondary ?? UIColor(hex: "#292B32")
         self.alert = alert ?? UIColor(hex: "#FA4D30")
         self.highlight = highlight ?? UIColor(hex: "#1054DE")

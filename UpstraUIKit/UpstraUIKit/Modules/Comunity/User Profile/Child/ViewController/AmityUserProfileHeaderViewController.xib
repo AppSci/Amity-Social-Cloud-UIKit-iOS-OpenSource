@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityUserProfileHeaderViewController" customModule="WBAmityUIKit" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityUserProfileHeaderViewController" customModule="AmityUIKit" customModuleProvider="target">
             <connections>
                 <outlet property="avatarView" destination="vhq-BA-fHP" id="TYu-74-LU8"/>
                 <outlet property="descriptionLabel" destination="Jyx-dK-963" id="1eq-OY-oId"/>
@@ -34,7 +34,7 @@
             <rect key="frame" x="0.0" y="0.0" width="543" height="610"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhq-BA-fHP" customClass="AmityAvatarView" customModule="WBAmityUIKit" customModuleProvider="target">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vhq-BA-fHP" customClass="AmityAvatarView" customModule="AmityUIKit" customModuleProvider="target">
                     <rect key="frame" x="211.5" y="69" width="120" height="120"/>
                     <color key="backgroundColor" name="mainGreen"/>
                     <constraints>
@@ -51,10 +51,20 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Nbu-nK-O1g">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OXY-Se-igs" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                             <rect key="frame" x="0.0" y="103.5" width="503" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="CsF-qs-4Na"/>
+                            </constraints>
+                            <state key="normal" title="Button"/>
+                            <connections>
+                                <action selector="followAction:" destination="-1" eventType="touchUpInside" id="pvM-EA-aBe"/>
+                            </connections>
+                        </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="Nbu-nK-O1g">
+                            <rect key="frame" x="0.0" y="163.5" width="503" height="40"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8G1-Jd-TQ9" userLabel="Edit Profile Button" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8G1-Jd-TQ9" userLabel="Edit Profile Button" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="251.5" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="w1L-bD-CJM"/>
@@ -64,7 +74,7 @@
                                         <action selector="editButtonTap:" destination="-1" eventType="touchUpInside" id="Ecs-5R-Nms"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wAT-Pc-h9S" userLabel="Message Button" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wAT-Pc-h9S" userLabel="Message Button" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                                     <rect key="frame" x="251.5" y="0.0" width="251.5" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="BSL-k4-EOO"/>
@@ -76,16 +86,6 @@
                                 </button>
                             </subviews>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OXY-Se-igs" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
-                            <rect key="frame" x="0.0" y="163.5" width="503" height="40"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="40" id="CsF-qs-4Na"/>
-                            </constraints>
-                            <state key="normal" title="Button"/>
-                            <connections>
-                                <action selector="followAction:" destination="-1" eventType="touchUpInside" id="pvM-EA-aBe"/>
-                            </connections>
-                        </button>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="iyn-7Y-jZ9">
                             <rect key="frame" x="0.0" y="223.5" width="503" height="62"/>
                             <subviews>
@@ -159,13 +159,13 @@
                         <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="QQn-8k-Lm7">
                             <rect key="frame" x="198.5" y="28.5" width="106" height="30"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gI0-1w-L7s" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gI0-1w-L7s" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X6F-Xv-l2M" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X6F-Xv-l2M" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                                     <rect key="frame" x="38" y="0.0" width="30" height="30"/>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xfZ-Rw-K0q" customClass="AmityButton" customModule="WBAmityUIKit" customModuleProvider="target">
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xfZ-Rw-K0q" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
                                     <rect key="frame" x="76" y="0.0" width="30" height="30"/>
                                 </button>
                             </subviews>
