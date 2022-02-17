@@ -26,6 +26,14 @@ public class AmityButton: UIButton {
         }
     }
     
+    var isCustomStyle = false
+    
+    override open var isHighlighted: Bool {
+        didSet {
+            alpha = isHighlighted && isCustomStyle ? 0.85 : 1
+        }
+    }
+    
     func setTintColor(_ color: UIColor?, for state: UIControl.State) {
         tintColors[state.rawValue] = color
         tintColor = tintColors[state.rawValue]

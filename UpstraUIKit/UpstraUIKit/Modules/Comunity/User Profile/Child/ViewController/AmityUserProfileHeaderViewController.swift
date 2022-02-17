@@ -109,10 +109,11 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     }
     
     private func setupChatButton() {
-        messageButton.setImage(AmityIconSet.iconChat, position: .left)
+        messageButton.setImage(AmityIconSet.iconChat?.withRenderingMode(.alwaysTemplate), position: .left)
         messageButton.setTitle(AmityLocalizedStringSet.communityDetailMessageButton.localizedString, for: .normal)
+        messageButton.isCustomStyle = true
         messageButton.backgroundColor = AmityColorSet.primary
-        messageButton.tintColor = AmityColorSet.baseInverse
+        messageButton.tintColor = .white
         messageButton.layer.cornerRadius = 6
         messageButton.isHidden = settings.shouldChatButtonHide
     }
@@ -162,13 +163,13 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
         followButton.setTitleShadowColor(AmityColorSet.baseInverse, for: .normal)
         followButton.setTitleFont(AmityFontSet.bodyBold)
         
-        followButton.tintColor = AmityColorSet.secondary
+        followButton.tintColor = .black
         followButton.layer.borderColor = AmityColorSet.secondary.blend(.shade3).cgColor
         followButton.layer.borderWidth = 1
         followButton.layer.cornerRadius = 6
         
         followButton.setTitle(AmityLocalizedStringSet.userDetailFollowButtonFollow.localizedString, for: .normal)
-        followButton.setImage(AmityIconSet.iconAdd, position: .left)
+        followButton.setImage(AmityIconSet.iconAdd?.withRenderingMode(.alwaysTemplate), position: .left)
         
         followButton.isHidden = true
     }
@@ -270,6 +271,10 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
     }
     
     @IBAction func chatButtonTap(_ sender: Any) {
+        if !Reachability.isConnectedToNetwork() && AmityUIKitManagerInternal.shared.client.connectionStatus != .connected {
+            AmityEventHandler.shared.showNoInternetToast()
+        }
+        // TODO: Make custom event
         screenViewModel.action.createChannel()
     }
     

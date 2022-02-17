@@ -65,7 +65,7 @@
                             <rect key="frame" x="0.0" y="163.5" width="503" height="40"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8G1-Jd-TQ9" userLabel="Edit Profile Button" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="251.5" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="231.5" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="w1L-bD-CJM"/>
                                     </constraints>
@@ -74,11 +74,13 @@
                                         <action selector="editButtonTap:" destination="-1" eventType="touchUpInside" id="Ecs-5R-Nms"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wAT-Pc-h9S" userLabel="Message Button" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
-                                    <rect key="frame" x="251.5" y="0.0" width="251.5" height="40"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wAT-Pc-h9S" userLabel="Message Button" customClass="AmityButton" customModule="AmityUIKit" customModuleProvider="target">
+                                    <rect key="frame" x="231.5" y="0.0" width="271.5" height="40"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="BSL-k4-EOO"/>
                                     </constraints>
+                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" title="Button"/>
                                     <connections>
                                         <action selector="chatButtonTap:" destination="-1" eventType="touchUpInside" id="NvT-AU-ehQ"/>
