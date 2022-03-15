@@ -52,6 +52,7 @@ final class AmityPollCreatorQusetionTableViewCell: UITableViewCell, Nibbable, Am
         pollTextView.padding = .init(top: 8, left: 0, bottom: 8, right: 0)
         pollTextView.returnKeyType = .done
         pollTextView.customTextViewDelegate = self
+        pollTextView.typingAttributes = [.font: AmityFontSet.body, .foregroundColor: AmityColorSet.base]
         
         lineView.backgroundColor = AmityColorSet.base.blend(.shade4)
     }
@@ -65,6 +66,9 @@ final class AmityPollCreatorQusetionTableViewCell: UITableViewCell, Nibbable, Am
         errorLabel.font = AmityFontSet.caption
     }
 
+    func getTextView()-> UITextView? {
+        return pollTextView
+    }
 }
 
 extension AmityPollCreatorQusetionTableViewCell: AmityTextViewDelegate {
@@ -81,6 +85,13 @@ extension AmityPollCreatorQusetionTableViewCell: AmityTextViewDelegate {
         if textView.returnKeyType == .done, text == "\n" {
             textView.resignFirstResponder()
         }
-        return textView.verifyFields(shouldChangeCharactersIn: range, replacementString: text)
+        if textView.verifyFields(shouldChangeCharactersIn: range, replacementString: text) {
+            return delegate?.textView(textView, shouldChangeTextIn: range, replacementText: text) ?? true
+        }
+        return false
+    }
+    
+    func textViewDidChangeSelection(_ textView: AmityTextView) {
+        delegate?.didPerformAction(self, action: .textViewDidChangeSelection(textView: textView))
     }
 }

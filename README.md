@@ -1,25 +1,39 @@
-# WBAmityUIKit
-[![Version](https://img.shields.io/cocoapods/v/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
-[![License](https://img.shields.io/cocoapods/l/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
-[![Platform](https://img.shields.io/cocoapods/p/WBAmityUIKit.svg?style=flat)](https://cocoapods.org/pods/WBAmityUIKit)
+# AmityUIKit OpenSource
 
-## Example
+Our **AmityUIKit** include user interfaces to enable fast integration of standard 
+Amity Chat and Amity Social features into new or existing applications.
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+<img width="928" alt="Screen Shot 2564-11-22 at 08 29 57" src="https://user-images.githubusercontent.com/9884138/142821262-aab24859-68a6-45fe-a94f-3cd3a679b0ee.png">
+<img width="897" alt="Screen Shot 2564-11-22 at 08 30 03" src="https://user-images.githubusercontent.com/9884138/142821272-cf46e2c6-9963-4b90-85ed-274ccc820756.png">
 
-## Requirements
+## Overview Architecture
+**MVVM** is cleanly separates presentation layer from the other layers. Divorcing one from the other improves its maintainability and testability. It also makes the application evolution easier in the future, thereby reducing the risk of technological obsolescence. 
 
-ios 13+
+Eliminates the need for application redesign user interfaces become outdated, or even add more complexity in the specific layer.
+For example, adding local data source to the application could be impacts to the other layers.
 
-## Installation
+Please note that every view model in this project will be named as **screen view model**, e.g. `AmityFeedScreenViewModel` and `AmityRecentChatScreenViewModel`.
 
-WBAmityUIKit is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
 
-```ruby
-pod 'WBAmityUIKit'
-```
+## Building framework
+AmityUIKit supports building xcframework which can be used on any Xcode version. Please follow this instruction for building.
+1. In terminal, go to project directory
+2. Run "./scripts/release-uikit.sh"
+3. After building process is done, there will be `amity-uikit.zip` file
 
-## Author
+`amity-uikit.zip` contains AmityChat.xcframework, Realm.xcframework and AmityUIKit.xcframework.
 
-Booster, roman.mishchenko@gen.tech
+## Documentation
+View the [documentation](https://github.com/AmityCo/Amity-Social-Cloud-UIKit-iOS-OpenSource/wiki) for AmityUIKit.
+
+
+## Changelog
+[See the changelog](https://github.com/AmityCo/Amity-Social-Cloud-UIKit-iOS/releases) to be aware of latest improvements and fixes.
+
+
+## Contribution guidelines
+Please refer to the [guidelines](https://github.com/AmityCo/Amity-Social-Cloud-UIKit-iOS-OpenSource/wiki/Contributing-to-Amity-UIKit-Open-Source).
+
+
+## License
+Public Framework. Copyright (c) 2020 [Amity](https://www.amity.co/).

@@ -71,6 +71,8 @@ public class AmityEditTextViewController: AmityViewController {
         setupMentionTableView()
         
         mentionManager.delegate = self
+        mentionManager.setColor(AmityColorSet.base, highlightColor: AmityColorSet.primary)
+        mentionManager.setFont(AmityFontSet.body, highlightFont: AmityFontSet.bodyBold)
         if let metadata = metadata {
             mentionManager.setMentions(metadata: metadata, inText: message)
         }
@@ -119,8 +121,8 @@ public class AmityEditTextViewController: AmityViewController {
     }
     
     @objc private func saveTap() {
-        let metadata: [String: Any]? = mentionManager.getMetadata()
-        let mentionees: AmityMentioneesBuilder? = mentionManager.getMentionees()
+        let metadata = mentionManager.getMetadata()
+        let mentionees = mentionManager.getMentionees()
         dismiss(animated: true) { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.editHandler?(strongSelf.textView.text ?? "", metadata, mentionees)
@@ -157,7 +159,7 @@ extension AmityEditTextViewController: AmityKeyboardServiceDelegate {
 }
 
 extension AmityEditTextViewController: AmityTextViewDelegate {
-    func textViewDidChange(_ textView: AmityTextView) {
+    public func textViewDidChange(_ textView: AmityTextView) {
         guard let text = textView.text else { return }
         saveBarButton.isEnabled = !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -166,11 +168,11 @@ extension AmityEditTextViewController: AmityTextViewDelegate {
         }
     }
     
-    func textViewDidChangeSelection(_ textView: AmityTextView) {
+    public func textViewDidChangeSelection(_ textView: AmityTextView) {
         mentionManager.changeSelection(textView)
     }
     
-    func textView(_ textView: AmityTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func textView(_ textView: AmityTextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if textView.text.count > AmityMentionManager.maximumCharacterCountForPost {
             showAlertForMaximumCharacters()
             return false
@@ -187,7 +189,7 @@ extension AmityEditTextViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: AmityMentionTableViewCell.identifier) as? AmityMentionTableViewCell, let model = mentionManager.getUser(at: indexPath) else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AmityMentionTableViewCell.identifier) as? AmityMentionTableViewCell, let model = mentionManager.item(at: indexPath) else { return UITableViewCell() }
         cell.display(with: model)
         return cell
     }
@@ -212,12 +214,12 @@ extension AmityEditTextViewController: UITableViewDelegate {
 
 // MARK: - AmityMentionManagerDelegate
 extension AmityEditTextViewController: AmityMentionManagerDelegate {
-    func didCreateAttributedString(attributedString: NSAttributedString) {
+    public func didCreateAttributedString(attributedString: NSAttributedString) {
         textView.attributedText = attributedString
-        textView.font = AmityFontSet.body
+        textView.typingAttributes = [.font: AmityFontSet.body, .foregroundColor: AmityColorSet.base]
     }
     
-    func didGetUsers(users: [AmityMentionUserModel]) {
+    public func didGetUsers(users: [AmityMentionUserModel]) {
         if users.isEmpty {
             mentionTableViewHeightConstraint.constant = 0
             mentionTableView.isHidden = true
@@ -232,14 +234,14 @@ extension AmityEditTextViewController: AmityMentionManagerDelegate {
         }
     }
     
-    func didMentionsReachToMaximumLimit() {
+    public func didMentionsReachToMaximumLimit() {
         let alertController = UIAlertController(title: AmityLocalizedStringSet.Mention.unableToMentionTitle.localizedString, message: AmityLocalizedStringSet.Mention.unableToMentionReplyDescription.localizedString, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.done.localizedString, style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         present(alertController, animated: true, completion: nil)
     }
     
-    func didCharactersReachToMaximumLimit() {
+    public func didCharactersReachToMaximumLimit() {
         showAlertForMaximumCharacters()
     }
 }

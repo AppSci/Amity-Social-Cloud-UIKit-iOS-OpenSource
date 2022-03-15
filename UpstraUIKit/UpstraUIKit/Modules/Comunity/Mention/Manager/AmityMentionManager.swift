@@ -9,7 +9,7 @@
 import AmitySDK
 import UIKit
 
-struct AmityMentionUserModel {
+public struct AmityMentionUserModel {
     let userId: String
     let displayName: String
     let avatarURL: String
@@ -23,32 +23,38 @@ struct AmityMentionUserModel {
     }
 }
 
-protocol AmityMentionManagerDelegate: AnyObject {
+public protocol AmityMentionManagerDelegate: AnyObject {
     func didGetUsers(users: [AmityMentionUserModel])
     func didCreateAttributedString(attributedString: NSAttributedString)
     func didMentionsReachToMaximumLimit()
     func didCharactersReachToMaximumLimit()
 }
 
-enum AmityMentionManagerType {
+public enum AmityMentionManagerType {
     case post(communityId: String?)
     case comment(communityId: String?)
     case message(channelId: String?)
 }
 
-final internal class AmityMentionManager {
+final public class AmityMentionManager {
     // Properties
     private let type: AmityMentionManagerType
     private var mentions: [AmityMention] = []
     private var searchingKey: String? = nil
     private(set) var isSearchingStarted: Bool = false
-    private(set) var users: [AmityMentionUserModel] = []
-    private lazy var mentionees: AmityMentioneesBuilder = AmityMentioneesBuilder()
+    public var users: [AmityMentionUserModel] = []
     private let communityId: String?
+    private var font: UIFont = AmityFontSet.body
+    private var highlightFont = AmityFontSet.bodyBold
+    private var foregroundColor = AmityColorSet.base
+    private var highlightColor = AmityColorSet.primary
     
     // Private community
     private lazy var privateCommunityRepository: AmityCommunityRepository = AmityCommunityRepository(client: AmityUIKitManagerInternal.shared.client)
     private var privateCommunityMembersCollection: AmityCollection<AmityCommunityMember>?
+    private var communityObject: AmityObject<AmityCommunity>?
+    private var token: AmityNotificationToken?
+    private var community: AmityCommunityModel?
     
     // User repository
     private lazy var userRepository: AmityUserRepository = AmityUserRepository(client: AmityUIKitManagerInternal.shared.client)
@@ -59,23 +65,40 @@ final internal class AmityMentionManager {
     public static let maximumCharacterCountForPost = 50000
     public static let maximumMentionsCount = 30
     
-    weak var delegate: AmityMentionManagerDelegate?
+    public weak var delegate: AmityMentionManagerDelegate?
     
-    init(withType type: AmityMentionManagerType) {
+    public init(withType type: AmityMentionManagerType) {
         self.type = type
         switch type {
         case .post(let communityId), .comment(let communityId):
             self.communityId = communityId
+            if let communityId = communityId {
+                communityObject = privateCommunityRepository.getCommunity(withId: communityId)
+                token = communityObject?.observe { [weak self] community, error in
+                    if community.dataStatus == .fresh {
+                        self?.token?.invalidate()
+                    }
+                    guard let object = community.object else { return }
+                    
+                    self?.community = AmityCommunityModel(object: object)
+                }
+            }
         default:
             self.communityId = nil
         }
     }
 }
 
-// MARK: - Internal methods
-extension AmityMentionManager {
+// MARK: - Public methods
+public extension AmityMentionManager {
     func shouldChangeTextIn(_ textInput: UITextInput, inRange range: NSRange, replacementText: String, currentText text: String) -> Bool {
         if replacementText == "@" {
+            for i in 0..<mentions.count {
+                if range.location < mentions[i].index {
+                    mentions[i].index += replacementText.count
+                }
+            }
+            
             if text == "" {
                 isSearchingStarted = true
                 search(withText: "")
@@ -107,11 +130,8 @@ extension AmityMentionManager {
             if let startPosition = textInput.position(from: textInput.beginningOfDocument, offset: range.location),
                let endPosition = textInput.position(from: textInput.beginningOfDocument, offset: range.location + range.length), let selectedRange = textInput.selectedTextRange {
                 
-                return canRemove(textInput, inRange: range, withSelectedRange: selectedRange, startPosition: startPosition, endPosition: endPosition)
+                return canRemove(textInput, inRange: range, withSelectedRange: selectedRange, startPosition: startPosition, endPosition: endPosition, inText: text)
             }
-            
-        } else if replacementText == " " { // When replacement text is a space then finish all operations related to mention
-            finishSearching()
         } else if isSearchingStarted {
             // when searching is started just append the replacement text to the searching key and make search
             if searchingKey == nil {
@@ -153,7 +173,7 @@ extension AmityMentionManager {
     }
     
     func addMention(from textInput: UITextInput, in text: String, at indexPath: IndexPath) {
-        if mentions.count > AmityMentionManager.maximumMentionsCount {
+        if mentions.count == AmityMentionManager.maximumMentionsCount {
             delegate?.didMentionsReachToMaximumLimit()
             return
         }
@@ -189,7 +209,7 @@ extension AmityMentionManager {
             currentText.append("\(displayName) ")
             
             let mention = AmityMention(type: type, index: range.location, length: range.length, userId: userId)
-
+            
             mentions.append(mention)
         } else {
             let cursorOffset = textInput.offset(from: begOfDoc, to: selectedRange.start)
@@ -209,10 +229,10 @@ extension AmityMentionManager {
                     currentText.insert(contentsOf: "\(displayName)", at: cursorIndex)
                 }
             }
-                
+            
             for mention in mentions {
                 if range.location < mention.index {
-                    mention.index += range.length + 2
+                    mention.index += range.length
                 }
             }
             
@@ -232,13 +252,13 @@ extension AmityMentionManager {
         finishSearching()
     }
     
-    func getUser(at indexPath: IndexPath) -> AmityMentionUserModel? {
+    func item(at indexPath: IndexPath) -> AmityMentionUserModel? {
         guard indexPath.row < users.count else { return nil }
         return users[indexPath.row]
     }
     
     func loadMore() {
-        guard let _ = communityId else {
+        if communityId == nil || (community?.isPublic ?? false) {
             if usersCollection?.hasNext ?? false {
                 usersCollection?.nextPage()
             }
@@ -250,13 +270,30 @@ extension AmityMentionManager {
         }
     }
     
-    func getMetadata() -> [String: Any]? {
+    func setMentions(metadata: [String: Any], inText text: String) {
+        mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
+        createAttributedText(text: text)
+    }
+    
+    func getMetadata(shift: Int = 0) -> [String: Any]? {
         if mentions.isEmpty { return nil }
-        return AmityMentionMapper.metadata(from: mentions)
+        
+        let finalMentions = mentions
+        
+        if shift != 0 {
+            for i in 0..<finalMentions.count {
+                finalMentions[i].index += shift
+            }
+        }
+        
+        return AmityMentionMapper.metadata(from: finalMentions)
     }
     
     func getMentionees() -> AmityMentioneesBuilder? {
         if mentions.isEmpty { return nil }
+        
+        let mentionees: AmityMentioneesBuilder = AmityMentioneesBuilder()
+        
         let userIds = mentions.filter{ $0.type == .user }.compactMap { $0.userId }
         if !userIds.isEmpty {
             mentionees.mentionUsers(userIds: userIds)
@@ -265,9 +302,14 @@ extension AmityMentionManager {
         return mentionees
     }
     
-    func setMentions(metadata: [String: Any], inText text: String) {
-        mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
-        createAttributedText(text: text)
+    func setColor(_ foregroundColor: UIColor, highlightColor: UIColor) {
+        self.foregroundColor = foregroundColor
+        self.highlightColor = highlightColor
+    }
+    
+    func setFont(_ font: UIFont, highlightFont: UIFont) {
+        self.font = font
+        self.highlightFont = highlightFont
     }
     
     func resetState() {
@@ -275,7 +317,6 @@ extension AmityMentionManager {
         searchingKey = nil
         isSearchingStarted = false
         users = []
-        mentionees = AmityMentioneesBuilder()
         collectionToken?.invalidate()
         collectionToken = nil
         privateCommunityMembersCollection = nil
@@ -286,7 +327,7 @@ extension AmityMentionManager {
 // MARK: - Private methods
 private extension AmityMentionManager {
     func search(withText text: String) {
-        guard let communityId = communityId else {
+        if communityId == nil || (community?.isPublic ?? false) {
             usersCollection = userRepository.searchUser(text, sortBy: .displayName)
             collectionToken = usersCollection?.observe { [weak self] (collection, _, error) in
                 self?.handleSearchResponse(with: collection)
@@ -294,16 +335,18 @@ private extension AmityMentionManager {
             return
         }
         
-        privateCommunityMembersCollection = privateCommunityRepository.searchMembers(communityId: communityId, displayName: text, membership: [.member], roles: [], sortBy: .lastCreated)
-        collectionToken = privateCommunityMembersCollection?.observe { [ weak self] (collection, change, error) in
-            self?.handleSearchResponse(with: collection)
+        if let communityId = communityId {
+            privateCommunityMembersCollection = privateCommunityRepository.searchMembers(communityId: communityId, displayName: text, membership: [.member], roles: [], sortBy: .lastCreated)
+            collectionToken = privateCommunityMembersCollection?.observe { [ weak self] (collection, change, error) in
+                self?.handleSearchResponse(with: collection)
+            }
         }
     }
     
     func handleSearchResponse<T>(with collection: AmityCollection<T>) {
-        users = []
         switch collection.dataStatus {
         case .fresh:
+            users = []
             for index in 0..<collection.count() {
                 guard let object = collection.object(at: index) else { continue }
                 if T.self == AmityCommunityMember.self {
@@ -314,7 +357,9 @@ private extension AmityMentionManager {
                     users.append(AmityMentionUserModel(user: userObject))
                 }
             }
-            delegate?.didGetUsers(users: users)
+            if isSearchingStarted {
+                delegate?.didGetUsers(users: users)
+            }
         case .error:
             collectionToken?.invalidate()
             delegate?.didGetUsers(users: users)
@@ -361,11 +406,14 @@ private extension AmityMentionManager {
     
     func createAttributedText(text: String) {
         let attributedString = NSMutableAttributedString(string: text)
-        
+        attributedString.addAttributes([.font: font, .foregroundColor: foregroundColor], range: NSRange(location: 0, length: text.count - 1))
+
         for mention in mentions {
+            if mention.index < 0 || mention.length <= 0 { continue }
             let range = NSRange(location: mention.index, length: mention.length + 1)
-            if range.location != NSNotFound && range.location < text.count {
-                attributedString.addAttribute(.foregroundColor, value: AmityColorSet.primary, range: range)
+            
+            if range.location != NSNotFound && (range.location + range.length) <= text.count {
+                attributedString.addAttributes([.foregroundColor: highlightColor, .font: highlightFont], range: range)
             }
         }
         
@@ -425,14 +473,14 @@ private extension AmityMentionManager {
     
     // Checks is it possible to remove the text in the selected range
     // If it's possible then removes the selected mention in the given range if there is any
-    func canRemove(_ textInput: UITextInput, inRange range: NSRange, withSelectedRange selectedRange: UITextRange, startPosition: UITextPosition, endPosition: UITextPosition) -> Bool {
+    func canRemove(_ textInput: UITextInput, inRange range: NSRange, withSelectedRange selectedRange: UITextRange, startPosition: UITextPosition, endPosition: UITextPosition, inText text: String) -> Bool {
         // Removing the selected text
         if selectedRange == textInput.textRange(from:startPosition, to: endPosition) {
             // check is there a mention in selected range, if there is any then remove
             if hasMentionInRange(range: range) {
                 removeMention(at: range)
             } else {
-                configureMentions(inRange: range)
+                configureMentions(inRange: range, forText: text)
             }
         } else {
             // Check wheater removing the mention of the ending
@@ -462,7 +510,7 @@ private extension AmityMentionManager {
                     }
                 }
             } else {
-                configureMentions(inRange: range)
+                configureMentions(inRange: range, forText: text)
                 
                 finishSearching()
             }
@@ -471,11 +519,22 @@ private extension AmityMentionManager {
     }
     
     // Configures the indexes of remaining mentions after removing a mention or text in the given range
-    func configureMentions(inRange range: NSRange) {
+    func configureMentions(inRange range: NSRange, forText text: String) {
         // If there is no mention in the selected range then change the indexes of every mention from mentions array
+        var space = 0
+        
+        if (range.location != 0 || range.length != 1 || range.length != 0) && range.location + range.length < text.count {
+            let charBefore = text[text.index(text.startIndex, offsetBy: range.location - 1)]
+            let charAfter = text[text.index(text.startIndex, offsetBy: range.location + range.length)]
+            
+            if charBefore == " " && charBefore == charAfter {
+                space = 1
+            }
+        }
+        
         for i in 0..<mentions.count {
             if range.location < mentions[i].index {
-                let newIndex = mentions[i].index - (range.length == 0 ? 1 : range.length)
+                let newIndex = mentions[i].index - (range.length == 0 ? 1 : (range.length + space))
                 mentions[i].index = newIndex > 0 ? newIndex : 0
             }
         }
@@ -483,17 +542,32 @@ private extension AmityMentionManager {
 }
 
 extension AmityMentionManager {
-    static func getAttributes(fromText text: String, withMetadata metadata: [String: Any]) -> [MentionAttribute] {
+    static func getAttributes(fromText text: String, withMetadata metadata: [String: Any], mentionees: [AmityMentionees], shift: Int = 0, highlightColor: UIColor = AmityColorSet.primary, highlightFont: UIFont = AmityFontSet.bodyBold) -> [MentionAttribute] {
         var attributes = [MentionAttribute]()
         
         let mentions = AmityMentionMapper.mentions(fromMetadata: metadata)
-        if mentions.isEmpty { return [] }
+        if mentions.isEmpty || mentionees.isEmpty { return [] }
+        
+        var users: [AmityUser] = []
+        let mentionee = mentionees[0]
+        if mentionee.type == .user, let usersArray = mentionee.users {
+            users = usersArray
+        }
         
         for mention in mentions {
             if mention.index < 0 || mention.length <= 0 { continue }
-            let range = NSRange(location: mention.index, length: mention.length + 1)
-            if range.location != NSNotFound && (range.location + range.length) <= text.count {
-                attributes.append(MentionAttribute(name: .foregroundColor, value: AmityColorSet.primary, range: range, userId: mention.userId ?? ""))
+            
+            var shouldMention = true
+            
+            if mention.type == .user {
+                shouldMention = users.contains(where: { user in
+                    user.userId == mention.userId
+                })
+            }
+            
+            let range = NSRange(location: mention.index + shift, length: mention.length + 1)
+            if shouldMention, range.location != NSNotFound && (range.location + range.length) <= text.count {
+                attributes.append(MentionAttribute(attributes: [.foregroundColor: highlightColor, .font: highlightFont], range: range, userId: mention.userId ?? ""))
             }
         }
 

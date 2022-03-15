@@ -83,6 +83,8 @@ open class AmityPostDetailViewController: AmityViewController {
         navigationController?.setBackgroundColor(with: .white)
         AmityKeyboardService.shared.delegate = self
         mentionManager?.delegate = self
+        mentionManager?.setColor(AmityColorSet.base, highlightColor: AmityColorSet.primary)
+        mentionManager?.setFont(AmityFontSet.body, highlightFont: AmityFontSet.bodyBold)
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -712,7 +714,7 @@ extension AmityPostDetailViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: AmityMentionTableViewCell.identifier) as? AmityMentionTableViewCell, let model = mentionManager?.getUser(at: indexPath) else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: AmityMentionTableViewCell.identifier) as? AmityMentionTableViewCell, let model = mentionManager?.item(at: indexPath) else { return UITableViewCell() }
         cell.display(with: model)
         return cell
     }
@@ -737,12 +739,12 @@ extension AmityPostDetailViewController: UITableViewDelegate {
 
 // MARK: - AmityMentionManagerDelegate
 extension AmityPostDetailViewController: AmityMentionManagerDelegate {
-    func didCreateAttributedString(attributedString: NSAttributedString) {
+    public func didCreateAttributedString(attributedString: NSAttributedString) {
         commentComposeBarView.textView.attributedText = attributedString
-        commentComposeBarView.textView.font = AmityFontSet.body
+        commentComposeBarView.textView.typingAttributes = [.font: AmityFontSet.body, .foregroundColor: AmityColorSet.base]
     }
     
-    func didGetUsers(users: [AmityMentionUserModel]) {
+    public func didGetUsers(users: [AmityMentionUserModel]) {
         if users.isEmpty {
             mentionTableViewHeightConstraint.constant = 0
             mentionTableView.isHidden = true
@@ -757,7 +759,7 @@ extension AmityPostDetailViewController: AmityMentionManagerDelegate {
         }
     }
     
-    func didMentionsReachToMaximumLimit() {
+    public func didMentionsReachToMaximumLimit() {
         let message = parentComment == nil ? AmityLocalizedStringSet.Mention.unableToMentionCommentDescription.localizedString : AmityLocalizedStringSet.Mention.unableToMentionReplyDescription.localizedString
         let alertController = UIAlertController(title: AmityLocalizedStringSet.Mention.unableToMentionTitle.localizedString, message: message, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: AmityLocalizedStringSet.General.done.localizedString, style: .cancel, handler: nil)
@@ -765,7 +767,7 @@ extension AmityPostDetailViewController: AmityMentionManagerDelegate {
         present(alertController, animated: true, completion: nil)
     }
     
-    func didCharactersReachToMaximumLimit() {
+    public func didCharactersReachToMaximumLimit() {
         showAlertForMaximumCharacters()
     }
 }

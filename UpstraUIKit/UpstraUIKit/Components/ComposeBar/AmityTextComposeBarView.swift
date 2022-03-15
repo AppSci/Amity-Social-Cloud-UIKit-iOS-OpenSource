@@ -97,6 +97,7 @@ class AmityTextComposeBarView: AmityView {
     func clearText() {
         text = ""
         setHeightToDefault()
+        textView.resignFirstResponder()
     }
 }
 
