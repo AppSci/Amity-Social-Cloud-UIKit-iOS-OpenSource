@@ -117,6 +117,10 @@ open class AmityEventHandler {
         
     }
     
+    open func showChat(with userId: String) {
+        
+    }
+    
     open func seeAllCommunitiesDidTap(from source: AmityViewController) {
         let viewController = AmityMyCommunityViewController.make()
         source.navigationController?.pushViewController(viewController, animated: true)

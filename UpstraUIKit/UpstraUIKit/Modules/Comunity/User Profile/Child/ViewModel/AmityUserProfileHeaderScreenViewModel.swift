@@ -92,30 +92,31 @@ extension AmityUserProfileHeaderScreenViewModel {
     }
     
     func createChannel() {
-        let builder = AmityConversationChannelBuilder()
-        builder.setUserId(userId)
-        builder.setDisplayName(user?.displayName ?? "")
-        
-        let channel: AmityObject<AmityChannel> = channelRepository.createChannel(with: builder)
-        channelToken?.invalidate()
-        channelToken = channel.observeOnce { [weak self] channelObject, _ in
-            guard let strongSelf = self else { return }
-            switch channelObject.dataStatus {
-            case .fresh:
-                if let channel = channelObject.object {
-                    strongSelf.delegate?.screenViewModel(strongSelf, didCreateChannel: channel)
-                }
-                strongSelf.channelToken?.invalidate()
-            case .local:
-                if let channel = channelObject.object {
-                    strongSelf.delegate?.screenViewModel(strongSelf, didCreateChannel: channel)
-                }
-            case .error, .notExist:
-                strongSelf.channelToken?.invalidate()
-            @unknown default:
-                break
-            }
-        }
+        AmityEventHandler.shared.showChat(with: userId)
+//        let builder = AmityConversationChannelBuilder()
+//        builder.setUserId(userId)
+//        builder.setDisplayName(user?.displayName ?? "")
+//
+//        let channel: AmityObject<AmityChannel> = channelRepository.createChannel(with: builder)
+//        channelToken?.invalidate()
+//        channelToken = channel.observeOnce { [weak self] channelObject, _ in
+//            guard let strongSelf = self else { return }
+//            switch channelObject.dataStatus {
+//            case .fresh:
+//                if let channel = channelObject.object {
+//                    strongSelf.delegate?.screenViewModel(strongSelf, didCreateChannel: channel)
+//                }
+//                strongSelf.channelToken?.invalidate()
+//            case .local:
+//                if let channel = channelObject.object {
+//                    strongSelf.delegate?.screenViewModel(strongSelf, didCreateChannel: channel)
+//                }
+//            case .error, .notExist:
+//                strongSelf.channelToken?.invalidate()
+//            @unknown default:
+//                break
+//            }
+//        }
     }
     
     func follow() {

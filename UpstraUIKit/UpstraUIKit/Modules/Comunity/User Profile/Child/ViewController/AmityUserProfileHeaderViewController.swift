@@ -274,7 +274,6 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
         if !Reachability.isConnectedToNetwork() && AmityUIKitManagerInternal.shared.client.connectionStatus != .connected {
             AmityEventHandler.shared.showNoInternetToast()
         }
-        // TODO: Make custom event
         screenViewModel.action.createChannel()
     }
     

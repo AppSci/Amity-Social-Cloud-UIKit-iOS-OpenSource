@@ -54,6 +54,7 @@ public final class AmityUserProfilePageViewController: AmityProfileViewControlle
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.setBackgroundColor(with: .white)
     }
     
