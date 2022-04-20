@@ -203,7 +203,12 @@ class AmityUserProfileHeaderViewController: AmityViewController, AmityRefreshabl
         displayNameLabel.text = user.displayName
         descriptionLabel.text = user.about
         editProfileButton.isHidden = !user.isCurrentUser
-        messageButton.isHidden = settings.shouldChatButtonHide || user.isCurrentUser
+        if #available(iOS 14.0, *) {
+            messageButton.isHidden = settings.shouldChatButtonHide || user.isCurrentUser
+        } else {
+            messageButton.isHidden = true
+        }
+        
     }
     
     private func updateFollowInfo(with model: AmityFollowInfo) {
