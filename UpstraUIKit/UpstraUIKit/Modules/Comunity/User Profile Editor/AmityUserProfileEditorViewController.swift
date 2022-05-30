@@ -284,20 +284,20 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
 extension AmityUserProfileEditorViewController: AmityUserProfileEditorScreenViewModelDelegate {
     
     func screenViewModelDidUpdate(_ viewModel: AmityUserProfileEditorScreenViewModelType) {
-        guard let user = screenViewModel?.dataSource.user else { return }
-        
-        displayNameTextField?.text = user.displayName
-        aboutTextView?.text = user.about
-        
-        if let image = uploadingAvatarImage {
-            // While uploading avatar, view model will get call once with an old image.
-            // To prevent image view showing an old image, checking if it nil here.
-            userAvatarView.image = image
-        } else {
-            userAvatarView?.setImage(withImageURL: user.avatarURL, placeholder: AmityIconSet.defaultAvatar)
-        }
-        
-        updateViewState()
+//        guard let user = screenViewModel?.dataSource.user else { return }
+//        
+//        displayNameTextField?.text = user.displayName
+//        aboutTextView?.text = user.about
+//        
+//        if let image = uploadingAvatarImage {
+//            // While uploading avatar, view model will get call once with an old image.
+//            // To prevent image view showing an old image, checking if it nil here.
+//            userAvatarView.image = image
+//        } else {
+//            userAvatarView?.setImage(withImageURL: user.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+//        }
+//        
+//        updateViewState()
     }
     
 }
