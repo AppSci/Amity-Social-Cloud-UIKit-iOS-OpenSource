@@ -30,6 +30,7 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
     private var isNameChanged = false
     private var isBioChanged = false
     private var isNeedToCheckChanges = false
+    private var isUpdatedOnce = false
     
     // To support reuploading image
     // use this variable to store a new image
@@ -284,20 +285,24 @@ final public class AmityUserProfileEditorViewController: AmityViewController {
 extension AmityUserProfileEditorViewController: AmityUserProfileEditorScreenViewModelDelegate {
     
     func screenViewModelDidUpdate(_ viewModel: AmityUserProfileEditorScreenViewModelType) {
-//        guard let user = screenViewModel?.dataSource.user else { return }
-//        
-//        displayNameTextField?.text = user.displayName
-//        aboutTextView?.text = user.about
-//        
-//        if let image = uploadingAvatarImage {
-//            // While uploading avatar, view model will get call once with an old image.
-//            // To prevent image view showing an old image, checking if it nil here.
-//            userAvatarView.image = image
-//        } else {
-//            userAvatarView?.setImage(withImageURL: user.avatarURL, placeholder: AmityIconSet.defaultAvatar)
-//        }
-//        
-//        updateViewState()
+        guard
+            !isUpdatedOnce,
+            let user = screenViewModel?.dataSource.user
+        else { return }
+
+        isUpdatedOnce = true
+        displayNameTextField?.text = user.displayName
+        aboutTextView?.text = user.about
+
+        if let image = uploadingAvatarImage {
+            // While uploading avatar, view model will get call once with an old image.
+            // To prevent image view showing an old image, checking if it nil here.
+            userAvatarView.image = image
+        } else {
+            userAvatarView?.setImage(withImageURL: user.avatarURL, placeholder: AmityIconSet.defaultAvatar)
+        }
+
+        updateViewState()
     }
     
 }
