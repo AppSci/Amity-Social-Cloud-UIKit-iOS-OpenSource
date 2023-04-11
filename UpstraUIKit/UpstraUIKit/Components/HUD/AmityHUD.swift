@@ -1,4 +1,4 @@
- //
+//
 //  AmityHUD.swift
 //  AmityUIKit
 //
@@ -27,7 +27,7 @@ public enum HUDContentType {
         }
     }
 }
- 
+
 private class AmityAlertModalViewController: UIViewController {
     
     private let containerView: UIView = UIView()
@@ -115,11 +115,10 @@ public class AmityHUD {
     private let alertModalViewController = AmityAlertModalViewController()
     private var content: HUDContentType?
     private var topViewController: UIViewController? {
-        return UIApplication.topViewController()
+        UIApplication.topViewController()
     }
     private var isPresenting: Bool {
-        return topViewController is AmityAlertViewController
-            || topViewController is AmityAlertModalViewController
+        alertViewController.presentingViewController != nil || alertModalViewController.presentingViewController != nil
     }
     
     private init() {
@@ -129,7 +128,7 @@ public class AmityHUD {
         alertModalViewController.modalPresentationStyle = .overFullScreen
         alertModalViewController.modalTransitionStyle = .crossDissolve
     }
-
+    
     // MARK: - Public methods
     
     public static func show(_ content: HUDContentType) {
@@ -145,7 +144,7 @@ public class AmityHUD {
     public static func hide(_ completion: (() -> Void)? = nil) {
         sharedHUD.hide(completion)
     }
-
+    
     // MARK: Private methods
     
     private func show(_ content: HUDContentType) {
@@ -171,9 +170,13 @@ public class AmityHUD {
         guard let content = content else { return }
         switch content {
         case .custom:
-            alertModalViewController.dismiss(animated: true, completion: completion)
+            alertModalViewController.presentingViewController?.dismiss(animated: true) {
+                completion?()
+            }
         default:
-            alertViewController.dismiss(animated: true, completion: completion)
+            alertViewController.presentingViewController?.dismiss(animated: true) {
+                completion?()
+            }
         }
         self.content = nil
     }
