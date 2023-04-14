@@ -111,15 +111,30 @@ class AmityAlertViewController: UIViewController {
 public class AmityHUD {
     
     private static let sharedHUD = AmityHUD()
+    
+    private enum PresentationState {
+        case notPresenting
+        case presenting
+        case presented
+        
+        var canPresent: Bool {
+            switch self {
+            case .notPresenting:
+                return true
+            case .presenting, .presented:
+                return false
+            }
+        }
+    }
+    
     private let alertViewController = AmityAlertViewController()
     private let alertModalViewController = AmityAlertModalViewController()
     private var content: HUDContentType?
     private var topViewController: UIViewController? {
         UIApplication.topViewController()
     }
-    private var isPresenting: Bool {
-        alertViewController.presentingViewController != nil || alertModalViewController.presentingViewController != nil
-    }
+    private var presentationState: PresentationState = .notPresenting
+    private var onPresented: (() -> Void)?
     
     private init() {
         alertViewController.modalPresentationStyle = .overFullScreen
@@ -132,12 +147,19 @@ public class AmityHUD {
     // MARK: - Public methods
     
     public static func show(_ content: HUDContentType) {
-        if sharedHUD.isPresenting {
+        switch sharedHUD.presentationState {
+        case .notPresenting:
+            sharedHUD.show(content)
+        case .presenting:
+            sharedHUD.onPresented = {
+                sharedHUD.hide {
+                    sharedHUD.show(content)
+                }
+            }
+        case .presented:
             sharedHUD.hide {
                 sharedHUD.show(content)
             }
-        } else {
-            sharedHUD.show(content)
         }
     }
     
@@ -158,23 +180,35 @@ public class AmityHUD {
             break
         case .custom:
             alertModalViewController.config(subview: content.view)
-            topViewController?.present(alertModalViewController, animated: true, completion: nil)
+            presentationState = .presenting
+            topViewController?.present(alertModalViewController, animated: true) { [weak self] in
+                self?.presentationState = .presented
+                self?.onPresented?()
+                self?.onPresented = nil
+            }
             return
         }
         
         alertViewController.config(subview: content.view)
-        topViewController?.present(alertViewController, animated: true, completion: nil)
+        presentationState = .presenting
+        topViewController?.present(alertViewController, animated: true) { [weak self] in
+            self?.presentationState = .presented
+            self?.onPresented?()
+            self?.onPresented = nil
+        }
     }
     
     private func hide(_ completion: (() -> Void)? = nil) {
         guard let content = content else { return }
         switch content {
         case .custom:
-            alertModalViewController.presentingViewController?.dismiss(animated: true) {
+            alertModalViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
+                self?.presentationState = .notPresenting
                 completion?()
             }
         default:
-            alertViewController.presentingViewController?.dismiss(animated: true) {
+            alertViewController.presentingViewController?.dismiss(animated: true) { [weak self] in
+                self?.presentationState = .notPresenting
                 completion?()
             }
         }
