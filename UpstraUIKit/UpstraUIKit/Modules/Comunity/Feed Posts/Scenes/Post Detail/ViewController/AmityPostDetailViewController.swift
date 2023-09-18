@@ -7,14 +7,10 @@
 //
 
 import UIKit
-import NVActivityIndicatorView
 import AmitySDK
 
 /// A view controller for providing post and relevant comments.
-open class AmityPostDetailViewController: AmityViewController {
-    
-    @IBOutlet private var activityBackgroundView: UIView!
-    @IBOutlet private var activityView: NVActivityIndicatorView!
+open class AmityPostDetailViewController: AmityViewController {    
     // MARK: - IBOutlet Properties
     @IBOutlet private var tableView: AmityPostTableView!
     @IBOutlet private var commentComposeBarView: AmityPostDetailCompostView!
@@ -69,13 +65,13 @@ open class AmityPostDetailViewController: AmityViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        startAnimation()
         setupNavigationBar()
         setupTableView()
         setupComposeBarView()
         setupProtocolHandler()
         setupScreenViewModel()
         setupMentionTableView()
-        startAnimation()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -112,23 +108,19 @@ open class AmityPostDetailViewController: AmityViewController {
         screenViewModel.delegate = self
         screenViewModel.action.fetchPost()
         screenViewModel.action.fetchComments()
-        self.startAnimation()
     }
     
     func startAnimation() {
-        self.activityBackgroundView.alpha = 0.3
-        self.activityView.startAnimating()
+        AmityUIKitManagerInternal.shared.startLoading?()
     }
     
     func stopAnimation() {
-        self.activityBackgroundView.alpha = 0
-        self.activityView.stopAnimating()
+        AmityUIKitManagerInternal.shared.stopLoading?()
     }
     
     // MARK: Setup views
     private func setupView() {
         view.backgroundColor = AmityColorSet.backgroundColor
-        self.activityBackgroundView.layer.cornerRadius = 10
     }
     
     private func setupNavigationBar() {

@@ -36,7 +36,9 @@ public final class AmityUIKitManager {
                              cancelString: String,
                              loadingTitle: String,
                              startTrackingFeedLoading: @escaping (()->()),
-                             stopTrackingFeedLoading: @escaping (()->())) {
+                             stopTrackingFeedLoading: @escaping (()->()),
+                             startLoading: @escaping (()->()),
+                             stopLoading: @escaping (()->())) {
         AmityUIKitManagerInternal.shared.setup(apiKey,
                                                region: region,
                                                cameraPermissionDeniedText: cameraPermissionDeniedText,
@@ -45,7 +47,9 @@ public final class AmityUIKitManager {
                                                cancelString: cancelString,
                                                loadingTitle: loadingTitle,
                                                startTrackingFeedLoading: startTrackingFeedLoading,
-                                               stopTrackingFeedLoading: stopTrackingFeedLoading)
+                                               stopTrackingFeedLoading: stopTrackingFeedLoading,
+                                               startLoading: startLoading,
+                                               stopLoading: stopLoading)
     }
     
     /// Setup AmityUIKit instance. Internally it creates AmityClient instance from AmitySDK.
@@ -183,6 +187,9 @@ final class AmityUIKitManagerInternal: NSObject {
     var startTrackingFeedLoading: (()->())?
     var stopTrackingFeedLoading: (()->())?
     
+    var startLoading: (() -> Void)?
+    var stopLoading: (() -> Void)?
+    
     // MARK: - Initializer
     
     private override init() { }
@@ -197,7 +204,9 @@ final class AmityUIKitManagerInternal: NSObject {
                cancelString: String,
                loadingTitle: String,
                startTrackingFeedLoading: @escaping (()->()),
-               stopTrackingFeedLoading: @escaping (()->())) {
+               stopTrackingFeedLoading: @escaping (()->()),
+               startLoading: @escaping (()->()),
+               stopLoading: @escaping (()->())) {
         guard let client = try? AmityClient(apiKey: apiKey, region: region) else { return }
         
         self.cameraPermissionDeniedText = cameraPermissionDeniedText
@@ -207,6 +216,8 @@ final class AmityUIKitManagerInternal: NSObject {
         self.loadingTitle = loadingTitle
         self.startTrackingFeedLoading = startTrackingFeedLoading
         self.stopTrackingFeedLoading = stopTrackingFeedLoading
+        self.startLoading = startLoading
+        self.stopLoading = stopLoading
         _client = client
         _client?.clientErrorDelegate = self
     }
