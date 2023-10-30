@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,8 +11,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AmityPostDetailViewController" customModule="AmityUIKit" customModuleProvider="target">
             <connections>
-                <outlet property="activityBackgroundView" destination="uko-Xg-HrR" id="Wbl-aU-Ad3"/>
-                <outlet property="activityView" destination="g4y-hU-0Ey" id="80T-Ln-2IL"/>
                 <outlet property="commentComposeBarBottomConstraint" destination="UKz-Zi-AVg" id="cUz-oX-7ad"/>
                 <outlet property="commentComposeBarView" destination="gMP-ip-qOd" id="4qr-Wq-oNn"/>
                 <outlet property="mentionTableView" destination="0s6-hY-oze" id="1WK-3k-nWw"/>
@@ -41,42 +39,18 @@
                         <constraint firstAttribute="height" constant="240" id="Fxt-Kx-jBd"/>
                     </constraints>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uko-Xg-HrR">
-                    <rect key="frame" x="147" y="388" width="120" height="120"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="120" id="imp-zd-grM"/>
-                        <constraint firstAttribute="width" constant="120" id="qtV-YG-nmh"/>
-                    </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g4y-hU-0Ey" customClass="NVActivityIndicatorView" customModule="NVActivityIndicatorView">
-                    <rect key="frame" x="167" y="408" width="80" height="80"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="80" id="GVF-WT-nGV"/>
-                        <constraint firstAttribute="height" constant="80" id="KwH-U1-uB4"/>
-                    </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="color" keyPath="color">
-                            <color key="value" red="0.82352941180000006" green="0.94901960780000005" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="Wb0-7q-vLN"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
-                <constraint firstItem="uko-Xg-HrR" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="2hz-tk-mpC"/>
                 <constraint firstItem="nxX-G7-dP4" firstAttribute="leading" secondItem="Wb0-7q-vLN" secondAttribute="leading" id="FUa-U5-VBJ"/>
-                <constraint firstItem="g4y-hU-0Ey" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="GV4-Yi-mif"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="trailing" secondItem="Wb0-7q-vLN" secondAttribute="trailing" id="T46-Hg-UVd"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="bottom" secondItem="Wb0-7q-vLN" secondAttribute="bottom" id="UKz-Zi-AVg"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="top" secondItem="0s6-hY-oze" secondAttribute="bottom" id="Y4o-3s-n8p"/>
-                <constraint firstItem="g4y-hU-0Ey" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="cpG-J9-g30"/>
                 <constraint firstItem="0s6-hY-oze" firstAttribute="leading" secondItem="Wb0-7q-vLN" secondAttribute="leading" id="fdG-02-kLl"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="leading" secondItem="Wb0-7q-vLN" secondAttribute="leading" id="k2S-06-qGU"/>
                 <constraint firstItem="Wb0-7q-vLN" firstAttribute="trailing" secondItem="0s6-hY-oze" secondAttribute="trailing" id="k9l-qe-gzs"/>
                 <constraint firstItem="nxX-G7-dP4" firstAttribute="top" secondItem="Wb0-7q-vLN" secondAttribute="top" id="qQI-fA-KRR"/>
-                <constraint firstItem="uko-Xg-HrR" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="qt2-8v-DMu"/>
                 <constraint firstItem="gMP-ip-qOd" firstAttribute="top" secondItem="nxX-G7-dP4" secondAttribute="bottom" id="vB3-bY-uTZ"/>
                 <constraint firstItem="nxX-G7-dP4" firstAttribute="trailing" secondItem="Wb0-7q-vLN" secondAttribute="trailing" id="yLf-Co-uxc"/>
             </constraints>

@@ -28,12 +28,11 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/AppSci/Amity-Social-Cloud-UIKit-iOS-OpenSource.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '13.0'
+  s.ios.deployment_target = '15.0'
   
   s.source_files = 'UpstraUIKit/UpstraUIKit/**/**.{h,hpp,m,swift,xib,storyboard,modulemap,plist,plist,xcconfig,strings}'
   s.resource = 'UpstraUIKit/UpstraUIKit/Assets.xcassets'
 
-  s.dependency 'AmitySDK', '5.32.0'
+  s.dependency 'AmitySDK', '5.33.8'
   s.dependency 'RealmSwift'
-  s.dependency 'NVActivityIndicatorView'
 end

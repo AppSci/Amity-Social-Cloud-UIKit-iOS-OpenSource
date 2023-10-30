@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import NVActivityIndicatorView
 
 public protocol FeedHeaderPresentable {
     var headerView: UIView { get }
@@ -22,8 +21,6 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     // MARK: - IBOutlet Properties
     @IBOutlet private var tableView: AmityPostTableView!
     
-    @IBOutlet weak var activitybackgroundView: UIView!
-    @IBOutlet weak var activityView: NVActivityIndicatorView!
     // MARK: - Properties
     private var screenViewModel: AmityFeedScreenViewModelType!
     private let createPostButton: AmityFloatingButton = AmityFloatingButton()
@@ -75,15 +72,12 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         onViewDidLoad?()
         setupScreenViewModel()
 //        setupPostButton()
-        
-        self.activitybackgroundView.alpha = 0
-        
+                
         let feedType = self.screenViewModel.dataSource.getFeedType()
         switch feedType {
         case .communityFeed(let communityId):
             if communityId.contains("aca52dd") {
-                self.activitybackgroundView.alpha = 0.3
-                self.activityView.startAnimating()
+                AmityUIKitManagerInternal.shared.startLoading?()
                 AmityUIKitManagerInternal.shared.startTrackingFeedLoading?()
             }
         default: ()
@@ -172,7 +166,6 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
     private func setupView() {
         setupTableView()
         setupRefreshControl()
-        self.activitybackgroundView.layer.cornerRadius = 10
     }
     
     private func setupPostButton() {
@@ -214,8 +207,7 @@ public final class AmityFeedViewController: AmityViewController, AmityRefreshabl
         switch feedType {
         case .communityFeed(let communityId):
             if communityId.contains("aca52dd") {
-                self.activitybackgroundView.alpha = 0
-                self.activityView.stopAnimating()
+                AmityUIKitManagerInternal.shared.stopLoading?()
                 AmityUIKitManagerInternal.shared.stopTrackingFeedLoading?()
             }
         default: break
